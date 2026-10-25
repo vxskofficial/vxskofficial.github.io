@@ -1,0 +1,67 @@
+/* VXSK 12.9.2 Phase 1 — scoped My Account navigation */
+#auth-panel-profile .vxsk-account-hub{margin:1.1rem 0 1.5rem;scroll-margin-top:18px;color:#edf1ff}
+.vxsk-account-hub .vxsk-ah-eyebrow{margin:0 0 .4rem;font-size:.72rem;letter-spacing:.17em;font-weight:800;color:#a6b0ff}
+.vxsk-account-hub .vxsk-ah-heading{display:flex;align-items:baseline;justify-content:space-between;gap:.7rem;flex-wrap:wrap;margin-bottom:.8rem}
+.vxsk-account-hub .vxsk-ah-heading h3{font-size:clamp(1.3rem,3vw,2.1rem);font-weight:900;line-height:1.05;margin:0;color:#f8f9ff}
+.vxsk-account-hub .vxsk-ah-heading p{margin:0;max-width:35ch;color:#b7bbd1;font-size:.86rem}
+.vxsk-account-hub .vxsk-ah-tabs{position:relative;display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0 1.1rem;padding:.45rem;border:1px solid rgba(180,160,255,.24);background:rgba(10,13,32,.8);border-radius:18px}
+.vxsk-account-hub .vxsk-ah-tab{font:inherit;font-size:.88rem;font-weight:800;letter-spacing:.01em;color:#bec5e1;border:1px solid transparent;border-radius:13px;background:transparent;padding:.76rem .95rem;cursor:pointer;flex:1 1 130px;min-height:45px}
+.vxsk-account-hub .vxsk-ah-tab:hover{background:rgba(115,95,230,.22);color:white}
+.vxsk-account-hub .vxsk-ah-tab[aria-selected="true"]{background:linear-gradient(120deg,#6845e6,#965df4 62%,#4556d1);color:white;box-shadow:0 6px 21px rgba(115,77,245,.22)}
+.vxsk-account-hub :is(button,a):focus-visible{outline:3px solid #a0eaf4;outline-offset:3px}
+.vxsk-account-hub .vxsk-ah-page[hidden]{display:none!important}
+.vxsk-account-hub .vxsk-ah-intro{margin:.3rem 0 1.1rem;color:#c9cde1;font-size:.9rem}
+.vxsk-account-hub .vxsk-ah-shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.76rem}
+.vxsk-account-hub .vxsk-ah-shortcut{width:100%;min-width:0;min-height:98px;display:flex;align-items:center;text-align:left;gap:.75rem;cursor:pointer;border:1px solid rgba(145,148,241,.29);border-radius:19px;padding:1rem;background:linear-gradient(140deg,rgba(41,39,82,.91),rgba(21,24,51,.93));color:white;box-shadow:0 12px 28px rgba(0,0,0,.12);font:inherit}
+.vxsk-account-hub .vxsk-ah-shortcut:hover{background:linear-gradient(140deg,rgba(81,58,158,.95),rgba(31,34,91,.98));border-color:rgba(178,156,255,.75);transform:translateY(-2px)}
+.vxsk-account-hub .vxsk-ah-shortcut-icon{flex:0 0 40px;width:40px;height:40px;display:grid;place-items:center;font-size:1.28rem;border:1px solid rgba(255,255,255,.17);border-radius:14px;background:rgba(147,117,239,.16)}
+.vxsk-account-hub .vxsk-ah-shortcut-copy{min-width:0;flex:1;display:grid;gap:.24rem}
+.vxsk-account-hub .vxsk-ah-shortcut-copy strong{font-size:.94rem;color:#f7f8ff}
+.vxsk-account-hub .vxsk-ah-shortcut-copy small{color:#c3c5db;line-height:1.33;font-size:.74rem}
+.vxsk-account-hub .vxsk-ah-shortcut-arrow{color:#b9a1ff;font-size:1.1rem}
+.vxsk-account-hub .vxsk-ah-note{font-size:.76rem;color:#aeb5c9;margin:1rem 0 0}
+.vxsk-account-hub .vxsk-ah-section-intro{padding:.4rem 0 1rem}
+.vxsk-account-hub .vxsk-ah-section-intro h4{font-size:1.32rem;font-weight:900;color:white;margin:0 0 .35rem}
+.vxsk-account-hub .vxsk-ah-section-intro p{color:#b6bcd6;margin:0;font-size:.85rem}
+.vxsk-account-hub .vxsk-ah-page .account-dashboard-grid,.vxsk-account-hub .vxsk-ah-page .account-settings-grid{width:100%;min-width:0}
+.vxsk-account-hub .vxsk-ah-page .account-settings-grid{margin-bottom:1rem}
+@media(max-width:650px){.vxsk-account-hub .vxsk-ah-shortcuts{grid-template-columns:1fr}.vxsk-account-hub .vxsk-ah-shortcut{min-height:78px}.vxsk-account-hub .vxsk-ah-tab{font-size:.78rem;flex:1 1 105px;padding:.65rem .5rem}}
+@media(prefers-reduced-motion:reduce){.vxsk-account-hub .vxsk-ah-shortcut:hover{transform:none}}
+
+/* Maintain access to the original role-gated links without duplicating auth UI. */
+.vxsk-account-hub .vxsk-ah-staff-actions{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:1rem}
+.vxsk-account-hub .vxsk-ah-staff-actions > [hidden]{display:none!important}
+.vxsk-account-hub .vxsk-ah-staff-actions > a{max-width:100%}
+
+/* VXSK V12.9.2 P2: Community is part of My Account, not a duplicate homepage section. */
+.vxsk-account-hub .vxsk-ah-page #community{margin:0;padding:0;max-width:100%;min-width:0;width:100%;color:#f1f2ff;scroll-margin-top:1rem}
+.vxsk-account-hub .vxsk-ah-page #community .section-head{margin:0 0 .8rem;gap:1rem;align-items:start}
+.vxsk-account-hub .vxsk-ah-page #community .section-head h2{font-size:clamp(1.5rem,4vw,2.7rem);margin:0}
+.vxsk-account-hub .vxsk-ah-page #community .section-head p{font-size:.9rem;line-height:1.55}
+.vxsk-account-hub .vxsk-ah-page #community .community-shell{width:100%;max-width:100%;min-width:0;margin:0;padding:1rem;border-radius:20px}
+.vxsk-account-hub .vxsk-ah-page #community .community-panel,
+.vxsk-account-hub .vxsk-ah-page #community .vxsk-group-section{width:100%;min-width:0;margin:.5rem 0 0}
+.vxsk-account-hub .vxsk-ah-community-nav{display:flex;flex-wrap:wrap;gap:.5rem;margin:0 0 1.25rem}
+.vxsk-account-hub .vxsk-ah-community-tab{flex:1 1 145px;min-height:44px;font:inherit;font-size:.83rem;font-weight:800;line-height:1.25;border:1px solid rgba(164,149,237,.38);color:#d9d9f7;background:rgba(24,24,60,.94);border-radius:12px;padding:.7rem .8rem;cursor:pointer}
+.vxsk-account-hub .vxsk-ah-community-tab[aria-selected="true"]{background:linear-gradient(110deg,#7445e3,#355ce1);border-color:#967dff;color:#fff}
+.vxsk-account-hub .vxsk-ah-community-pane[hidden]{display:none!important}
+.vxsk-account-hub .vxsk-ah-community-pane{min-width:0;max-width:100%;overflow-wrap:anywhere}
+.vxsk-account-hub .vxsk-ah-community-pane .community-panel{max-width:100%}
+.vxsk-account-hub .vxsk-ah-community-pane #community-results{max-height:min(42vh,460px);overflow:auto}
+.vxsk-account-hub .vxsk-ah-community-pane .community-search-row{display:flex;min-width:0}
+.vxsk-account-hub .vxsk-ah-community-pane .community-search-row input{min-width:0;flex:1}
+.vxsk-account-hub .vxsk-ah-community-pane .vxsk-group-layout{min-width:0}
+/* Make the hub large enough for existing group chat, directory and friends cards. */
+.account-dialog:has(.vxsk-ah-community-mounted) .account-shell{width:min(1050px,94vw);max-width:100%}
+.account-dialog:has(#auth-panel-profile:not([hidden])){width:min(1080px,calc(100vw - 24px));max-width:98vw}
+@media(max-width:680px){
+ .vxsk-account-hub .vxsk-ah-community-tab{flex:1 1 128px;font-size:.74rem;padding:.55rem .42rem}
+ .vxsk-account-hub .vxsk-ah-page #community .community-shell{padding:.7rem}
+ .vxsk-account-hub .vxsk-ah-page #community .section-head{display:block}
+ .vxsk-account-hub .vxsk-ah-page #community .community-search-row{flex-wrap:wrap}
+ .account-dialog:has(#auth-panel-profile:not([hidden])){width:calc(100vw - 12px);max-width:100vw}
+}
+
+/* Reveal classes were originally observed on the homepage; inside an opened account
+   dialog their layout should never wait for a homepage scroll intersection. */
+.vxsk-account-hub #community .reveal{opacity:1!important;visibility:visible!important;transform:none!important}

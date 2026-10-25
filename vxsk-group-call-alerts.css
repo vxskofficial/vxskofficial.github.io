@@ -1,0 +1,77 @@
+/* VXSK V12.9.3 P2 — adds group-call alerts without changing existing call UI. */
+.vxsk-notification-bell .vxsk-group-call-dot[hidden],
+.vxsk-group-call-alert[hidden],.vxsk-group-call-panel-item[hidden]{display:none!important}
+.vxsk-notification-bell .vxsk-group-call-dot{position:absolute;bottom:-7px;left:-8px;display:grid;place-items:center;border:1px solid #9a8bff;background:#151238;border-radius:999px;font-size:12px;width:23px;height:23px;box-shadow:0 0 12px rgba(134,98,255,.5)}
+.vxsk-notification-bell.vxsk-has-group-call{box-shadow:0 0 0 2px rgba(135,93,255,.45),0 0 17px rgba(135,93,255,.55)}
+.vxsk-group-call-alert{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom, 0px));left:18px;width:min(385px,calc(100vw - 36px));z-index:1100;padding:18px;border:1px solid rgba(166,137,255,.72);border-radius:17px;background:linear-gradient(145deg,#17113e,#0c112e);box-shadow:0 18px 60px rgba(0,0,0,.7),0 0 26px rgba(116,72,246,.3);color:#f7f5ff;font:500 14px/1.45 system-ui,sans-serif}
+.vxsk-group-call-alert-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.vxsk-group-call-alert-copy{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vxsk-group-call-alert-copy strong{font-weight:850;letter-spacing:.04em;overflow-wrap:anywhere}
+.vxsk-group-call-alert-copy small{color:#c7c1f2}
+.vxsk-group-call-alert-dismiss{width:32px;height:32px;flex:none;background:#2c2251;color:#fff;border:1px solid #9c81d8;border-radius:10px;font-size:20px;cursor:pointer}
+.vxsk-group-call-alert-actions,.vxsk-group-call-panel-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+.vxsk-group-call-alert-join,.vxsk-group-call-panel-join{background:linear-gradient(110deg,#7237df,#3365ed);color:#fff;border:1px solid #9c86ff;border-radius:10px;padding:10px 12px;font-size:12px;font-weight:800;cursor:pointer}
+.vxsk-group-call-alert-ring,.vxsk-group-call-panel-ring{background:#2c2251;color:#f3eefe;border:1px solid #7c69a3;border-radius:10px;padding:10px 12px;font-size:12px;font-weight:800;cursor:pointer}
+.vxsk-group-call-alert-info{font-size:11px;color:#c5bfe4;margin:12px 0 0}
+.vxsk-group-call-panel-item{border:1px solid rgba(151,124,239,.5);border-radius:13px;background:rgba(70,50,130,.25);padding:12px;color:#f8f6ff}
+.vxsk-group-call-panel-item strong{font-size:12px}
+.vxsk-group-call-panel-item p{font-size:12px;color:#cbc4ed;margin:8px 0 0}
+.vxsk-group-call-panel-actions{margin-top:10px}
+.vxsk-group-call-alert button:focus-visible,.vxsk-group-call-panel-item button:focus-visible{outline:2px solid #c4a5ff;outline-offset:3px}
+@media(max-width:540px){.vxsk-group-call-alert{left:10px;bottom:calc(10px + env(safe-area-inset-bottom, 0px));width:calc(100vw - 20px);padding:13px}.vxsk-group-call-alert-actions button{flex:1 1 auto}}
+@media(prefers-reduced-motion:reduce){.vxsk-notification-bell.vxsk-has-group-call{animation:none!important}}
+
+/* V12.9.3-P3: header squads shortcut / authenticated live-call green JOIN */
+.vxsk-squad-header-cluster{display:flex;align-items:center;gap:5px;flex-shrink:0;z-index:25}
+.vxsk-squad-header{color:#f3efff;white-space:nowrap;text-decoration:none;background:rgba(61,42,124,.7);border:1px solid #7864bf;border-radius:10px;padding:9px 10px;font:800 11px/1 system-ui,sans-serif}
+.vxsk-squad-header:hover,.vxsk-squad-header:focus-visible{background:#48328d;outline:2px solid #ad91ff;outline-offset:2px}
+.vxsk-squad-header.has-live-call{border-color:#37e59b;box-shadow:0 0 9px rgba(39,223,144,.36)}
+.vxsk-squad-live-join{cursor:pointer;border:1px solid #7dffbf;border-radius:10px;padding:9px 10px;background:linear-gradient(120deg,#077b51,#14955c);color:white;font:900 11px/1 system-ui,sans-serif;white-space:nowrap;box-shadow:0 0 12px rgba(27,240,144,.5);animation:vxsk-live-glow 2s ease-in-out infinite}
+.vxsk-squad-live-join[hidden]{display:none!important}
+.vxsk-squad-ring-toggle{cursor:pointer;white-space:nowrap;background:rgba(52,36,93,.83);border:1px solid #77619b;border-radius:10px;padding:9px 10px;color:#fff;font:800 10px/1 system-ui,sans-serif}
+.vxsk-squad-ring-toggle[aria-pressed=true]{border-color:#4fe6a0;background:rgba(12,87,60,.9)}
+.vxsk-squad-header-cluster button:focus-visible{outline:2px solid #caa7ff;outline-offset:3px}
+@keyframes vxsk-live-glow{50%{box-shadow:0 0 22px rgba(27,240,144,.86)}}
+@media(max-width:1050px){.vxsk-squad-header-cluster{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));right:12px;z-index:1151;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100vw - 20px)}.vxsk-squad-header,.vxsk-squad-live-join,.vxsk-squad-ring-toggle{box-shadow:0 5px 24px rgba(0,0,0,.65)}}
+@media(prefers-reduced-motion:reduce){.vxsk-squad-live-join{animation:none}}
+
+/* Header nickname results: focus and safe small-screen placement */
+.vxsk-header-suggest[hidden]{display:none!important}
+.vxsk-header-suggest{position:fixed;z-index:1800;background:linear-gradient(145deg,#151232,#0b112a);border:1px solid #8c73d3;border-radius:13px;padding:9px;color:#fff;box-shadow:0 17px 40px rgba(0,0,0,.7);max-height:min(400px,65vh);overflow:auto;font-family:system-ui,sans-serif}
+.vxsk-header-search-status{margin:3px 6px 10px;color:#c7bbee;font:600 11px/1.5 system-ui,sans-serif}
+.vxsk-header-search-list{display:flex;flex-direction:column;gap:5px}
+.vxsk-header-search-result{display:flex;align-items:center;gap:10px;text-align:left;border:1px solid rgba(140,111,223,.5);background:#211c49;color:#fff;width:100%;padding:8px;border-radius:10px;cursor:pointer;font-family:system-ui,sans-serif}
+.vxsk-header-search-result:hover,.vxsk-header-search-result:focus-visible{border-color:#ae92ff;background:#342461;outline:2px solid #ae92ff}
+.vxsk-header-search-avatar{display:grid;place-items:center;flex:none;width:29px;height:29px;border-radius:50%;background:#5641a9;font-weight:900}
+.vxsk-header-search-result strong{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vxsk-header-search-result small{margin-left:auto;font-size:9px;color:#aefed8;white-space:nowrap}
+
+/* VXSK V12.9.3-P4: responsive header toolbar, not a bottom-right floating widget. */
+@media(max-width:1050px){
+  .header > .vxsk-squad-header-cluster{
+    position:relative!important;inset:auto!important;right:auto!important;bottom:auto!important;
+    display:flex;box-sizing:border-box;align-items:center;justify-content:center;
+    flex-wrap:nowrap;gap:8px;width:100%;max-width:100%;min-width:0;
+    margin:0 auto;padding:7px 12px calc(8px + env(safe-area-inset-bottom,0px));
+    background:rgba(17,12,44,.94);border-top:1px solid rgba(143,116,234,.32);
+    z-index:25;
+  }
+  .header > .vxsk-squad-header-cluster > *{min-height:34px;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center}
+  .header > .vxsk-squad-header-cluster .vxsk-squad-live-join[hidden]{display:none!important}
+}
+@media(max-width:540px){
+  .header > .vxsk-squad-header-cluster{gap:7px;padding:5px 8px 7px}
+  .header > .vxsk-squad-header-cluster .vxsk-squad-header,
+  .header > .vxsk-squad-header-cluster .vxsk-squad-live-join,
+  .header > .vxsk-squad-header-cluster .vxsk-squad-ring-toggle{
+    font-size:11px;line-height:1.15;letter-spacing:0;min-height:34px;border-radius:9px;
+    padding:7px 10px;max-width:100%;white-space:nowrap;
+  }
+  .header > .vxsk-squad-header-cluster .vxsk-squad-ring-toggle{font-size:0;min-width:38px;flex:none;padding:5px}
+  .header > .vxsk-squad-header-cluster .vxsk-squad-ring-toggle::before{content:'🔕';font-size:17px}
+  .header > .vxsk-squad-header-cluster .vxsk-squad-ring-toggle[aria-pressed=true]::before{content:'🔔'}
+  .header > .vxsk-squad-header-cluster .vxsk-squad-live-join{background:linear-gradient(120deg,#087d4c,#18a46b);flex:0 0 auto}
+}
+
+/* P4 unified: squad ring toggle no longer appears; private RING controls both. */
+.vxsk-squad-header-cluster > .vxsk-squad-ring-toggle{display:none!important}
