@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -12,6 +12,8 @@
 <script defer="" src="supabase-config.js?v=12.8.34"></script><script defer="" src="staging-guard.js"></script><script defer="" src="staff.js?v=12.8.34"></script><script defer="" src="opponent-staff.js?v=12.8.34"></script><script defer src="vxsk-cover-utils.js?v=12.8.34"></script><script defer src="content-editor.js?v=12.8.34"></script>
 <link href="staff-command.css?v=12.8.34" rel="stylesheet"/><script defer="" src="staff-command.js?v=12.8.34"></script><script defer="" src="staff-arena.js?v=12.8.34"></script><script defer="" src="staff-showmatches.js?v=12.8.34"></script><script defer src="owner-staff-manager.js?v=12.8.34"></script><link rel="stylesheet" href="vxsk-cover.css?v=12.8.34"/>  <link rel="stylesheet" href="vxsk-master-staff.css?v=12.9.4-candidate">
   <script defer src="vxsk-master-staff.js?v=12.9.4-candidate"></script>
+<link rel="stylesheet" href="vxsk-marketplace.css?v=12.9.4-boost-review1">
+<script defer src="vxsk-boost-review.js?v=12.9.4-boost-review1"></script>
 </head>
 <body>
 <a class="skip-link" href="#workspace">Skip to workspace</a>
@@ -24,6 +26,7 @@
 <button aria-pressed="false" data-staff-tab="opponents" id="staff-inbox-opponents" type="button">🎯 NO OPPONENT <span id="opponents-inbox-count">—</span></button>
 <button aria-pressed="false" data-staff-tab="bulletin" type="button">⚔ MANAGE SHOWMATCHES</button>
 <button aria-pressed="false" data-staff-tab="tournaments" type="button">🏆 MANAGE TOURNAMENTS</button>
+<button aria-pressed="false" data-staff-tab="boosters" type="button">🎮 BOOSTERS</button>
 <button aria-pressed="false" data-staff-tab="team" id="staff-owner-team-tab" type="button" hidden>👑 TEAM &amp; ROLES</button>
 </nav><p class="staff-command-explainer">Everything the VXSK staff manage lives here. The Arena Hub is for players and viewers.</p>
 <section data-staff-view="applications" id="staff-view-applications"><section aria-label="Application statistics" class="stats"><div class="stat"><span>PENDING</span><strong id="count-pending">—</strong></div><div class="stat"><span>APPROVED</span><strong id="count-approved">—</strong></div><div class="stat"><span>REJECTED</span><strong id="count-rejected">—</strong></div><div class="stat"><span>ALL VISIBLE</span><strong id="count-total">—</strong></div></section><div id="regular-inbox"><div class="toolbar"><div><label for="filter-status">STATUS</label><select id="filter-status"><option value="all">All applications</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></div><div><label for="filter-search">SEARCH PLAYERS</label><input id="filter-search" maxlength="80" placeholder="Username / game / mode" type="search"/></div><button id="refresh" type="button">↻ REFRESH</button></div>
@@ -126,6 +129,11 @@
 </div>
 </section>
 
+<section data-staff-view="boosters" hidden id="staff-view-boosters" aria-labelledby="staff-boost-heading">
+<div class="command-section-title"><div><span class="eyebrow">VXSK / APPLICATION REVIEW</span><h2 id="staff-boost-heading">BOOSTER <em>APPLICATIONS.</em></h2><p>Approve VXSK play-together boosters. Only Owner / Reviewer accounts verified with 2FA can review applicants; the database enforces these permissions.</p></div></div>
+<div class="staff-arena-card"><button type="button" id="vxsk-boost-refresh">↻ REFRESH APPLICATIONS</button><p class="notice" id="vxsk-boost-staff-status" role="status" aria-live="polite">Open this tab to review applications.</p><div id="vxsk-boost-staff-list" class="vxsk-boost-staff-list"></div></div>
+<div class="staff-arena-card"><h3>OWNER-ONLY SERVICE REQUESTS</h3><p class="small-muted">Bookings are requests, not proof of payment. Only the Owner with 2FA may see this list. No private payment codes are collected here.</p><button type="button" id="vxsk-boost-orders-refresh">↻ REFRESH REQUESTS</button><p class="notice" id="vxsk-boost-owner-status" role="status" aria-live="polite"></p><div id="vxsk-boost-owner-list"></div></div>
+</section>
 <p class="footer-note">Private staff workspace. Do not copy player contacts into public chats. Netlify Forms submissions need a separate verified sync before they appear here.</p>
 </div>
 </main>

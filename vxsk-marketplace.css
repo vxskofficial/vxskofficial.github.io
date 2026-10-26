@@ -1,0 +1,59 @@
+/* VXSK V12.9.4 — responsive marketplace, all monetary figures are real text. */
+.vxsk-marketplace{background:linear-gradient(142deg,#070b1d 2%,#181037 56%,#0b0d25);color:#f7f3ff;padding:clamp(42px,6vw,80px) 18px;isolation:isolate}
+.vxsk-mkt-inner{max-width:1250px;margin:0 auto;min-width:0}
+.vxsk-mkt-kicker{font:850 12px/1.5 'Space Grotesk',system-ui,sans-serif;letter-spacing:.12em;color:#ba92ff}
+.vxsk-marketplace h2{font:900 clamp(29px,4.4vw,49px)/1.05 'Barlow Condensed',Impact,system-ui,sans-serif;margin:10px 0 8px;color:#fff}
+.vxsk-mkt-intro,.vxsk-mkt-boost>p{color:#d2c9eb;line-height:1.6;max-width:820px;font-size:14px}
+.vxsk-mkt-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,1.6vw,20px);margin:26px 0 34px}
+.vxsk-mkt-card{min-width:0;overflow:hidden;display:flex;flex-direction:column;border-radius:20px;background:linear-gradient(150deg,#171337,#090b1e);border:1px solid rgba(159,103,255,.58);box-shadow:0 14px 37px rgba(0,0,0,.28)}
+.vxsk-mkt-visual{height:clamp(175px,19vw,240px);overflow:hidden;background:#140e36}
+.vxsk-mkt-visual img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 23%;transition:transform .3s ease}
+.vxsk-mkt-card:hover .vxsk-mkt-visual img{transform:scale(1.04)}
+.vxsk-mkt-card-content{padding:20px;display:flex;flex:1;flex-direction:column;min-width:0}
+.vxsk-mkt-tag{font:800 11px/1.4 'Space Grotesk',system-ui,sans-serif;letter-spacing:.065em;color:#b79bff}
+.vxsk-mkt-card h3{font:900 clamp(23px,2.6vw,32px)/1.07 'Barlow Condensed',Impact,system-ui,sans-serif;margin:11px 0 10px;color:#fff}
+.vxsk-mkt-card p{font:500 13px/1.55 'Space Grotesk',system-ui,sans-serif;color:#d6d0ed;margin:0 0 18px;flex:1}
+.vxsk-mkt-card-footer{display:flex;align-items:end;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid rgba(180,142,255,.18);padding-top:14px}
+.vxsk-mkt-price{display:flex;flex-direction:column;gap:3px}
+.vxsk-mkt-price span{font:750 10px/1.4 system-ui,sans-serif;letter-spacing:.06em;color:#c9b8ed}
+.vxsk-mkt-price strong{font:900 clamp(31px,3.3vw,44px)/1 'Barlow Condensed',Impact,system-ui,sans-serif;color:#fff;text-shadow:0 0 14px rgba(150,119,255,.2)}
+.vxsk-mkt-action,.vxsk-mkt-ghost{font:850 12px/1.35 'Space Grotesk',system-ui,sans-serif;min-height:42px;border-radius:11px;padding:12px 14px;cursor:pointer}
+.vxsk-mkt-action{background:linear-gradient(125deg,#8043fb,#364dec);border:1px solid #a48aff;color:#fff;box-shadow:0 5px 20px #351a8670}
+.vxsk-mkt-action:hover:not(:disabled),.vxsk-mkt-action:focus-visible{background:linear-gradient(125deg,#9963ff,#4668f7);outline:2px solid #b8a4ff;outline-offset:2px}
+.vxsk-mkt-action:disabled{opacity:.49;cursor:not-allowed}
+.vxsk-mkt-ghost{background:#171633;color:#f7eeff;border:1px solid #7057b2}
+.vxsk-mkt-ghost:hover,.vxsk-mkt-ghost:focus-visible{background:#29214e;outline:2px solid #aa92ff}
+.vxsk-mkt-boost{padding:clamp(18px,2.3vw,30px);border:1px solid #624bae;border-radius:19px;background:radial-gradient(circle at 80% 0%,#26194c 0%,#111127 65%)}
+.vxsk-mkt-boost h2{margin-top:4px}
+.vxsk-mkt-boost-controls{display:flex;align-items:end;flex-wrap:wrap;gap:18px;margin:24px 0}
+.vxsk-mkt-field-label{display:flex;flex-direction:column;gap:8px;min-width:0;font:800 11px/1.5 system-ui,sans-serif;letter-spacing:.045em;color:#ddd1fc}
+.vxsk-mkt-field{min-height:43px;box-sizing:border-box;display:block;width:100%;padding:10px 12px;border-radius:10px;color:#fff;background:#11152c;border:1px solid #6b5b98;font:600 14px/1.4 'Space Grotesk',system-ui,sans-serif}
+.vxsk-mkt-field-label:has(#vxsk-mkt-game){flex:2 1 230px}
+.vxsk-mkt-quantity{display:flex;align-items:center;gap:9px;padding:5px;border:1px solid #584781;border-radius:11px;background:#121128}
+.vxsk-mkt-quantity span{font:850 10px/1.2 system-ui,sans-serif;letter-spacing:.07em;color:#c5b9e6;margin:0 7px}
+.vxsk-mkt-quantity button{width:38px;height:38px;border-radius:8px;border:1px solid #7862b1;color:#fff;background:#2e2357;font-size:22px;cursor:pointer}
+.vxsk-mkt-quantity button:focus-visible{outline:2px solid #c4a4ff}
+.vxsk-mkt-quantity output{font:900 22px/1.1 'Barlow Condensed',Impact,sans-serif;min-width:24px;text-align:center;color:#fff}
+.vxsk-mkt-boost-total{display:flex;flex-direction:column;gap:3px;min-width:125px}
+.vxsk-mkt-boost-total span{font:800 11px/1 system-ui,sans-serif;color:#c3b3eb}
+.vxsk-mkt-boost-total strong{font:900 40px/1 'Barlow Condensed',Impact,sans-serif;color:#fff}
+.vxsk-mkt-booster-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:12px}
+.vxsk-mkt-booster{display:flex;align-items:center;gap:10px;padding:13px 12px;border:1px solid #65539a;border-radius:11px;background:#171833;cursor:pointer}
+.vxsk-mkt-booster:has(input:checked){border-color:#c7a3ff;background:#322457}
+.vxsk-mkt-booster-avatar{display:grid;place-items:center;font:900 16px 'Barlow Condensed',sans-serif;background:#3b2a78;color:#f4eaff;border-radius:100%;width:37px;height:37px}
+.vxsk-mkt-booster strong,.vxsk-mkt-booster small{display:block}.vxsk-mkt-booster strong{font:800 13px system-ui,sans-serif;color:#fff;overflow-wrap:anywhere}.vxsk-mkt-booster small{font:700 10px system-ui,sans-serif;color:#b8b0df;margin-top:4px}
+.vxsk-mkt-hint{color:#cfc8ec;font:500 13px/1.6 'Space Grotesk',system-ui,sans-serif}
+.vxsk-mkt-boost-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
+.vxsk-mkt-dialog{position:fixed;inset:0;margin:auto;border:1px solid #9a74e8;border-radius:20px;background:linear-gradient(145deg,#16122f,#0b0e24);color:#fff;width:min(95vw,560px);max-height:min(90vh,740px);padding:0;box-shadow:0 20px 80px #000a;overflow-y:auto}
+.vxsk-mkt-dialog::backdrop{background:rgba(2,3,14,.82);backdrop-filter:blur(3px)}
+.vxsk-mkt-dialog-header{padding:21px 22px 14px;position:relative;border-bottom:1px solid #6e5b963b}.vxsk-mkt-dialog-header h2{font:900 clamp(24px,4vw,32px)/1.1 'Barlow Condensed',Impact,sans-serif;margin:0 46px 8px 0}.vxsk-mkt-dialog-header p{margin:0;color:#d0cbe9;font-size:13px;line-height:1.5}
+.vxsk-mkt-close{position:absolute;right:18px;top:18px;border:1px solid #7a6ca7;background:#201b3d;color:#fff;border-radius:9px;width:34px;height:34px;cursor:pointer}
+.vxsk-mkt-dialog-body{padding:20px 22px 24px}.vxsk-mkt-order-form{display:flex;flex-direction:column;gap:16px}.vxsk-mkt-order-summary{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px;border:1px solid #5842a0;border-radius:12px;background:#211840}.vxsk-mkt-order-summary strong{font:900 32px 'Barlow Condensed',Impact,sans-serif;color:#fff}.vxsk-mkt-order-summary span{font-size:12px;color:#d0c1fa}
+.vxsk-mkt-dialog-label{font:850 13px/1.3 system-ui,sans-serif;margin:5px 0 0}
+.vxsk-mkt-method-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.vxsk-mkt-method{display:flex;align-items:center;gap:9px;padding:8px;border:1px solid #645486;border-radius:11px;background:#1b1937;cursor:pointer;min-width:0}.vxsk-mkt-method:has(input:checked){border-color:#c09bf9;background:#342354}.vxsk-mkt-method img{width:43px;height:37px;object-fit:contain;background:#fff;border-radius:6px;padding:4px;box-sizing:border-box}.vxsk-mkt-method strong{font:800 11px/1.3 system-ui,sans-serif;min-width:0;overflow-wrap:anywhere}
+.vxsk-mkt-status{min-height:18px;font:700 12px/1.5 system-ui,sans-serif;color:#ffd79f}.vxsk-mkt-status.is-good{color:#b9f5c8}
+.vxsk-boost-staff-list{display:grid;gap:10px;margin-top:12px}.vxsk-boost-staff-row{padding:15px;border:1px solid #5c518c;border-radius:12px;background:#18172c}.vxsk-boost-staff-row strong{display:block;font-size:15px}.vxsk-boost-staff-row p{font-size:13px;color:#dfdbef;overflow-wrap:anywhere}.vxsk-boost-staff-actions{display:flex;flex-wrap:wrap;gap:8px}.vxsk-boost-staff-actions button{border:1px solid #8165bc;background:#352350;color:#fff;border-radius:8px;padding:8px 13px;cursor:pointer}
+@media(max-width:900px){.vxsk-mkt-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:610px){.vxsk-mkt-cards{grid-template-columns:1fr}.vxsk-mkt-card{max-width:510px;margin-inline:auto;width:100%}.vxsk-mkt-visual{height:225px}.vxsk-mkt-boost-controls{gap:13px}.vxsk-mkt-boost-total strong{font-size:36px}}
+@media(max-width:390px){.vxsk-mkt-method-grid{grid-template-columns:1fr}.vxsk-mkt-dialog-body{padding:17px}.vxsk-mkt-card-footer{align-items:start}.vxsk-mkt-card .vxsk-mkt-action{width:100%}}
+@media(prefers-reduced-motion:reduce){.vxsk-mkt-visual img{transition:none}.vxsk-mkt-card:hover .vxsk-mkt-visual img{transform:none}}

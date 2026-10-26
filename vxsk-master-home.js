@@ -52,27 +52,9 @@
     $('find-rival')?.setAttribute('hidden','');
     for(const a of document.querySelectorAll('a[href="#find-rival"],button[data-staff-tab="opponents"]'))a.hidden=true;
     const oldOpp=$('my-opponents-title');if(oldOpp){const wrapper=oldOpp.closest('.account-option, .account-card, section');if(wrapper && wrapper!==$('account-profile'))wrapper.hidden=true;}
-    // Shop preview: transparent coming-soon status. No order acceptance, no payment form.
-    if(!$('vxsk-master-shop')){
-      const section=make('section','vxsk-master-shop');section.id='vxsk-master-shop';section.setAttribute('aria-label','VXSK shop preview');
-      const wrap=make('div','vxsk-master-shop-inner');
-      const lead=make('div','vxsk-master-shop-lead');lead.append(make('span','vxsk-master-kicker','VXSK / COMING SOON'), make('h2','','SHOP & MERCH'));
-      lead.append(make('p','','Preview only — orders and payment methods are not active. No money or account credentials are collected here.'));
-      const cards=make('div','vxsk-master-shop-cards');
-      function card(icon,title,info,status){const a=make('article','vxsk-master-shop-card');a.append(make('div','vxsk-master-shop-icon',icon),make('h3','',title),make('p','',info),make('strong','',status));return a;}
-      cards.append(card('👕','VXSK T-SHIRT','Official VXSK merch concept. Final size and delivery options to be confirmed.','60 TND · COMING SOON'));
-      cards.append(card('🎯','COMPETITIVE COACHING','Rocket League, VALORANT and League of Legends improvement sessions. No account sharing or rank-boosting service is active.','SERVICE NOT OPEN'));
-      cards.append(card('⚔','SHOWMATCH REMATCH REQUEST','Optional 1v1 rematch ticket idea, subject to event rules and payment verification.','5 TND PROPOSAL · NOT FOR SALE'));
-      const note=make('p','vxsk-master-shop-note','Planned options: D17 (La Poste Tunisienne), Ooredoo, Orange Tunisie and Tunisie Telecom (TT). COMING SOON - no payments can be made here. No payment provider is connected or endorsed.');
-      wrap.append(lead,cards,note);section.append(wrap);
-      const main=$('main')||document.querySelector('main');
-      if(main)main.append(section);
-    }
-    // Anchor link for the concept shop, without disrupting the site navigation ordering.
-    const links=$('nav-links');
-    if(links && !links.querySelector('a[href="#vxsk-master-shop"]')){
-      const a=make('a','vxsk-master-shop-link','SHOP');a.href='#vxsk-master-shop';links.append(a);
-    }
+    // The shop and marketplace are provided by vxsk-marketplace.js.
+    // Keeping this V12.9.4 file focused on homepage / DM UI avoids duplicate cards.
+
   };
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
