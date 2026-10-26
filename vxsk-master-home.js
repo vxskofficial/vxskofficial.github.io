@@ -7,9 +7,14 @@
     const accountDialog=$('account-dialog');
     function showDms(){
       // Use the existing auth-controlled account opener, not a second account/login handler.
-      if (!accountDialog?.open || $('account-profile')?.hidden) {
+      // The real authenticated profile panel is #auth-panel-profile.
+      // If signed out, open the existing authentication dialog and do not
+      // navigate to private community tabs before authentication succeeds.
+      const profilePanel=$('auth-panel-profile');
+      if (!accountDialog?.open || profilePanel?.hidden) {
         document.querySelector('.account-nav.open-account')?.click();
       }
+      if (!accountDialog?.open || !profilePanel || profilePanel.hidden) return;
       // My Account P2 puts the *original* live community nodes inside these tabs.
       const reveal = () => {
         const main=$('vxsk-ah-tab-community');
