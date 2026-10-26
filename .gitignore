@@ -1,0 +1,39 @@
+# VXSK Official — keep development material out of the public website repository
+# This file controls future untracked files; it does not delete files or untrack commits.
+
+# Supabase database scripts and release/setup notes
+*.sql
+VXSK-*.md
+HOW-TO-APPLY-*.txt
+README-V*.txt
+
+# Secrets and local credentials
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+*service-role*
+*service_role*
+
+# Backups, archives, local databases
+*.bak
+*.backup
+*.zip
+*.7z
+*.rar
+*.tar
+*.gz
+*.db
+*.sqlite
+*.sqlite3
+
+# Non-website development directories
+supabase/
+vxsk-ai-temp/
+node_modules/
+
+# OS temporary files
+.DS_Store
+Thumbs.db
