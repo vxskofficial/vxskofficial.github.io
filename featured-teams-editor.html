@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="color-scheme" content="dark">
+<title>VXSK — Featured Teams Draft Editor</title>
+<style>
+:root{font-family:system-ui,Segoe UI,Arial,sans-serif;color:#faf6ff;background:#0b0616}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 20% 1%,#4c1b7d65,transparent 50%),#0a0616;color:#faf5ff;min-height:100vh}a{color:#d5bbff}button,input,textarea,select{font:inherit}button{cursor:pointer;border-radius:10px;border:1px solid #865bbf;background:#271448;color:#fff;padding:11px 15px;font-weight:750}button:hover,button:focus-visible{border-color:#dbc1ff;background:#49257a}button.primary{background:#7b33d4;border-color:#a46afd}button.danger{background:#521b38;border-color:#ab4e74}.shell{max-width:1120px;margin:auto;padding:22px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;border-bottom:1px solid #65438e78}.eyebrow{font-size:11px;letter-spacing:.18em;color:#c49bff;font-weight:800}h1{font-size:clamp(34px,5vw,59px);line-height:1;margin:12px 0 18px;text-transform:uppercase}h1 span{color:#bb85ff}.note{border-left:3px solid #a66bff;background:#2f1a476d;padding:12px 18px;font-size:13px;line-height:1.65;color:#e6dbf5}.work{display:grid;grid-template-columns:270px minmax(0,1fr);gap:18px;margin-top:23px}.panel{background:#120d28ee;border:1px solid #734e9d;border-radius:18px;padding:20px;box-shadow:0 12px 35px #05020e6b}.panel h2{font-size:19px;margin:0 0 15px}.list{display:grid;gap:8px;margin:14px 0}.list button{display:block;width:100%;text-align:left;word-break:break-word;font-size:12px}.list button.active{border-color:#d2b5ff;background:#542987}.actions{display:flex;gap:9px;flex-wrap:wrap}.actions button{font-size:12px}label{font-size:12px;color:#d8c8f1;font-weight:760;display:grid;gap:7px}input:not([type="checkbox"]):not([type="file"]),textarea{width:100%;min-width:0;border-radius:9px;border:1px solid #6a518b;background:#0d0b22;padding:11px;color:#fff}input[type="file"]{font-size:11px;max-width:100%}textarea{min-height:98px;resize:vertical;line-height:1.5}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.fields .wide{grid-column:1/-1}.sub{color:#a998c1;font-size:11px;line-height:1.5;margin:0}.preview{padding:15px;display:flex;gap:12px;border:1px solid #7254a6;border-radius:14px;background:#0c0a21;align-items:center;margin:18px 0}.preview img{max-width:145px;width:34%;height:106px;object-fit:contain;background:#1d1237;border-radius:8px}.preview figcaption{flex:1;min-width:0}.preview strong{font-weight:900;font-size:21px;display:block;overflow-wrap:anywhere}.preview span{font-size:11px;color:#c7addb}.submit-row{margin-top:20px;display:flex;flex-wrap:wrap;gap:10px}.status{min-height:27px;color:#c9aef6;font-size:12px;line-height:1.55}.footer{border-top:1px solid #5b427b;margin-top:28px;padding-bottom:30px;color:#a8a0bf;font-size:12px;line-height:1.6}.hide{display:none!important}@media(max-width:760px){.work{grid-template-columns:1fr}.fields{grid-template-columns:1fr}.preview{align-items:start}}
+</style>
+</head>
+<body>
+<header class="top shell"><div><div class="eyebrow">VXSK / CONTENT WORKSPACE</div><h1>FEATURED <span>TEAMS.</span></h1></div><a href="index.html#vxsk-teams">← BACK TO WEBSITE</a></header>
+<main class="shell">
+<p class="note"><strong>Draft editor — not a live admin backend.</strong> You can add teams, upload their logos, edit descriptions/socials and download one ready-to-copy <code>featured-teams.json</code>. Your website changes only after someone with GitHub repository write access copies that file to the review branch and commits it. Anyone who visits this editor page can prepare a draft, but nobody can publish through this page. No passwords or private codes are stored here.</p>
+<div class="work">
+<aside class="panel"><h2>Teams</h2><div class="actions"><button class="primary" type="button" id="new-team">＋ ADD TEAM</button><button type="button" id="import-btn">IMPORT JSON</button></div><input id="import-file" class="hide" type="file" accept="application/json,.json" aria-label="Import featured-teams.json"><div class="list" id="team-list" aria-label="Teams"></div><p class="sub">Use Up / Down to set the display order. Untick “Featured” to hide a team from the public cards without deleting it.</p><div class="actions"><button id="move-up" type="button">↑ UP</button><button id="move-down" type="button">↓ DOWN</button><button id="remove-team" class="danger" type="button">REMOVE</button></div></aside>
+<section class="panel"><h2>Team details</h2>
+<form id="edit-form" autocomplete="off">
+<div class="fields">
+<label class="wide">Team name *<input id="name" type="text" maxlength="90" required placeholder="TEAM NAME"></label>
+<label>Small category label<input id="label" type="text" maxlength="100" placeholder="COMMUNITY TEAM · TUNISIA"></label>
+<label>Games / tags (comma separated)<input id="games" type="text" maxlength="260" placeholder="Rocket League, VALORANT"></label>
+<label class="wide">Description<textarea id="description" maxlength="650" placeholder="Tell the community about this team"></textarea></label>
+<label class="wide">Logo upload (PNG, JPG, WebP or animated GIF)<input id="logo-upload" type="file" accept="image/png,image/jpeg,image/webp,image/gif"><span class="sub">Image is embedded in the exported JSON. 1.5 MB max original; JPG/PNG/WebP are optimized automatically, GIF keeps its animation if within the size limit.</span></label>
+<label class="wide">Or logo path (for existing images)<input id="image-path" type="text" maxlength="300" placeholder="assets/team-logo.webp"><span class="sub">Use image upload above for a new logo. Existing assets can keep their path.</span></label>
+<label>Website (HTTPS)<input id="website" type="url" placeholder="https://..."></label>
+<label>Discord (HTTPS)<input id="discord" type="url" placeholder="https://discord.gg/..."></label>
+<label>TikTok (HTTPS)<input id="tiktok" type="url" placeholder="https://www.tiktok.com/@..."></label>
+<label>Instagram (HTTPS)<input id="instagram" type="url" placeholder="https://www.instagram.com/..."></label>
+<label>Linktree / other (HTTPS)<input id="other" type="url" placeholder="https://..."></label>
+<label>Contact email<input id="email" type="email" placeholder="team@example.com"></label>
+<label class="wide" style="display:flex;align-items:center;gap:10px;flex-direction:row"><input id="featured" type="checkbox" checked> Featured team (visible on website)</label>
+</div>
+<figure class="preview" id="preview"><img id="preview-image" alt="Draft logo preview"><figcaption><span>PREVIEW</span><strong id="preview-name">TEAM NAME</strong><span id="preview-label">COMMUNITY TEAM</span></figcaption></figure>
+<div class="submit-row"><button class="primary" type="submit">SAVE DRAFT CHANGES</button><button id="export" type="button">↓ EXPORT featured-teams.json</button></div>
+<p id="status" class="status" role="status" aria-live="polite"></p>
+</form>
+</section>
+</div>
+<div class="footer"><strong>Publishing:</strong> Download the JSON → copy it into your VXSK website folder, replacing only <code>featured-teams.json</code> → preview → commit on <code>vxsk-v12.9.4-review</code> → push review. Keep <code>main</code> untouched until approved. Changes in this form alone do not update the public website.</div>
+</main>
+<script>
+'use strict';
+(() => {
+  const $=id=>document.getElementById(id);
+  const original={version:1,teams:[]};
+  let teams=[],active=-1;
+  const fields=['name','label','games','description','image-path','website','discord','tiktok','instagram','other','email','featured'];
+  const cleanText=(v,max=650)=>String(v||'').trim().slice(0,max);
+  const safeImage=s=>typeof s==='string'&&((/^assets\/[a-z0-9_./-]+\.(png|jpe?g|webp|gif)$/i.test(s)&&!s.includes('..'))||(/^data:image\/(png|jpeg|webp|gif);base64,[a-z0-9+/=]+$/i.test(s)&&s.length<2600000))?s:'';
+  const isHttps=v=>typeof v==='string'&&v.startsWith('https://')&&v.length<500;
+  function linksToInputs(t){
+    const x={website:'',discord:'',tiktok:'',instagram:'',other:'',email:''};
+    for(const l of t?.links||[]){if(l.label==='EMAIL' && l.url?.startsWith('mailto:'))x.email=l.url.slice(7);else{
+      const key=l.label==='LINKTREE'?'other':(l.label||'').toLowerCase();if(key in x)x[key]=l.url;
+    }}return x;
+  }
+  function showStatus(msg){$('status').textContent=msg;}
+  function refreshList(){
+    const list=$('team-list');list.replaceChildren();teams.forEach((t,i)=>{const b=document.createElement('button');b.type='button';b.className=i===active?'active':'';b.textContent=(i+1)+'. '+(t.name||'NEW TEAM')+(t.featured===false?' (hidden)':'');b.addEventListener('click',()=>select(i));list.append(b);});
+  }
+  function select(i){
+    active=i;const t=teams[i]||{};const l=linksToInputs(t);
+    $('name').value=t.name||'';$('label').value=t.label||'';$('description').value=t.description||'';$('games').value=(t.games||[]).join(', ');$('image-path').value=t.image?.startsWith('data:')?'':(t.image||'');
+    for(const k of Object.keys(l))$(k).value=l[k];$('featured').checked=t.featured!==false;
+    $('logo-upload').value=''; refreshList();refreshPreview();showStatus(i<0?'Add a team to start editing.':'Editing a local draft. Select SAVE to keep changes.');
+  }
+  function refreshPreview(){const t=teams[active]||{};const image=$('preview-image');const src=safeImage(t.image)||'assets/vxsk-logo.png';image.src=src;image.onerror=()=>{image.removeAttribute('src');image.alt='Logo not found';};$('preview-name').textContent=$('name').value||t.name||'NEW TEAM';$('preview-label').textContent=$('label').value||t.label||'COMMUNITY TEAM';}
+  function collect(){
+    if(active<0)return false;
+    const name=cleanText($('name').value,90);
+    if(!name){showStatus('Enter a team name first.');return false;}
+    const t=teams[active];t.name=name;t.label=cleanText($('label').value,100);t.description=cleanText($('description').value,650);t.games=$('games').value.split(',').map(x=>cleanText(x,40)).filter(Boolean).slice(0,8);t.featured=$('featured').checked;
+    const path=$('image-path').value.trim();if(path){if(!safeImage(path)){showStatus('Image path must be a local assets/... PNG, JPG, WebP or GIF file.');return false;}t.image=path;}
+    const links=[];
+    for(const key of ['website','discord','tiktok','instagram','other']){
+      const url=$(key).value.trim();if(!url)continue;if(!isHttps(url)){showStatus('All social URLs must start with https://');return false;}
+      links.push({label:key==='other'?'LINKTREE':key.toUpperCase(),url});
+    }
+    const email=$('email').value.trim();if(email){if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showStatus('Enter a valid contact email.');return false;}links.push({label:'EMAIL',url:'mailto:'+email});}
+    t.links=links;refreshList();refreshPreview();showStatus('Draft saved in this editor. Export JSON to keep and publish changes.');return true;
+  }
+  $('edit-form').addEventListener('submit',e=>{e.preventDefault();collect();});
+  $('new-team').addEventListener('click',()=>{if(active>=0 && !collect())return;teams.push({id:'team-'+Date.now().toString(36),name:'',label:'COMMUNITY TEAM',description:'',image:'',games:[],links:[],featured:true});select(teams.length-1);$('name').focus();});
+  $('remove-team').addEventListener('click',()=>{if(active<0)return;if(!confirm('Remove this team from the exported JSON?'))return;teams.splice(active,1);select(teams.length?Math.min(active,teams.length-1):-1);});
+  for(const [id,dir] of [['move-up',-1],['move-down',1]])$(id).addEventListener('click',()=>{if(active<0||active+dir<0||active+dir>=teams.length)return;if(!collect())return;[teams[active],teams[active+dir]]=[teams[active+dir],teams[active]];select(active+dir);});
+  $('logo-upload').addEventListener('change',async e=>{
+    const f=e.target.files?.[0];if(!f||active<0)return;
+    if(!['image/png','image/jpeg','image/webp','image/gif'].includes(f.type)||f.size>1_500_000){showStatus('Choose a PNG/JPG/WebP/GIF no larger than 1.5 MB.');return;}
+    const reader=new FileReader();reader.onload=()=>{
+      const raw=String(reader.result||'');
+      const accept=data=>{if(!safeImage(data)){showStatus('Image exceeds the maximum exported size. Choose a smaller file.');return;}teams[active].image=data;$('image-path').value='';refreshPreview();showStatus('Image added to your draft. Export JSON to save it.');};
+      if(f.type==='image/gif'){accept(raw);return;}
+      const img=new Image();img.onload=()=>{const scale=Math.min(1,1000/Math.max(img.naturalWidth,img.naturalHeight));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);accept(canvas.toDataURL('image/webp',.82));};img.onerror=()=>showStatus('Could not process this image.');img.src=raw;
+    };reader.onerror=()=>showStatus('Unable to read image.');reader.readAsDataURL(f);
+  });
+  $('import-btn').addEventListener('click',()=>$('import-file').click());
+  $('import-file').addEventListener('change',async e=>{
+    const f=e.target.files?.[0];if(!f)return;if(f.size>8_000_000){showStatus('JSON too large.');return;}
+    try{const json=JSON.parse(await f.text());if(!Array.isArray(json.teams)||json.teams.length>30)throw Error('Invalid teams list');teams=json.teams.filter(x=>x&&typeof x==='object').map((t,i)=>({id:cleanText(t.id,65)||'team-'+i,name:cleanText(t.name,90),label:cleanText(t.label,100),description:cleanText(t.description,650),image:safeImage(t.image),games:Array.isArray(t.games)?t.games.slice(0,8).map(x=>cleanText(x,40)):[],links:Array.isArray(t.links)?t.links.slice(0,8).filter(l=>l&&typeof l.label==='string'&&(isHttps(l.url)||String(l.url).startsWith('mailto:'))).map(l=>({label:cleanText(l.label,25),url:cleanText(l.url,500)})):[],featured:t.featured!==false}));select(teams.length?0:-1);showStatus('Imported '+teams.length+' teams.');}
+    catch(err){showStatus('Could not import JSON. Use a valid featured-teams.json.');}
+    e.target.value='';
+  });
+  $('export').addEventListener('click',()=>{
+    if(active>=0&&!collect())return;
+    if(!teams.length){showStatus('Add at least one team before exporting.');return;}
+    if(teams.some(t=>!t.name)){showStatus('One or more teams are missing their name.');return;}
+    const json=JSON.stringify({version:1,teams},null,2)+'\n';const blob=new Blob([json],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='featured-teams.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);showStatus('Download created. Copy the JSON into your review-branch website folder, then test and commit. No website was changed automatically.');
+  });
+  // Server-hosted page can read current public JSON; file:// users can import through the button.
+  fetch('featured-teams.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('no data');return r.json();}).then(data=>{if(!Array.isArray(data.teams)||data.teams.length>30)throw Error('invalid data');teams=data.teams;select(teams.length?0:-1);showStatus('Loaded '+teams.length+' teams from featured-teams.json');}).catch(()=>{teams=original.teams;select(-1);showStatus('No JSON loaded here. Click IMPORT JSON to continue, or ADD TEAM for a new draft.');});
+  $('name').addEventListener('input',refreshPreview);$('label').addEventListener('input',refreshPreview);
+})();
+</script>
+</body></html>

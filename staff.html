@@ -14,6 +14,8 @@
   <script defer src="vxsk-master-staff.js?v=12.9.4-candidate"></script>
 <link rel="stylesheet" href="vxsk-marketplace.css?v=12.9.4-boost-review1">
 <script defer src="vxsk-boost-review.js?v=12.9.4-boost-review1"></script>
+<link rel="stylesheet" href="vxsk-owner-cleanup.css?v=12.9.4-p3"/>
+<script defer src="vxsk-owner-cleanup.js?v=12.9.4-p3"></script>
 </head>
 <body>
 <a class="skip-link" href="#workspace">Skip to workspace</a>
@@ -28,6 +30,7 @@
 <button aria-pressed="false" data-staff-tab="tournaments" type="button">🏆 MANAGE TOURNAMENTS</button>
 <button aria-pressed="false" data-staff-tab="boosters" type="button">🎮 BOOSTERS</button>
 <button aria-pressed="false" data-staff-tab="team" id="staff-owner-team-tab" type="button" hidden>👑 TEAM &amp; ROLES</button>
+<button aria-pressed="false" data-staff-tab="cleanup" id="vxsk-owner-cleanup-tab" type="button" hidden>🗑 OWNER CLEANUP</button>
 </nav><p class="staff-command-explainer">Everything the VXSK staff manage lives here. The Arena Hub is for players and viewers.</p>
 <section data-staff-view="applications" id="staff-view-applications"><section aria-label="Application statistics" class="stats"><div class="stat"><span>PENDING</span><strong id="count-pending">—</strong></div><div class="stat"><span>APPROVED</span><strong id="count-approved">—</strong></div><div class="stat"><span>REJECTED</span><strong id="count-rejected">—</strong></div><div class="stat"><span>ALL VISIBLE</span><strong id="count-total">—</strong></div></section><div id="regular-inbox"><div class="toolbar"><div><label for="filter-status">STATUS</label><select id="filter-status"><option value="all">All applications</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></div><div><label for="filter-search">SEARCH PLAYERS</label><input id="filter-search" maxlength="80" placeholder="Username / game / mode" type="search"/></div><button id="refresh" type="button">↻ REFRESH</button></div>
 <p aria-live="polite" class="notice" id="notice" role="status"></p>
@@ -133,6 +136,16 @@
 <div class="command-section-title"><div><span class="eyebrow">VXSK / APPLICATION REVIEW</span><h2 id="staff-boost-heading">BOOSTER <em>APPLICATIONS.</em></h2><p>Approve VXSK play-together boosters. Only Owner / Reviewer accounts verified with 2FA can review applicants; the database enforces these permissions.</p></div></div>
 <div class="staff-arena-card"><button type="button" id="vxsk-boost-refresh">↻ REFRESH APPLICATIONS</button><p class="notice" id="vxsk-boost-staff-status" role="status" aria-live="polite">Open this tab to review applications.</p><div id="vxsk-boost-staff-list" class="vxsk-boost-staff-list"></div></div>
 <div class="staff-arena-card"><h3>OWNER-ONLY SERVICE REQUESTS</h3><p class="small-muted">Bookings are requests, not proof of payment. Only the Owner with 2FA may see this list. No private payment codes are collected here.</p><button type="button" id="vxsk-boost-orders-refresh">↻ REFRESH REQUESTS</button><p class="notice" id="vxsk-boost-owner-status" role="status" aria-live="polite"></p><div id="vxsk-boost-owner-list"></div></div>
+</section>
+<section data-staff-view="cleanup" id="staff-view-cleanup" hidden aria-labelledby="vxsk-cleanup-heading">
+ <div class="command-section-title"><div><span class="eyebrow">OWNER ONLY / SUPABASE + MFA</span><h2 id="vxsk-cleanup-heading">GAME HUB <em>DELETE CENTER.</em></h2><p>Review Game Hub events, fixtures, referee reports and other staff records before removing them. Existing Applications, No Opponent and Public Posts tabs already have their own Delete controls.</p></div></div>
+ <div class="vxsk-cleanup-panel">
+   <p class="vxsk-cleanup-warning">SECURITY FIRST: deletion is not enabled until an audited Owner-only Supabase RPC exists. The frontend cannot override permissions. Do not attempt production database changes without a verified backup.</p>
+   <div class="vxsk-cleanup-toolbar"><label for="vxsk-cleanup-type">SECTION <select id="vxsk-cleanup-type"><option value="events">Tournament events</option><option value="fixtures">Tournament fixtures</option><option value="reports">Referee reports</option><option value="challenges">Showmatch challenges</option><option value="boosters">Booster applications (backend pending)</option><option value="orders">Marketplace requests (backend pending)</option><option value="feedback">Server feedback (backend pending)</option></select></label><button type="button" id="vxsk-cleanup-refresh">↻ VIEW RECORDS</button></div>
+   <p id="vxsk-cleanup-status" class="notice" aria-live="polite" role="status">Sign in as Owner with MFA, then choose a section.</p>
+   <div id="vxsk-cleanup-items" class="vxsk-cleanup-list" aria-live="polite"></div>
+   <p class="small-muted">Owner actions are protected by a future server-side authorization check and an explicit two-step confirmation. Until then, Delete buttons are disabled. Existing deletion workflows remain unchanged.</p>
+ </div>
 </section>
 <p class="footer-note">Private staff workspace. Do not copy player contacts into public chats. Netlify Forms submissions need a separate verified sync before they appear here.</p>
 </div>

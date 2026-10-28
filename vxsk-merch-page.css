@@ -1,0 +1,19 @@
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 65% 0%,#24124c 0,#0c0d27 36%,#070919 70%);color:#fff;font-family:'Space Grotesk',system-ui,sans-serif;overflow-x:hidden}a{color:inherit;text-decoration:none}button,select,textarea{font:inherit}button{cursor:pointer}.vxsk-skip-merch{position:absolute;left:-9999px}.vxsk-skip-merch:focus{left:10px;top:8px;z-index:1000;background:#fff;color:#111;padding:8px}
+.vxsk-merch-header{min-height:80px;padding:16px clamp(16px,3.8vw,64px);display:flex;align-items:center;gap:25px;position:sticky;top:0;z-index:60;background:rgba(8,8,25,.94);backdrop-filter:blur(17px);border-bottom:1px solid #6b4ea680}
+.vxsk-merch-logo{flex-shrink:0}.vxsk-merch-logo img{width:139px;height:auto;display:block;filter:drop-shadow(0 0 12px #9151e957)}
+.vxsk-merch-header nav{display:flex;gap:clamp(7px,1.6vw,25px);align-items:center;flex:1;justify-content:center;flex-wrap:wrap}
+.vxsk-merch-header nav a,.vxsk-merch-signin{display:inline-flex;gap:7px;padding:8px 10px;font:800 12px 'Space Grotesk',system-ui,sans-serif;letter-spacing:.045em;border-radius:9px;color:#d9d2fc;white-space:nowrap;transition:color .2s,background .2s}
+.vxsk-merch-header nav a:hover,.vxsk-merch-header nav a:focus-visible,.vxsk-merch-signin:hover{color:#fff;background:#4831858a;box-shadow:0 0 16px #8d54ff55}
+.vxsk-merch-signin{border:1px solid #7b5ed0}
+.vxsk-merch-intro{max-width:1180px;margin:0 auto;padding:clamp(42px,5vw,65px) 24px 10px;text-align:center}
+.vxsk-merch-kicker{color:#cba6ff;font:850 11px system-ui,sans-serif;letter-spacing:.18em}
+.vxsk-merch-intro h1{font:900 clamp(40px,6.4vw,82px)/.97 'Barlow Condensed',Impact,sans-serif;letter-spacing:.015em;margin:12px 0 18px}
+.vxsk-merch-intro h1 span{background:linear-gradient(100deg,#be80ff,#68b5ff);color:transparent;background-clip:text}
+.vxsk-merch-intro p{max-width:730px;margin:0 auto;color:#cfc7e8;font-size:14px;line-height:1.75}
+.vxsk-merch-pills{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:21px}
+.vxsk-merch-pills span{font:800 10px system-ui,sans-serif;letter-spacing:.11em;padding:9px 13px;border:1px solid #7054c0;border-radius:99px;color:#ded5ff;background:#1c1734}
+.vxsk-merch-footer{max-width:1240px;margin:0 auto;padding:35px 24px 50px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;border-top:1px solid #50426d;color:#aaa4c5;font-size:12px}
+.vxsk-merch-footer a{text-decoration:underline;text-underline-offset:3px}
+@media(max-width:850px){.vxsk-merch-header{gap:12px;flex-wrap:wrap}.vxsk-merch-header nav{order:3;width:100%;justify-content:flex-start}.vxsk-merch-signin{margin-left:auto}}
+@media(max-width:390px){.vxsk-merch-header{padding:12px}.vxsk-merch-header nav a{font-size:10px;padding:7px 5px}.vxsk-merch-intro{padding:38px 17px 5px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto} .vxsk-merch-header nav a{transition:none}}

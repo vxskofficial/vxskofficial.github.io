@@ -34,9 +34,38 @@
       for(const row of rows){const card=el('div',undefined,'vxsk-boost-staff-row');card.append(el('strong',`${row.service.toUpperCase()} — ${row.total_tnd} DT`),el('p',`Player: ${row.nickname||'VXSK player'} · Game: ${GAME[row.game]||'—'} · Qty: ${row.quantity} · Method: ${row.payment_method}`),el('p',`Status: ${row.status} · Notes: ${row.note||'None'}`));list.append(card);}
     }catch(error){msg(status,'Owner-only requests unavailable: '+err(error));}
   }
+
+  // Read-only Staff Command feedback board. Authorization enforced by Supabase RPC, not by this tab.
+  function makeFeedbackBoard(){
+    const parent=document.getElementById('staff-view-boosters');if(!parent||document.getElementById('vxsk-staff-feedback-board'))return;
+    const board=el('section',undefined,'staff-arena-card vxsk-staff-feedback-board');board.id='vxsk-staff-feedback-board';
+    const title=el('h3','SERVER FEEDBACK / PRIVATE STAFF INBOX');
+    const info=el('p','Feedback is private to authorized VXSK owner/reviewers once the secure backend is installed. Email forwarding to the owner requires a separate verified server-side integration.','small-muted');
+    const refreshBtn=el('button','↻ REFRESH FEEDBACK');refreshBtn.type='button';refreshBtn.id='vxsk-feedback-refresh';refreshBtn.addEventListener('click',refreshFeedback);
+    const status=el('p','Private inbox not yet checked.','notice');status.id='vxsk-feedback-status';status.setAttribute('role','status');
+    const list=el('div',undefined,'vxsk-staff-feedback-list');list.id='vxsk-feedback-list';
+    board.append(title,info,refreshBtn,status,list);parent.append(board);
+  }
+  async function refreshFeedback(){
+    const status=$('vxsk-feedback-status'),list=$('vxsk-feedback-list');if(!list)return;
+    list.replaceChildren();msg(status,'Checking private staff feedback inbox…');
+    try{
+      const payload=await rpc('vxsk_server_feedback_staff_list');const records=Array.isArray(payload)?payload:[];
+      msg(status,`${records.length} feedback item(s) visible to your verified role.`);
+      if(!records.length){list.append(el('p','No feedback yet.'));return;}
+      for(const entry of records.slice(0,100)){
+        const card=el('article',undefined,'vxsk-staff-feedback-entry');
+        const category=String(entry.category||'feedback').slice(0,30).toUpperCase();
+        const nickname=String(entry.nickname||'Registered player').slice(0,60);
+        card.append(el('strong',`${category} · ${nickname}`),el('p',String(entry.message||'').slice(0,800)));
+        list.append(card);
+      }
+    }catch(error){msg(status,'Verified backend required: '+err(error));}
+  }
   const start=()=>{
+    makeFeedbackBoard();
     $('vxsk-boost-refresh')?.addEventListener('click',refresh);$('vxsk-boost-orders-refresh')?.addEventListener('click',orders);
-    document.querySelector('[data-staff-tab="boosters"]')?.addEventListener('click',()=>refresh());
+    document.querySelector('[data-staff-tab="boosters"]')?.addEventListener('click',()=>{refresh();refreshFeedback();});
     window.addEventListener('vxsk:staff-ready',e=>{
       const role=e.detail?.role;
       const allowed=['owner','reviewer'].includes(role);

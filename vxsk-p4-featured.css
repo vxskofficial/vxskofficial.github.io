@@ -1,0 +1,47 @@
+/* VXSK V12.9.4 P4 — scoped Staff/Featured Teams. Loads after Purple Breath. */
+:root{--p4-lilac:#d9bdff;--p4-violet:#a16aff}
+#vxsk-teams{scroll-margin-top:105px}
+.vxsk-featured-toolbar{display:flex;align-items:center;justify-content:flex-end;min-height:10px;margin:10px 0 0}
+#vxsk-featured-manage{display:inline-flex;align-items:center;gap:9px;padding:11px 17px;border:1px solid #a36fe5;border-radius:11px;color:#fff;text-decoration:none;background:linear-gradient(130deg,#6026a9,#291658);box-shadow:0 6px 20px #36126e4f;font:800 11px 'Space Grotesk',system-ui,sans-serif;letter-spacing:.045em;transition:transform .2s,box-shadow .2s}
+#vxsk-featured-manage:hover{transform:translateY(-2px);box-shadow:0 8px 27px #7831d17a}
+#vxsk-featured-manage[hidden]{display:none!important}
+/* Large full-width image zones; preserve the source logo's whole shape. */
+#vxsk-teams .vxsk-partner-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(15px,1.7vw,25px);margin-top:22px}
+#vxsk-teams .vxsk-partner-card{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:16px;min-width:0;min-height:475px;padding:clamp(20px,1.8vw,28px);overflow:hidden;border-radius:21px;border:1px solid #8a59d28c;background:radial-gradient(ellipse at 52% 0,#2b174d89,transparent 62%),linear-gradient(145deg,#19102f,#0d0a23 84%);box-shadow:0 18px 48px #08041687;transition:transform .32s,border-color .32s,box-shadow .32s}
+#vxsk-teams .vxsk-partner-card:hover{transform:translateY(-5px);border-color:#b58bff;box-shadow:0 18px 50px #130729aa,0 0 28px #8e48df30}
+#vxsk-teams .vxsk-partner-visual{position:relative;display:flex;align-items:center;justify-content:center;flex:0 0 auto;width:100%;height:clamp(215px,18vw,270px);border-radius:15px;overflow:hidden;padding:20px;background:radial-gradient(ellipse at 50% 45%,#42216f80,#100c22 69%);box-shadow:inset 0 0 0 1px #a279e01d}
+#vxsk-teams .vxsk-partner-visual img{position:relative;z-index:1;display:block;width:100%;height:100%;max-width:100%;max-height:100%;padding:0;object-fit:contain!important;object-position:50% 50%!important;transform:none!important;filter:drop-shadow(0 7px 16px #090516aa)}
+#vxsk-teams .vxsk-partner-vortex .vxsk-partner-visual img{object-fit:contain!important;object-position:center center!important}
+#vxsk-teams .vxsk-partner-drax .vxsk-partner-visual{background:radial-gradient(ellipse at center,#4a20399a,#15091f 72%)}
+#vxsk-teams .vxsk-partner-drax .vxsk-partner-visual img{width:100%!important;height:100%!important;max-width:100%!important;filter:drop-shadow(0 2px 17px #8f375e66)}
+#vxsk-teams .vxsk-partner-n2xt .vxsk-partner-visual img{max-width:85%;max-height:92%;width:85%}
+#vxsk-teams .vxsk-partner-copy{flex:1;display:flex;flex-direction:column;min-width:0}
+#vxsk-teams .vxsk-partner-copy h3{font-size:clamp(29px,3.1vw,39px);margin:7px 0 10px}
+#vxsk-teams .vxsk-partner-copy p{font-size:clamp(12px,1vw,13px);line-height:1.7;color:#dbd2f0;flex:1}
+#vxsk-teams .vxsk-team-chips{margin:14px 0 4px}
+#vxsk-teams .vxsk-team-links{margin-top:auto;padding-top:17px}
+#vxsk-teams .vxsk-team-links a:focus-visible{outline:2px solid #d1a9ff;outline-offset:3px}
+.vxsk-image-fallback{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:18px;color:#cfaaff;font:900 clamp(29px,3vw,46px)/1 'Barlow Condensed',Impact,sans-serif;letter-spacing:.06em;text-shadow:0 0 17px #692dba;opacity:0;user-select:none}
+.vxsk-partner-visual.vxsk-p4-image-error .vxsk-image-fallback{opacity:1}
+.vxsk-partner-visual.vxsk-p4-image-error img{display:none!important}
+/* Staff preview: 7 official public roster profiles instead of two stock backgrounds. */
+.header #nav-hover-panel:has(.vxsk-p4-staff-preview){max-height:min(70vh,500px);overflow-y:auto;overscroll-behavior:contain}
+.header .vxsk-p4-staff-preview{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.header .vxsk-p4-staff-preview .nav-preview-card{height:178px;min-height:178px;max-height:178px;border-radius:12px;background:#140e28}
+.header .vxsk-p4-staff-preview .nav-preview-card img{object-fit:cover;object-position:50% 18%;opacity:.70;filter:saturate(.88)}
+.header .vxsk-p4-staff-preview .nav-preview-card:after{background:linear-gradient(0deg,#070517e8,#07051726 82%)}
+.header .vxsk-p4-staff-preview .nav-preview-copy{padding:13px;gap:4px;max-width:100%}
+.header .vxsk-p4-staff-preview .nav-preview-copy small{font-size:8px;letter-spacing:.12em}
+.header .vxsk-p4-staff-preview .nav-preview-copy strong{font-size:clamp(20px,2vw,27px)}
+.header .vxsk-p4-staff-preview .nav-preview-copy>span{font-size:10px;line-height:1.35;color:#e1d7ed}
+.header .vxsk-p4-featured-preview{grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.header .vxsk-p4-featured-preview .nav-preview-card{min-height:190px;border-radius:13px}
+.header .vxsk-p4-featured-preview .nav-preview-card img{object-fit:contain!important;object-position:center 12%!important;max-height:118px;height:64%;top:0;opacity:.95;padding:9px 15px 0;filter:drop-shadow(0 0 9px #aa62ce48)}
+.header .vxsk-p4-featured-preview .nav-preview-card:after{background:linear-gradient(0deg,#0a071c 0%,#0a071ce3 27%,transparent 84%)}
+.header .vxsk-p4-featured-preview .nav-preview-copy{justify-content:flex-end;gap:4px;padding:12px}
+.header .vxsk-p4-featured-preview .nav-preview-copy strong{font-size:25px}
+.header .vxsk-p4-featured-preview .nav-preview-copy>span{font-size:10px}
+.header #nav-links a[href="#sponsor"] span{font-size:clamp(9px,.76vw,12px)}
+@media(max-width:1100px){#vxsk-teams .vxsk-partner-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){#vxsk-teams .vxsk-partner-grid{grid-template-columns:1fr}#vxsk-teams .vxsk-partner-card{min-height:0;padding:19px}#vxsk-teams .vxsk-partner-visual{height:240px}#vxsk-teams .vxsk-partner-copy p{font-size:13px}#vxsk-featured-manage{width:100%;justify-content:center}}
+@media(prefers-reduced-motion:reduce){#vxsk-teams .vxsk-partner-card,#vxsk-featured-manage{transition:none!important}#vxsk-teams .vxsk-partner-card:hover,#vxsk-featured-manage:hover{transform:none!important}}

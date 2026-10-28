@@ -57,3 +57,75 @@
 @media(max-width:610px){.vxsk-mkt-cards{grid-template-columns:1fr}.vxsk-mkt-card{max-width:510px;margin-inline:auto;width:100%}.vxsk-mkt-visual{height:225px}.vxsk-mkt-boost-controls{gap:13px}.vxsk-mkt-boost-total strong{font-size:36px}}
 @media(max-width:390px){.vxsk-mkt-method-grid{grid-template-columns:1fr}.vxsk-mkt-dialog-body{padding:17px}.vxsk-mkt-card-footer{align-items:start}.vxsk-mkt-card .vxsk-mkt-action{width:100%}}
 @media(prefers-reduced-motion:reduce){.vxsk-mkt-visual img{transition:none}.vxsk-mkt-card:hover .vxsk-mkt-visual img{transform:none}}
+
+/* V12.9.4 next review — native VXSK extension, not competitor-page styling. */
+.vxsk-marketplace :is(button,select,textarea):focus-visible{outline:2px solid #d5b9ff;outline-offset:3px}
+.vxsk-coach-directory{margin:20px 0 32px;padding:clamp(20px,3vw,32px);border:1px solid rgba(164,131,255,.45);border-radius:19px;background:linear-gradient(135deg,#14112f,#0e1430)}
+.vxsk-coach-filters{display:flex;flex-wrap:wrap;gap:12px;align-items:end;margin:20px 0}
+.vxsk-coach-filters .vxsk-mkt-field-label{min-width:min(260px,100%)}
+.vxsk-coach-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,245px),1fr));gap:14px}
+.vxsk-coach-grid>p{grid-column:1/-1}
+.vxsk-coach-card{border:1px solid rgba(154,118,246,.52);border-radius:16px;background:linear-gradient(154deg,#1c1a41,#11122f);padding:18px;display:flex;flex-direction:column;gap:13px;min-width:0}
+.vxsk-coach-top{display:flex;align-items:center;gap:13px;min-width:0}
+.vxsk-coach-top>div{min-width:0}.vxsk-coach-top h3{font:900 24px/1.1 'Barlow Condensed',Impact,sans-serif;margin:0 0 6px;color:#fff;overflow-wrap:anywhere}
+.vxsk-coach-photo,.vxsk-coach-monogram{width:70px;height:70px;flex:0 0 70px;border:2px solid #815fff;border-radius:15px;object-fit:cover;background:#221950;display:grid;place-items:center;color:#fff;font:900 25px 'Barlow Condensed',Impact,sans-serif}
+.vxsk-coach-specialty{display:inline-flex;align-items:center;gap:6px;color:#c9bcfc;font:800 11px/1.4 'Space Grotesk',system-ui,sans-serif}
+.vxsk-coach-specialty img{width:22px;height:22px;object-fit:contain}
+.vxsk-coach-bio{color:#d8d2ee;font:500 13px/1.6 'Space Grotesk',system-ui,sans-serif;margin:0;flex:1}
+.vxsk-coach-rating{color:#e6c6ff;font:800 12px/1.4 'Space Grotesk',system-ui,sans-serif;margin:0}
+.vxsk-coach-foot{display:flex;flex-wrap:wrap;gap:9px;align-items:center;border-top:1px solid rgba(180,150,255,.2);padding-top:14px}
+.vxsk-coach-price{font:900 28px/1.1 'Barlow Condensed',Impact,system-ui,sans-serif;color:#fff;flex-basis:100%}
+.vxsk-coach-foot button{flex:1 1 110px}
+.vxsk-coach-detail{display:flex;gap:16px;align-items:center;margin-bottom:20px;min-width:0}
+.vxsk-coach-detail>div{min-width:0}.vxsk-coach-detail h3{font:900 28px 'Barlow Condensed',Impact,sans-serif;margin:0}
+.vxsk-coach-detail p{font:650 13px/1.5 'Space Grotesk',system-ui,sans-serif;color:#ccc1f4}
+.vxsk-coach-fullbio{white-space:pre-wrap;overflow-wrap:anywhere;color:#ebe8f5;line-height:1.65}
+.vxsk-review-list{display:grid;gap:12px}.vxsk-review-entry{padding:14px;border:1px solid #59468d;border-radius:11px;background:#171735}.vxsk-review-entry strong{font-size:13px;color:#f5d2ff}.vxsk-review-entry p{font-size:13px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.vxsk-rank-panel{border:1px solid rgba(158,122,253,.38);border-radius:16px;padding:clamp(14px,2vw,22px);background:#0a1027b8;margin:12px 0 24px}
+.vxsk-rank-panel h3{font:900 26px/1.1 'Barlow Condensed',Impact,sans-serif;margin:0 0 8px;color:#fff}
+.vxsk-rank-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin-top:15px}
+.vxsk-rank-group{min-width:0;border:1px solid #524078;border-radius:13px;padding:15px;background:#15112e}
+.vxsk-rank-group legend{padding:0 7px;font:900 12px/1.3 'Space Grotesk',system-ui,sans-serif;color:#e3d9ff;letter-spacing:.05em}
+.vxsk-rank-options{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:7px}
+.vxsk-rank-choice{min-width:0;padding:8px 4px;min-height:91px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:1px solid #403760;border-radius:10px;background:#12152f;color:#e5def9;font:700 10px/1.24 'Space Grotesk',system-ui,sans-serif;cursor:pointer;overflow-wrap:anywhere}
+.vxsk-rank-choice[aria-pressed="true"]{background:#34235d;border-color:#b58aff;box-shadow:inset 0 0 0 1px #bb96ff,0 0 14px #683cc344;color:#fff}
+.vxsk-rank-choice img{display:block;width:44px;height:44px;object-fit:contain}
+.vxsk-rank-division{display:flex;align-items:center;gap:10px;margin-top:14px;color:#d8ccf4;font:850 11px 'Space Grotesk',system-ui,sans-serif}
+.vxsk-rank-division select{width:115px}.vxsk-rank-division select:disabled{opacity:.5}
+.vxsk-rank-summary{font:800 12px/1.6 'Space Grotesk',system-ui,sans-serif;color:#cebaff;background:#221c45;padding:10px 13px;border-radius:10px;overflow-wrap:anywhere;margin:16px 0 0}
+.vxsk-mkt-booster-extra{display:flex;flex-direction:column;gap:6px;margin-left:auto;min-width:0}
+.vxsk-mkt-reviews-open{color:#e7d9ff;background:transparent;border:1px solid #7155b3;border-radius:8px;font:800 10px 'Space Grotesk',system-ui,sans-serif;padding:7px;cursor:pointer}
+.vxsk-mkt-booster-extra small{color:#ece7ff;white-space:nowrap}
+.vxsk-server-feedback{margin:30px 0 0;padding:clamp(20px,3vw,32px);border:1px solid #554b90;border-radius:20px;background:linear-gradient(135deg,#13122e,#121a39)}
+.vxsk-mkt-feedback-form{display:grid;grid-template-columns:minmax(170px,1fr) minmax(0,2fr);align-items:end;gap:14px;max-width:850px;margin-top:20px}
+.vxsk-mkt-feedback-form .vxsk-mkt-field-label:nth-child(2){grid-row:span 2}
+.vxsk-mkt-feedback-form textarea{min-height:120px;resize:vertical}
+.vxsk-mkt-feedback-form .vxsk-mkt-status{align-self:center;margin:0}
+.vxsk-mkt-feedback-form>.vxsk-mkt-action{justify-self:start}
+.vxsk-staff-feedback-board{margin-top:24px}
+.vxsk-staff-feedback-board h3{margin:0 0 10px;color:#f6edff;font:900 23px 'Barlow Condensed',Impact,system-ui,sans-serif}
+.vxsk-staff-feedback-list{display:grid;gap:10px;margin-top:12px}
+.vxsk-staff-feedback-entry{border:1px solid #5c518c;border-radius:12px;padding:14px;background:#18172c;overflow-wrap:anywhere}
+.vxsk-staff-feedback-entry p{white-space:pre-wrap;color:#ddd5ef;font-size:13px;line-height:1.55}
+@media(max-width:880px){.vxsk-rank-columns{grid-template-columns:1fr}.vxsk-rank-options{grid-template-columns:repeat(auto-fill,minmax(72px,1fr))}}
+@media(max-width:610px){.vxsk-coach-directory,.vxsk-server-feedback{padding:18px 14px}.vxsk-rank-options{grid-template-columns:repeat(auto-fill,minmax(70px,1fr))}.vxsk-mkt-feedback-form{grid-template-columns:1fr}.vxsk-mkt-feedback-form .vxsk-mkt-field-label:nth-child(2){grid-row:auto}.vxsk-mkt-booster{flex-wrap:wrap}.vxsk-mkt-booster-extra{width:100%;margin-left:0;flex-direction:row;justify-content:space-between;align-items:center}}
+@media(max-width:375px){.vxsk-rank-options{grid-template-columns:repeat(3,minmax(0,1fr))}.vxsk-rank-choice{min-height:87px}.vxsk-rank-choice img{width:40px;height:40px}.vxsk-coach-top{gap:10px}}
+
+/* VXSK phase-2: dedicated merchandise page, verified profile detail UI */
+body[data-vxsk-page="merch"] .vxsk-marketplace{min-height:70vh;padding:34px 20px 80px;background:transparent}
+body[data-vxsk-page="merch"] .vxsk-mkt-inner{max-width:1240px;margin-inline:auto}
+.vxsk-rank-choice img{width:64px;height:63px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(122,96,243,.27))}
+.vxsk-rank-choice{min-height:118px;gap:8px;font-size:11px}
+.vxsk-rank-choice[aria-pressed="true"] img{filter:drop-shadow(0 0 12px rgba(157,123,255,.7))}
+.vxsk-mkt-booster-avatar-photo{width:54px;height:54px;border-radius:13px;object-fit:cover;border:2px solid #8263d7;flex:none}
+.vxsk-mkt-booster-body{min-width:120px;flex:1;display:flex;flex-direction:column;gap:3px}
+.vxsk-mkt-booster-body .vxsk-booster-bio{white-space:normal;overflow-wrap:anywhere;line-height:1.5}
+.vxsk-mkt-booster-extra{gap:8px;align-items:flex-end}
+.vxsk-mkt-reviews-open:focus-visible{outline:2px solid #ddc7ff;outline-offset:3px}
+@media(max-width:610px){body[data-vxsk-page="merch"] .vxsk-marketplace{padding:25px 12px 65px}.vxsk-rank-choice{min-height:103px}.vxsk-rank-choice img{width:53px;height:52px}.vxsk-mkt-booster-extra{align-items:center}}
+@media(max-width:365px){.vxsk-rank-choice img{width:45px;height:44px}}
+
+.vxsk-coach-empty{width:100%;grid-column:1/-1;padding:22px;border-radius:14px;border:1px dashed #6e5799;background:#171337;color:#dbd0fe;font:800 14px/1.7 'Space Grotesk',system-ui,sans-serif;letter-spacing:.03em}
+.vxsk-review-submit{display:grid;gap:12px;margin-top:21px;padding-top:18px;border-top:1px solid #554477}
+.vxsk-review-submit h3{font:900 23px 'Barlow Condensed',Impact,sans-serif;color:#fff;margin:0}
+.vxsk-review-submit .vxsk-mkt-field-label{display:flex;flex-direction:column;gap:8px}
