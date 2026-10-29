@@ -102,6 +102,13 @@
         options.sort==='old' ? q.order('created_at',{ascending:true}) : q.order('name',{ascending:true});
       const {data,error,count}=await q.range((page-1)*12,page*12-1);
       if(error) throw error;
+      // Until the FIRST published directory row exists, keep the four bundled
+      // public community teams visible. An empty database is not an empty event.
+      if((count??0)===0){
+        const {count:publishedCount,error:publishedError}=await api.from(table)
+          .select('id',{count:'exact',head:true}).eq('status','published');
+        if(!publishedError && publishedCount===0)return staticList(options);
+      }
       return {teams:(data||[]).map(format),count:count??0,source:'database'};
     } catch(err) {
       console.warn('VXSK Teams database unavailable; showing legacy preview:',err?.message);
@@ -114,6 +121,12 @@
       const {data,error}=await api.from(table).select('*').eq('status','published')
         .not('featured_slot','is',null).order('featured_slot',{ascending:true}).limit(3);
       if(error) throw error;
+      if(!(data||[]).length){
+        const {count,error:countError}=await api.from(table)
+          .select('id',{count:'exact',head:true}).eq('status','published');
+        if(!countError && count===0)
+          return rawFallback().filter(t=>t.featured_order!==null).slice(0,3);
+      }
       return (data||[]).map(format);
     } catch(err) {
       console.warn('VXSK featured database read failed:',err?.message);
@@ -122,7 +135,14 @@
   }
   async function one(id) {
     if (!api) return rawFallback().find(t=>t.slug===id) || null;
-    if (!isUuid(id)) return null; // No stale fallback profiles once hosted DB is active.
+    // Legacy slugs work in preview while no public team has yet been imported.
+    if (!isUuid(id)){
+      try {
+        const {count,error}=await api.from(table).select('id',{count:'exact',head:true}).eq('status','published');
+        if(!error && count===0)return rawFallback().find(t=>t.slug===id)||null;
+      }catch(_){}
+      return null;
+    }
     try {
       const {data,error}=await api.from(table).select('*')
         .eq('id',id).eq('status','published').maybeSingle();

@@ -6,3 +6,9 @@
 @media(max-width:900px){.vxsk-th-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.vxsk-th-manager{grid-template-columns:1fr}.vxsk-th-list{max-height:220px}.vxsk-th-profile{grid-template-columns:1fr}.vxsk-th-profile .vxsk-th-logo{height:310px}}
 @media(max-width:630px){.vxsk-th-grid,.vxsk-th-filterbar,.vxsk-th-fields{grid-template-columns:1fr}.vxsk-th-hero{padding:45px 0 20px}.vxsk-th-nav .vxsk-th-wrap{min-height:68px}.vxsk-th-menu{gap:2px}.vxsk-th-menu a{padding:7px;font-size:11px}.vxsk-th-logo{height:200px}.vxsk-th-wide{grid-column:auto}}
 @media(prefers-reduced-motion:reduce){.vxsk-th-card{transition:none}.vxsk-th-card:hover{transform:none}}
+
+/* P5.3 IMPORTANT: native hidden must override button/grid display.
+   Prevent showing owner-only controls when Supabase/MFA access fails. */
+.vxsk-th-page [hidden]{display:none!important}
+.vxsk-th-auth-help{margin-top:14px;font-size:13px;color:#ddc3ff}
+.vxsk-th-auth-help a{display:inline-block;padding:8px 13px;border:1px solid #a984dc;border-radius:8px;text-decoration:none;color:#fff}

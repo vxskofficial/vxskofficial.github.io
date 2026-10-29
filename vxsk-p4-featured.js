@@ -74,7 +74,7 @@
     if(items){currentTeams=items.slice(0,3);updateTeams();}
   };
   document.head.append(legacy);
-  const hub=document.createElement('script');hub.src='vxsk-teams-hub.js?v=12.9.4-p5';
+  const hub=document.createElement('script');hub.src='vxsk-teams-hub.js?v=12.9.4-p52';
   hub.onload=async()=>{
     try{
       const teams=await window.VXSKTeamsHub.featured();

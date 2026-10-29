@@ -3,12 +3,45 @@
   const $=id=>document.getElementById(id),hub=window.VXSKTeamsHub,api=hub?.api;
   const status=(text)=>{$('th-save-status').textContent=text;};
   const authStatus=(text)=>{$('th-auth-status').textContent=text;};
-  if (!api){authStatus('Team publishing requires the online VXSK staging site and the secured Supabase setup. Open the website online after activation.');return;}
-  if (!await hub.owner()){authStatus('Owner access requires a signed-in VXSK owner with MFA (AAL2). Sign in on the VXSK homepage, complete MFA, then return here.');return;}
-  let selected=null, teams=[], saving=false, migration=false;
+  // P5.3: keep the entire editor truly hidden until access is confirmed.
+  // A CSS display rule in P5.2 was accidentally overriding the HTML `hidden`
+  // attribute, so an unauthenticated user could see inert buttons.
+  const locked=(message,showLogin=true)=>{
+    $('th-manager').hidden=true;
+    authStatus(message);
+    const a=$('th-auth-action');if(a)a.hidden=!showLogin;
+  };
+  if (!api){locked('Team Manager is locked: Supabase client could not initialize. Check your connection and refresh. No changes were made.',false);return;}
+  try {
+    const u=await api.auth.getUser();
+    if(u.error || !u.data?.user){
+      locked('Team Manager is locked: you are not signed in on this website. Open HOME on this same website, sign in with your VXSK owner account, finish 2FA, then return to Manager. Signing in on another domain will not sign you in here.');
+      return;
+    }
+    const level=await api.auth.mfa.getAuthenticatorAssuranceLevel();
+    if(level.error || level.data?.currentLevel!=='aal2'){
+      locked('Team Manager is locked: owner two-step verification (MFA/AAL2) is not complete on this website. Finish verification using MY ACCOUNT / SECURITY on the preview homepage, then return.');
+      return;
+    }
+    const role=await api.rpc('vxsk_hub_owner');
+    if(role.error){
+      locked('Team Manager is locked: owner role could not be checked ('+String(role.error.message||'RPC error').slice(0,180)+'). No changes were made.');
+      return;
+    }
+    if(role.data!==true){
+      locked('Team Manager is locked: the signed-in account was not verified as VXSK owner. No changes were made.');
+      return;
+    }
+  }catch(err){
+    locked('Team Manager is locked: login check failed ('+String(err?.message||'unknown error').slice(0,160)+'). No changes were made.');
+    return;
+  }
+  let selected=null, teams=[], saving=false, migration=false, importArmed=false;
+  const importStatus=(text)=>{$('th-import-status').textContent=text;};
+  const importButton=$('th-import');
   const fields=['name','label','description','discord','instagram','tiktok','website','email'];
   const idMap=Object.fromEntries(fields.map(key=>[key,$('th-'+key)]));
-  $('th-auth-status').hidden=true;$('th-manager').hidden=false;
+  $('th-auth-status').hidden=true;const authAction=$('th-auth-action');if(authAction)authAction.hidden=true;$('th-manager').hidden=false;
   const linksToValues=(team)=>{
     const obj={discord:'',instagram:'',tiktok:'',website:'',email:''};
     for (const l of team?.links||[]) {const key=String(l.label||'').toLowerCase();if (key==='email'&&l.url?.startsWith('mailto:'))obj.email=l.url.slice(7);else if(key in obj)obj[key]=l.url;}
@@ -104,14 +137,25 @@
     const {error}=await api.from('vxsk_directory_teams').update({status:'archived',featured_slot:null,updated_at:new Date().toISOString()}).eq('id',selected.id);
     if(error){status(error.message);return;}await reload();select(teams.find(t=>t.id===selected.id)||null);status('Archived. Not visible to the public.');
   });
-  // One-time owner migration preserves the original four public teams; never overwrites edited DB records.
-  $('th-import').addEventListener('click',async()=>{
-    if(migration||!confirm('Bring existing Featured Teams into the secure Teams Hub? Existing database records will not be overwritten.'))return;
-    if(!await hub.owner()){status('Owner MFA is required.');return;}
-    migration=true;$('th-import').disabled=true;let added=0,skipped=0;
+  // Owner-only migration. Require an explicit second click and show progress
+  // immediately beside the import button (not below the long team editor).
+  importButton.addEventListener('click',async()=>{
+    if(migration)return;
+    if(!importArmed){
+      importArmed=true;
+      importButton.textContent='CONFIRM IMPORT 4 TEAMS';
+      importStatus('Confirm to publish the 4 existing VXSK teams into the shared Supabase database. This is a real change.');
+      return;
+    }
+    importArmed=false;
+    importButton.textContent='BRING EXISTING VXSK TEAMS';
+    if(!await hub.owner()){importStatus('Owner MFA is required. Nothing was imported.');return;}
+    migration=true;importButton.disabled=true;let added=0,skipped=0;
     try{
       const old=hub.fallback();
+      if(old.length!==4)throw Error('Expected 4 existing teams, found '+old.length+'. No import started.');
       for(const [i,t] of old.entries()){
+        importStatus('Importing '+t.name+' ('+(i+1)+'/4)...');
         const {data:existing,error:findError}=await api.from('vxsk_directory_teams')
           .select('id').eq('name',t.name).limit(1).maybeSingle();
         if(findError)throw findError;
@@ -123,12 +167,17 @@
           logo_path=await upload(uploadFile);
         }
         const payload={name:t.name,label:t.label,description:t.description,games:t.games,links:linkRecord(t.links),logo_path,status:'published',featured_slot:i<3?i+1:null};
-        const {error}=await api.from('vxsk_directory_teams').insert(payload);if(error)throw error;
+        const {error}=await api.from('vxsk_directory_teams').insert(payload);
+        if(error)throw error;
         added++;
       }
-      await reload();select(null);status('Migration complete: '+added+' added, '+skipped+' already existed.');
-    }catch(err){status('Migration stopped: '+(err.message||'Error')+'. '+added+' added so far; retry safely to resume.');}
-    finally{migration=false;$('th-import').disabled=false;}
+      await reload();select(null);
+      const message='Import complete: '+added+' added, '+skipped+' already existed. Reload All Teams to verify.';
+      importStatus(message);status(message);
+    }catch(err){
+      const message='Import stopped: '+(err?.message||'Unknown error')+'. '+added+' added so far. Do not retry until reviewed.';
+      importStatus(message);status(message);
+    }finally{migration=false;importButton.disabled=false;}
   });
-  if(await reload())select(null);
+  if(await reload()){select(null);importStatus('Import is owner-only and will require a second confirmation click. No changes until confirmed.');}
 })();
