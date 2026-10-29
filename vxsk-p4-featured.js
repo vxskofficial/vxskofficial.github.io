@@ -1,6 +1,6 @@
-/* VXSK P4: public Featured Teams JSON + visual header previews.
-   Public reads only. The editor downloads a draft JSON; publishing requires normal GitHub write access.
-   The owner button is gated by existing Owner+MFA but is NOT an authorization mechanism for data writes. */
+/* VXSK P5.1: public Featured Teams + staff previews.
+   Data is read from Supabase's published Teams Directory rows after migration.
+   Owner buttons are UI only; Supabase RLS enforces write permissions. */
 'use strict';
 (() => {
   const grid = document.querySelector('#vxsk-teams .vxsk-partner-grid');
@@ -21,6 +21,11 @@
     if(typeof url!=='string')return '';
     if(/^assets\/[a-z0-9_./-]+\.(?:png|jpg|jpeg|webp|gif)$/i.test(url) && !url.includes('..'))return url;
     if(/^data:image\/(?:png|jpeg|webp|gif);base64,[a-z0-9+/=]+$/i.test(url) && url.length<2_600_000)return url;
+    try {
+      const u=new URL(url), base=new URL(window.VXSK_SUPABASE?.url||'https://invalid.example');
+      if(u.protocol==='https:' && u.hostname===base.hostname &&
+         u.pathname.startsWith('/storage/v1/object/public/vxsk-team-logos/'))return url;
+    } catch (_) {}
     return '';
   };
   const safeLink=(url)=>typeof url==='string' && (url.startsWith('https://') || /^mailto:[^\s<>"']+@[^\s<>"']+$/i.test(url)) && url.length<=500 ? url : '';
@@ -58,9 +63,39 @@
     }
   }
   function updateTeams(){if(!grid || !currentTeams)return;grid.replaceChildren(...currentTeams.map(teamCard));}
-  // Leave static HTML usable when JSON isn't available (e.g. cache, disabled fetch).
+  // Preview uses bundled public data. Hosted pages switch to secure Supabase team records
+  // once the staging database schema has been installed. Never publish from public JavaScript.
   fixLegacyErrors();
-  fetch('featured-teams.json?v=12.9.4-p4-featured1',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Data file unavailable');return r.json();}).then(json=>{const valid=normalize(json);if(valid){currentTeams=valid;updateTeams();}}).catch(()=>{});
+  const legacy=document.createElement('script');
+  legacy.src='featured-teams-data.js?v=12.9.4-p5';
+  legacy.onload=()=>{
+    if(currentTeams)return;
+    const items=normalize(window.VXSKFeaturedTeamsData);
+    if(items){currentTeams=items.slice(0,3);updateTeams();}
+  };
+  document.head.append(legacy);
+  const hub=document.createElement('script');hub.src='vxsk-teams-hub.js?v=12.9.4-p5';
+  hub.onload=async()=>{
+    try{
+      const teams=await window.VXSKTeamsHub.featured();
+      const items=normalize({teams});
+      if(items){currentTeams=items.slice(0,3);updateTeams();}
+    }catch(_){}
+  };
+  document.head.append(hub);
+  // Dedicated directory replaces the old unbounded homepage list.
+  const section=document.getElementById('vxsk-teams');
+  if(section && !section.querySelector('.vxsk-th-home-footer')){
+    const wrap=node('div','vxsk-th-home-footer');const a=node('a','','EXPLORE ALL TEAMS ↗');a.href='teams.html';wrap.append(a);
+    const gridSection=section.querySelector('.vxsk-partner-grid');(gridSection?.parentElement||section).insertBefore(wrap,gridSection?.nextSibling||null);
+  }
+  const links=document.getElementById('nav-links');
+  if(links&&!links.querySelector('a[href="teams.html"]')){
+    const a=node('a','vxsk-nav-teams');a.href='teams.html';a.append(node('span','','All Teams'));
+    const featured=links.querySelector('a[href="#sponsor"]');
+    links.insertBefore(a,featured?.nextSibling||null);
+  }
+  if(ownerButton){ownerButton.href='team-manager.html';ownerButton.innerHTML='+ MANAGE TEAMS <span>↗</span>';}
   function previewCard({name,small,desc,src,href}){
     const a=node('a','nav-preview-card');a.href=href;
     const img=node('img');img.src=safeImage(src);img.alt='';img.loading='lazy';img.addEventListener('error',()=>{img.remove();},{once:true});
@@ -78,7 +113,7 @@
         {name:'N2XT ESPORTS',label:'OFFICIAL PARTNER',description:'Tunisian gaming community',image:'assets/n2xt-official-logo.png'},
         {name:'VORTEX TN',label:'COMMUNITY TEAM',description:'Rocket League and Minecraft',image:'assets/vxsk-vortex-tn.webp'},
         {name:'DRAX ESPORTS',label:'ROCKET LEAGUE',description:'Competitive community',image:'assets/vxsk-drax-dragon.webp'}];
-      for(const t of source.slice(0,6))inner.append(previewCard({name:t.name,small:t.label,desc:t.description,src:t.image,href:'#vxsk-teams'}));
+      for(const t of source.slice(0,3))inner.append(previewCard({name:t.name,small:t.label,desc:t.description,src:t.image,href:'#vxsk-teams'}));
     }
     preview.replaceChildren(inner);
   }
