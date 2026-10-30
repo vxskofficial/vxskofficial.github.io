@@ -54,7 +54,8 @@
     const totalNum=el('strong','',currency(price('boost',state.quantity)));totalNum.id='vxsk-mkt-boost-total';total.append(totalNum);controls.append(total);
     boost.append(controls,buildRankPanel());
     const result=el('div','vxsk-mkt-booster-list');result.id='vxsk-mkt-booster-list';result.setAttribute('aria-live','polite');boost.append(result);
-    const actions=el('div','vxsk-mkt-boost-actions');const request=el('button','vxsk-mkt-action','CONFIRM BOOST REQUEST');request.type='button';request.id='vxsk-mkt-boost-request';request.disabled=true;request.addEventListener('click',()=>openModal('boost'));const apply=el('button','vxsk-mkt-ghost','APPLY TO BECOME A BOOSTER');apply.type='button';apply.addEventListener('click',openApply);actions.append(request,apply);boost.append(actions);
+    const actions=el('div','vxsk-mkt-boost-actions');const request=el('button','vxsk-mkt-action','CONFIRM BOOST REQUEST');request.type='button';request.id='vxsk-mkt-boost-request';request.disabled=true;request.addEventListener('click',()=>openModal('boost'));const apply=el('button','vxsk-mkt-ghost','APPLY TO BECOME A BOOSTER');apply.type='button';apply.addEventListener('click',openApply);const edit=el('button','vxsk-mkt-ghost','EDIT MY BOOSTER PROFILE');edit.type='button';edit.addEventListener('click',openEditBoosterProfile);
+    actions.append(request,apply,edit);boost.append(actions);
     inside.append(boost);section.append(inside);(document.querySelector('main')||document.body).append(section);renderRankChoices();
     const nav=$('nav-links');if(nav&&!nav.querySelector('a[href="#vxsk-marketplace"]')){const link=el('a','vxsk-master-shop-link','MERCH');link.href='#vxsk-marketplace';nav.append(link);}
     const stale=nav?.querySelector('a[href="#vxsk-master-shop"]');if(stale)stale.href='#vxsk-marketplace';
@@ -75,6 +76,10 @@
         if(avatar){icon=el('img','vxsk-mkt-booster-avatar-photo');icon.src=avatar;icon.alt='';icon.loading='lazy';}
         else icon=el('span','vxsk-mkt-booster-avatar',String(row.nickname||'VX').slice(0,2).toUpperCase());
         const body=el('span','vxsk-mkt-booster-body');body.append(el('strong','',String(row.nickname||'VXSK Booster').slice(0,70)),el('small','',GAME_LABELS[row.game]||''));
+        if(row.rank_name)body.append(el('small','vxsk-booster-rank',`SELF-REPORTED RANK · ${String(row.rank_name).slice(0,35)}${row.rank_division?' '+String(row.rank_division):''}`));
+        else body.append(el('small','vxsk-booster-rank','Rank not provided yet'));
+        if(row.region)body.append(el('small','vxsk-booster-region',`Region: ${String(row.region).slice(0,40)}`));
+        if(row.availability)body.append(el('small','vxsk-booster-availability',`Availability: ${String(row.availability).slice(0,80)}`));
         if(row.nationality)body.append(el('small','vxsk-booster-nation',String(row.nationality).slice(0,60)));
         if(row.bio)body.append(el('small','vxsk-booster-bio',String(row.bio).slice(0,180)));
         const reviews=el('button','vxsk-mkt-reviews-open',validRating(row));reviews.type='button';reviews.addEventListener('click',event=>{event.preventDefault();openReviews(row.booster_id,String(row.nickname||'VXSK Booster'));});
@@ -144,6 +149,70 @@
       submit.disabled=true;try{await rpc('vxsk_market_apply',{p_game:game.input.value,p_pitch:desc.input.value.trim()});showStatus(note,'Application sent. You will appear in the public list only after approval.',true);submit.textContent='APPLICATION SENT';}
       catch(err){showStatus(note,'Not accepted: '+errors(err));submit.disabled=false;}
     });contents.append(form);
+  }
+
+  // P10.1: edit only the authenticated player's own approved profile.
+  // Server RPC verifies ownership; UI checks are not security boundaries.
+  async function openEditBoosterProfile(){
+    const user=await getSession();
+    if(!user){const {contents}=modal('SIGN IN REQUIRED','Open My Account on this hosted VXSK preview and sign in before editing your own booster profile.');contents.append(el('p','vxsk-mkt-hint','Login sessions do not work from local file:// pages.'));return;}
+    let profiles;
+    try{profiles=await rpc('vxsk_market_my_booster_profiles');}
+    catch(error){const {contents}=modal('PROFILE EDITOR UNAVAILABLE','P10.1 database upgrade is required.');contents.append(el('p','vxsk-mkt-status',errors(error)));return;}
+    if(!Array.isArray(profiles)||!profiles.length){const {contents}=modal('NO APPROVED BOOSTER PROFILE','Only your own approved booster profile can be edited.');contents.append(el('p','vxsk-mkt-hint','Submit a booster application and have it reviewed by a different authorized staff member first.'));return;}
+    const {contents}=modal('EDIT MY BOOSTER PROFILE','Choose your game, add a logo/photo and self-reported rank. Never share passwords or account identifiers. Public photos are visible to everyone.');
+    const form=el('form','vxsk-mkt-order-form');
+    const chooser=textLabel('YOUR APPROVED GAME','select');
+    for(const item of profiles){const o=el('option','',`${GAME_LABELS[item.game]||item.game} — ${item.nickname||'VXSK Booster'}`);o.value=item.booster_id;chooser.input.append(o);}
+    const nickname=textLabel('DISPLAY NAME','input',{maxlength:'70',minlength:'2',required:'',placeholder:'Your VXSK nickname'});
+    const bio=textLabel('ABOUT YOUR PLAY STYLE','textarea',{maxlength:'700',rows:'4',placeholder:'Your experience, specialties and what you can help with. No contact details.'});
+    const rank=textLabel('YOUR RANK IN THIS GAME (SELF-REPORTED)','select');
+    const division=textLabel('RANK DIVISION','select');
+    const region=textLabel('SERVER REGION','select');
+    for(const [value,label] of [['','Not specified'],['EU','Europe'],['MENA','Middle East / North Africa'],['NA','North America'],['Other','Other']]){const o=el('option','',label);o.value=value;region.input.append(o);}
+    const nationality=textLabel('COUNTRY / NATIONALITY (OPTIONAL)','input',{maxlength:'60',placeholder:'Optional public profile field'});
+    const availability=textLabel('AVAILABILITY (OPTIONAL)','input',{maxlength:'80',placeholder:'Example: Weekends, evenings UTC+1'});
+    const photo=textLabel('PUBLIC PHOTO OR TEAM LOGO (OPTIONAL)','input',{type:'file',accept:'image/png,image/jpeg,image/webp'});
+    const hint=el('p','vxsk-mkt-hint','PNG / JPG / WEBP, up to 1.5 MB. A team logo is fine; no personal photo is required. Uploaded images will be public.');
+    const status=el('p','vxsk-mkt-status');status.setAttribute('role','status');status.setAttribute('aria-live','polite');
+    const submit=el('button','vxsk-mkt-action','SAVE MY PROFILE');submit.type='submit';
+    form.append(chooser.label,nickname.label,bio.label,rank.label,division.label,region.label,nationality.label,availability.label,photo.label,hint,status,submit);
+    const getSelected=()=>profiles.find(p=>p.booster_id===chooser.input.value)||profiles[0];
+    function fill(){
+      const p=getSelected();nickname.input.value=String(p.nickname||'');bio.input.value=String(p.bio||'');
+      rank.input.replaceChildren();for(const [label] of (RANKS[p.game]||[])){const option=el('option','',label);option.value=label;rank.input.append(option);}
+      rank.input.value=p.rank_name||(RANKS[p.game]?.[0]?.[0]||'');
+      division.input.replaceChildren();for(const label of ['','I','II','III','IV']){const o=el('option','',label||'No division');o.value=label;division.input.append(o);}
+      division.input.value=p.rank_division||'';region.input.value=p.region||'';nationality.input.value=p.nationality||'';availability.input.value=p.availability||'';
+      photo.input.value='';status.textContent='';
+    }
+    chooser.input.addEventListener('change',fill);fill();
+    form.addEventListener('submit',async event=>{
+      event.preventDefault();const p=getSelected();const name=nickname.input.value.trim(),about=bio.input.value.trim();
+      if(name.length<2||about.length<20){showStatus(status,'Add a display name (2+) and an about section (20+ characters).');return;}
+      const file=photo.input.files?.[0];
+      if(file&&(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>1572864)){
+        showStatus(status,'Choose a PNG/JPG/WEBP up to 1.5 MB.');return;
+      }
+      submit.disabled=true;showStatus(status,'Saving your profile…');
+      try{
+        let path=null;
+        if(file){
+          const ext={'image/png':'png','image/jpeg':'jpg','image/webp':'webp'}[file.type];
+          path=`${user.id}/${crypto.randomUUID()}.${ext}`;
+          const {error}=await api().storage.from('vxsk-booster-photos').upload(path,file,{upsert:false,contentType:file.type,cacheControl:'3600'});
+          if(error)throw error;
+        }
+        await rpc('vxsk_market_update_my_booster_profile',{
+          p_booster_id:p.booster_id,p_nickname:name,p_bio:about,p_rank_name:rank.input.value,
+          p_rank_division:division.input.value,p_region:region.input.value,
+          p_availability:availability.input.value.trim(),p_nationality:nationality.input.value.trim(),p_avatar_path:path
+        });
+        showStatus(status,'Profile saved! Your public profile will show the new details after refresh.',true);
+        submit.textContent='SAVED';await loadBoosters();
+      }catch(error){showStatus(status,'Not saved: '+errors(error));submit.disabled=false;}
+    });
+    contents.append(form);
   }
 
   // V12.9.4 next UI: VXSK existing ranks/assets, NO copied competitor UI.
@@ -261,6 +330,13 @@
     if(photo){const img=el('img','vxsk-coach-photo');img.src=photo;img.alt='';row.append(img);}
     else row.append(el('span','vxsk-coach-monogram',nick.slice(0,2).toUpperCase()));
     const details=el('div');details.append(el('h3','',nick),el('p','',GAME_LABELS[booster.game]||GAME_LABELS[state.game]||'VXSK'),el('strong','vxsk-coach-price','5 DT / game'),el('p','',validRating(booster)));
+    if(booster.rank_name){
+      const badge=(RANKS[booster.game]||[]).find(x=>x[0]===booster.rank_name);
+      if(badge){const rankimg=el('img','vxsk-booster-profile-rank-image');rankimg.src=badge[1];rankimg.alt='';rankimg.loading='lazy';details.append(rankimg);}
+      details.append(el('p','vxsk-booster-rank',`Self-reported rank: ${String(booster.rank_name).slice(0,35)}${booster.rank_division?' '+String(booster.rank_division):''}`));
+    }else details.append(el('p','vxsk-booster-rank','Rank not added yet'));
+    if(booster.region)details.append(el('p','',`Server region: ${String(booster.region).slice(0,40)}`));
+    if(booster.availability)details.append(el('p','',`Availability: ${String(booster.availability).slice(0,80)}`));
     if(booster.nationality)details.append(el('p','',`Nationality: ${String(booster.nationality).slice(0,60)}`));row.append(details);contents.append(row);
     contents.append(el('p','vxsk-coach-fullbio',String(booster.bio||'Full biography has not yet been provided by this booster.').slice(0,700)));
     const actions=el('div','vxsk-mkt-boost-actions');const read=el('button','vxsk-mkt-ghost','VERIFIED REVIEWS');read.type='button';read.addEventListener('click',()=>openReviews(booster.booster_id,nick));

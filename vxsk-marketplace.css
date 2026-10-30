@@ -129,3 +129,8 @@ body[data-vxsk-page="merch"] .vxsk-mkt-inner{max-width:1240px;margin-inline:auto
 .vxsk-review-submit{display:grid;gap:12px;margin-top:21px;padding-top:18px;border-top:1px solid #554477}
 .vxsk-review-submit h3{font:900 23px 'Barlow Condensed',Impact,sans-serif;color:#fff;margin:0}
 .vxsk-review-submit .vxsk-mkt-field-label{display:flex;flex-direction:column;gap:8px}
+
+/* P10.1 — Booster self-reported rank */
+.vxsk-booster-rank{color:#cbb0ff;font-weight:700;}
+.vxsk-booster-profile-rank-image{display:block;width:56px;height:56px;object-fit:contain;margin:8px 0;}
+.vxsk-booster-region,.vxsk-booster-availability{opacity:.87;}
