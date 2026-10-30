@@ -1,5 +1,6 @@
-/* VXSK Teams Hub P5.1 — matches public.vxsk_directory_teams.
-   Public pages read published rows. All writes are enforced by Supabase RLS. */
+/* VXSK Teams Hub P9 — Supabase is the only public source of teams.
+   Published rows only. Archived/draft records never appear as static fallback.
+   All writes are enforced by Supabase RLS. */
 'use strict';
 (() => {
   const config = window.VXSK_SUPABASE || {};
@@ -34,15 +35,6 @@
         path.includes('..')) return '';
     return safeImage(api.storage.from('vxsk-team-logos').getPublicUrl(path).data.publicUrl);
   }
-  const rawFallback = () => {
-    const raw = window.VXSKFeaturedTeamsData?.teams;
-    if (!Array.isArray(raw)) return [];
-    return raw.filter(t => t && t.name).slice(0,30).map((t,i) => format({
-      ...t, slug:['n2xt','vortex','drax','team-test'][i] || String(t.id || ''),
-      logo_path:t.image, featured_slot:i < 3 ? i + 1 : null,
-      status:'published'
-    }));
-  };
   const linksFromRecord = raw => {
     if (Array.isArray(raw)) {
       return raw.filter(x => x && typeof x.label === 'string').map(x => ({
@@ -79,18 +71,8 @@
       created_at:t.created_at || null,updated_at:t.updated_at || null
     };
   }
-  function staticList(options={}) {
-    let rows=rawFallback();
-    if(options.featured) rows=rows.filter(t=>t.featured_order!==null);
-    if(options.q) rows=rows.filter(t=>t.name.toLowerCase().includes(String(options.q).toLowerCase()));
-    if(options.game && options.game!=='all')rows=rows.filter(t=>t.games.some(g=>g.toLowerCase()===options.game.toLowerCase()));
-    rows.sort((a,b)=>options.featured ? a.featured_order-b.featured_order :
-      options.sort==='new' ? 0 : options.sort==='old' ? 0 : a.name.localeCompare(b.name));
-    const count=rows.length, page=Math.max(1,Number(options.page)||1);
-    return {teams:rows.slice((page-1)*12,page*12),count,source:'preview'};
-  }
   async function list(options={}) {
-    if (!api) return staticList(options);
+    if (!api) return {teams:[],count:0,source:'unavailable'};
     const page=Math.max(1,Number(options.page)||1);
     try {
       let q=api.from(table).select('*',{count:'exact'}).eq('status','published');
@@ -102,47 +84,26 @@
         options.sort==='old' ? q.order('created_at',{ascending:true}) : q.order('name',{ascending:true});
       const {data,error,count}=await q.range((page-1)*12,page*12-1);
       if(error) throw error;
-      // Until the FIRST published directory row exists, keep the four bundled
-      // public community teams visible. An empty database is not an empty event.
-      if((count??0)===0){
-        const {count:publishedCount,error:publishedError}=await api.from(table)
-          .select('id',{count:'exact',head:true}).eq('status','published');
-        if(!publishedError && publishedCount===0)return staticList(options);
-      }
       return {teams:(data||[]).map(format),count:count??0,source:'database'};
     } catch(err) {
-      console.warn('VXSK Teams database unavailable; showing legacy preview:',err?.message);
-      return staticList(options);
+      console.warn('VXSK Teams database read failed:',err?.message);
+      return {teams:[],count:0,source:'unavailable'};
     }
   }
   async function featured() {
-    if (!api) return rawFallback().filter(t=>t.featured_order!==null).slice(0,3);
+    if (!api) return [];
     try {
       const {data,error}=await api.from(table).select('*').eq('status','published')
         .not('featured_slot','is',null).order('featured_slot',{ascending:true}).limit(3);
       if(error) throw error;
-      if(!(data||[]).length){
-        const {count,error:countError}=await api.from(table)
-          .select('id',{count:'exact',head:true}).eq('status','published');
-        if(!countError && count===0)
-          return rawFallback().filter(t=>t.featured_order!==null).slice(0,3);
-      }
       return (data||[]).map(format);
     } catch(err) {
       console.warn('VXSK featured database read failed:',err?.message);
-      return rawFallback().filter(t=>t.featured_order!==null).slice(0,3);
+      return [];
     }
   }
   async function one(id) {
-    if (!api) return rawFallback().find(t=>t.slug===id) || null;
-    // Legacy slugs work in preview while no public team has yet been imported.
-    if (!isUuid(id)){
-      try {
-        const {count,error}=await api.from(table).select('id',{count:'exact',head:true}).eq('status','published');
-        if(!error && count===0)return rawFallback().find(t=>t.slug===id)||null;
-      }catch(_){}
-      return null;
-    }
+    if (!api || !isUuid(id)) return null;
     try {
       const {data,error}=await api.from(table).select('*')
         .eq('id',id).eq('status','published').maybeSingle();
@@ -186,6 +147,6 @@
     a.append(b);return a;
   }
   window.VXSKTeamsHub=Object.freeze({
-    api,table,format,safeImage,safeLink,logoUrl,list,featured,one,owner,logo,card,fallback:rawFallback
+    api,table,format,safeImage,safeLink,logoUrl,list,featured,one,owner,logo,card
   });
 })();

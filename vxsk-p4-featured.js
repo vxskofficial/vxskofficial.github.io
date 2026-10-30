@@ -15,7 +15,7 @@
     ['MEDO','CO-CASTER & ANALYST','assets/vxsk-team-medo-2026.webp','#vxsk-staff-medo'],
     ['AYOUB','CHAT MODERATOR & REFEREE','assets/vxsk-team-ayoub-2026.webp','#vxsk-staff-ayoub']
   ];
-  let currentTeams = null;
+  let currentTeams = [];
   const node=(tag, cls, value)=>{const el=document.createElement(tag);if(cls)el.className=cls;if(value!=null)el.textContent=String(value);return el;};
   const safeImage=(url)=>{
     if(typeof url!=='string')return '';
@@ -62,19 +62,13 @@
       if(img.complete && img.naturalWidth===0)visual.classList.add('vxsk-p4-image-error');
     }
   }
-  function updateTeams(){if(!grid || !currentTeams)return;grid.replaceChildren(...currentTeams.map(teamCard));}
-  // Preview uses bundled public data. Hosted pages switch to secure Supabase team records
-  // once the staging database schema has been installed. Never publish from public JavaScript.
-  fixLegacyErrors();
-  const legacy=document.createElement('script');
-  legacy.src='featured-teams-data.js?v=12.9.4-p5';
-  legacy.onload=()=>{
-    if(currentTeams)return;
-    const items=normalize(window.VXSKFeaturedTeamsData);
-    if(items){currentTeams=items.slice(0,3);updateTeams();}
-  };
-  document.head.append(legacy);
-  const hub=document.createElement('script');hub.src='vxsk-teams-hub.js?v=12.9.4-p52';
+  function updateTeams(){
+    if(!grid)return;
+    if(currentTeams.length)grid.replaceChildren(...currentTeams.map(teamCard));
+    else grid.replaceChildren(node('p','vxsk-th-empty-teams','Featured teams are temporarily unavailable. Please try again later.'));
+  }
+  if(grid)grid.replaceChildren(node('p','vxsk-th-empty-teams','Loading featured teams...'));
+  const hub=document.createElement('script');hub.src='vxsk-teams-hub.js?v=12.9.4-p9';
   hub.onload=async()=>{
     try{
       const teams=await window.VXSKTeamsHub.featured();
@@ -109,11 +103,8 @@
     if(href==='#staff'){
       for(const [name,desc,src,link] of staff)inner.append(previewCard({name,desc,src,href:link,small:'VXSK CREW'}));
     }else{
-      const source=currentTeams||[
-        {name:'N2XT ESPORTS',label:'OFFICIAL PARTNER',description:'Tunisian gaming community',image:'assets/n2xt-official-logo.png'},
-        {name:'VORTEX TN',label:'COMMUNITY TEAM',description:'Rocket League and Minecraft',image:'assets/vxsk-vortex-tn.webp'},
-        {name:'DRAX ESPORTS',label:'ROCKET LEAGUE',description:'Competitive community',image:'assets/vxsk-drax-dragon.webp'}];
-      for(const t of source.slice(0,3))inner.append(previewCard({name:t.name,small:t.label,desc:t.description,src:t.image,href:'#vxsk-teams'}));
+      for(const t of currentTeams.slice(0,3))inner.append(previewCard({name:t.name,small:t.label,desc:t.description,src:t.image,href:'#vxsk-teams'}));
+      if(!currentTeams.length)inner.append(node('p','vxsk-th-empty-teams','No featured teams available.'));
     }
     preview.replaceChildren(inner);
   }

@@ -36,9 +36,7 @@
     locked('Team Manager is locked: login check failed ('+String(err?.message||'unknown error').slice(0,160)+'). No changes were made.');
     return;
   }
-  let selected=null, teams=[], saving=false, migration=false, importArmed=false;
-  const importStatus=(text)=>{$('th-import-status').textContent=text;};
-  const importButton=$('th-import');
+  let selected=null, teams=[], saving=false;
   const fields=['name','label','description','discord','instagram','tiktok','website','email'];
   const idMap=Object.fromEntries(fields.map(key=>[key,$('th-'+key)]));
   $('th-auth-status').hidden=true;const authAction=$('th-auth-action');if(authAction)authAction.hidden=true;$('th-manager').hidden=false;
@@ -59,19 +57,6 @@
     if(email){if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw Error('Please use a valid email');out.email=email;}
     return out;
   };
-  // Convert legacy team links into the JSON object used by the new database.
-  function linkRecord(list){
-    const out={};
-    for(const link of list||[]){
-      const key=String(link.label||'').toLowerCase();
-      if(key==='email' && /^mailto:[^\s@]+@[^\s@]+\.[^\s@]+$/.test(link.url||'')){
-        out.email=link.url.slice(7);
-      }else if(['discord','instagram','tiktok','website'].includes(key)){
-        const safe=hub.safeLink(link.url);if(safe)out[key]=safe;
-      }
-    }
-    return out;
-  }
   function logoPreview(src,name){const box=hub.logo(src,name||'VXSK');if(src?.startsWith('blob:')){const im=box.querySelector('img');im.src=src;im.hidden=false;}$('th-preview-logo').replaceChildren(box);}
   function select(team){
     selected=team || null;const v=linksToValues(team);
@@ -93,9 +78,6 @@
     const {data,error}=await api.from('vxsk_directory_teams').select('*').order('updated_at',{ascending:false}).limit(500);
     if(error){authStatus('Team database is not activated yet. P5 SQL must first be reviewed and applied in Supabase staging. '+error.message);$('th-manager').hidden=true;$('th-auth-status').hidden=false;return false;}
     teams=(data||[]).map(hub.format);refreshList();
-    const originals=hub.fallback();
-    $('th-import').hidden=originals.length===0 ||
-      originals.every(old=>teams.some(t=>t.name.toLowerCase()===old.name.toLowerCase()));
     return true;
   }
   async function upload(file){
@@ -137,47 +119,5 @@
     const {error}=await api.from('vxsk_directory_teams').update({status:'archived',featured_slot:null,updated_at:new Date().toISOString()}).eq('id',selected.id);
     if(error){status(error.message);return;}await reload();select(teams.find(t=>t.id===selected.id)||null);status('Archived. Not visible to the public.');
   });
-  // Owner-only migration. Require an explicit second click and show progress
-  // immediately beside the import button (not below the long team editor).
-  importButton.addEventListener('click',async()=>{
-    if(migration)return;
-    if(!importArmed){
-      importArmed=true;
-      importButton.textContent='CONFIRM IMPORT 4 TEAMS';
-      importStatus('Confirm to publish the 4 existing VXSK teams into the shared Supabase database. This is a real change.');
-      return;
-    }
-    importArmed=false;
-    importButton.textContent='BRING EXISTING VXSK TEAMS';
-    if(!await hub.owner()){importStatus('Owner MFA is required. Nothing was imported.');return;}
-    migration=true;importButton.disabled=true;let added=0,skipped=0;
-    try{
-      const old=hub.fallback();
-      if(old.length!==4)throw Error('Expected 4 existing teams, found '+old.length+'. No import started.');
-      for(const [i,t] of old.entries()){
-        importStatus('Importing '+t.name+' ('+(i+1)+'/4)...');
-        const {data:existing,error:findError}=await api.from('vxsk_directory_teams')
-          .select('id').eq('name',t.name).limit(1).maybeSingle();
-        if(findError)throw findError;
-        if(existing){skipped++;continue;}
-        let logo_path=t.image;
-        if(logo_path.startsWith('data:image/')){
-          const blob=await (await fetch(logo_path)).blob();
-          const uploadFile=new File([blob],'team.webp',{type:blob.type||'image/webp'});
-          logo_path=await upload(uploadFile);
-        }
-        const payload={name:t.name,label:t.label,description:t.description,games:t.games,links:linkRecord(t.links),logo_path,status:'published',featured_slot:i<3?i+1:null};
-        const {error}=await api.from('vxsk_directory_teams').insert(payload);
-        if(error)throw error;
-        added++;
-      }
-      await reload();select(null);
-      const message='Import complete: '+added+' added, '+skipped+' already existed. Reload All Teams to verify.';
-      importStatus(message);status(message);
-    }catch(err){
-      const message='Import stopped: '+(err?.message||'Unknown error')+'. '+added+' added so far. Do not retry until reviewed.';
-      importStatus(message);status(message);
-    }finally{migration=false;importButton.disabled=false;}
-  });
-  if(await reload()){select(null);importStatus('Import is owner-only and will require a second confirmation click. No changes until confirmed.');}
+  if(await reload())select(null);
 })();

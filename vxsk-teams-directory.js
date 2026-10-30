@@ -12,7 +12,11 @@
     if(page>totalPages){page=totalPages;return refresh();}
     $('th-grid').replaceChildren(...out.teams.map(hub.card));
     $('th-empty').hidden=out.teams.length!==0;
-    $('th-results').textContent=out.count+' '+(out.count===1?'team':'teams')+' found'+(out.source==='preview'?' · Preview data':'');
+    $('th-empty').textContent=out.source==='unavailable'
+      ? 'Teams are temporarily unavailable. Please refresh to try again.'
+      : 'No teams match your search. Try another name or game.';
+    $('th-results').textContent=out.source==='unavailable'
+      ? 'Unable to load teams' : out.count+' '+(out.count===1?'team':'teams')+' found';
     $('th-page').textContent=page+' / '+totalPages;
     $('th-prev').disabled=page<=1;$('th-next').disabled=page>=totalPages;
   }
