@@ -151,6 +151,48 @@
     });contents.append(form);
   }
 
+  // P10.2: accept ordinary camera images and compress locally before uploading
+  // to the existing 2 MiB Supabase bucket. Never upload the original large file.
+  const PHOTO_ALLOWED_MIMES=['image/png','image/jpeg','image/webp'];
+  const PHOTO_MAX_INPUT=20*1024*1024;
+  const PHOTO_SAFE_TARGET=1850000; // Below bucket's 2 MiB hard limit.
+  async function prepareBoosterPhoto(file){
+    if(!PHOTO_ALLOWED_MIMES.includes(file.type))
+      throw new Error('Choose a PNG, JPG or WEBP image.');
+    if(file.size>PHOTO_MAX_INPUT)
+      throw new Error('This image is over 20 MB. Please choose a smaller image.');
+    const ext={'image/png':'png','image/jpeg':'jpg','image/webp':'webp'};
+    if(file.size<=PHOTO_SAFE_TARGET)
+      return {data:file,type:file.type,ext:ext[file.type],compressed:false};
+    const image=await new Promise((resolve,reject)=>{
+      const url=URL.createObjectURL(file);
+      const img=new Image();
+      img.onload=()=>{URL.revokeObjectURL(url);resolve(img);};
+      img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('Could not read this image.'));};
+      img.src=url;
+    });
+    const width=image.naturalWidth,height=image.naturalHeight;
+    if(!width||!height)throw new Error('Invalid image dimensions.');
+    const maxSide=Math.max(width,height);
+    for(const targetSide of [1600,1200,900,700,500]){
+      const scale=Math.min(1,targetSide/maxSide);
+      const canvas=document.createElement('canvas');
+      canvas.width=Math.max(1,Math.round(width*scale));
+      canvas.height=Math.max(1,Math.round(height*scale));
+      const ctx=canvas.getContext('2d');
+      if(!ctx)throw new Error('Image resizing is unavailable on this browser.');
+      ctx.drawImage(image,0,0,canvas.width,canvas.height);
+      for(const mime of ['image/webp','image/jpeg']){
+        for(const quality of [0.85,0.7,0.55]){
+          const blob=await new Promise(resolve=>canvas.toBlob(resolve,mime,quality));
+          if(blob&&blob.type===mime&&blob.size>0&&blob.size<=PHOTO_SAFE_TARGET)
+            return {data:blob,type:mime,ext:mime==='image/webp'?'webp':'jpg',compressed:true};
+        }
+      }
+    }
+    throw new Error('Could not compress photo enough. Please select a smaller one.');
+  }
+
   // P10.1: edit only the authenticated player's own approved profile.
   // Server RPC verifies ownership; UI checks are not security boundaries.
   async function openEditBoosterProfile(){
@@ -173,7 +215,7 @@
     const nationality=textLabel('COUNTRY / NATIONALITY (OPTIONAL)','input',{maxlength:'60',placeholder:'Optional public profile field'});
     const availability=textLabel('AVAILABILITY (OPTIONAL)','input',{maxlength:'80',placeholder:'Example: Weekends, evenings UTC+1'});
     const photo=textLabel('PUBLIC PHOTO OR TEAM LOGO (OPTIONAL)','input',{type:'file',accept:'image/png,image/jpeg,image/webp'});
-    const hint=el('p','vxsk-mkt-hint','PNG / JPG / WEBP, up to 1.5 MB. A team logo is fine; no personal photo is required. Uploaded images will be public.');
+    const hint=el('p','vxsk-mkt-hint','PNG / JPG / WEBP, up to 20 MB. Large photos are automatically resized on your device to fit our 2 MB upload limit. A logo is fine; no personal photo required. Images are public.');
     const status=el('p','vxsk-mkt-status');status.setAttribute('role','status');status.setAttribute('aria-live','polite');
     const submit=el('button','vxsk-mkt-action','SAVE MY PROFILE');submit.type='submit';
     form.append(chooser.label,nickname.label,bio.label,rank.label,division.label,region.label,nationality.label,availability.label,photo.label,hint,status,submit);
@@ -191,16 +233,15 @@
       event.preventDefault();const p=getSelected();const name=nickname.input.value.trim(),about=bio.input.value.trim();
       if(name.length<2||about.length<20){showStatus(status,'Add a display name (2+) and an about section (20+ characters).');return;}
       const file=photo.input.files?.[0];
-      if(file&&(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>1572864)){
-        showStatus(status,'Choose a PNG/JPG/WEBP up to 1.5 MB.');return;
-      }
-      submit.disabled=true;showStatus(status,'Saving your profile…');
+      submit.disabled=true;showStatus(status,file?'Preparing photo on your device…':'Saving your profile…');
       try{
         let path=null;
         if(file){
-          const ext={'image/png':'png','image/jpeg':'jpg','image/webp':'webp'}[file.type];
-          path=`${user.id}/${crypto.randomUUID()}.${ext}`;
-          const {error}=await api().storage.from('vxsk-booster-photos').upload(path,file,{upsert:false,contentType:file.type,cacheControl:'3600'});
+          const prepared=await prepareBoosterPhoto(file);
+          showStatus(status,prepared.compressed?'Photo resized. Uploading…':'Uploading photo…');
+          path=`${user.id}/${crypto.randomUUID()}.${prepared.ext}`;
+          const {error}=await api().storage.from('vxsk-booster-photos')
+            .upload(path,prepared.data,{upsert:false,contentType:prepared.type,cacheControl:'3600'});
           if(error)throw error;
         }
         await rpc('vxsk_market_update_my_booster_profile',{
