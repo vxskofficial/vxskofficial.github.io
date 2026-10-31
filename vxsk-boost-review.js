@@ -31,7 +31,48 @@
     list.replaceChildren();msg(status,'Checking owner-only access…');
     try{const data=await rpc('vxsk_market_owner_requests');const rows=Array.isArray(data)?data:[];msg(status,`${rows.length} requests visible to verified owner.`);
       if(!rows.length)list.append(el('p','No requests yet.'));
-      for(const row of rows){const card=el('div',undefined,'vxsk-boost-staff-row');card.append(el('strong',`${row.service.toUpperCase()} — ${row.total_tnd} DT`),el('p',`Player: ${row.nickname||'VXSK player'} · Game: ${GAME[row.game]||'—'} · Qty: ${row.quantity} · Method: ${row.payment_method}`),el('p',`Status: ${row.status} · Notes: ${row.note||'None'}`));list.append(card);}
+      for(const row of rows){
+        const card=el('div',undefined,'vxsk-boost-staff-row');
+        card.append(
+          el('strong',`${String(row.service||'request').toUpperCase()} — ${row.total_tnd} DT`),
+          el('p',`Player: ${row.nickname||'VXSK player'} · Game: ${GAME[row.game]||'—'} · Qty: ${row.quantity} · Method: ${row.payment_method}`),
+          el('p',`Status: ${row.status} · Notes: ${row.note||'None'}`)
+        );
+        // Only the owner-only RPC provides request rows; the status RPC independently
+        // enforces owner + MFA and refuses updates to non-editable records.
+        const choices=row.status==='pending'
+          ? [['APPROVE REQUEST','approved'],['REJECT REQUEST','rejected'],['CANCEL REQUEST','cancelled']]
+          : row.status==='approved'
+          ? [['MARK COMPLETED','completed'],['CANCEL REQUEST','cancelled']]
+          : [];
+        if(choices.length && typeof row.id==='string'){
+          const bar=el('div',undefined,'vxsk-boost-staff-actions');
+          for(const [label,nextStatus] of choices){
+            const button=el('button',label);button.type='button';
+            button.addEventListener('click',async()=>{
+              const description=`${String(row.service||'service').toUpperCase()} — ${row.total_tnd} DT`;
+              const warning=nextStatus==='completed'
+                ? 'Only mark completed if the service was actually delivered. This does not verify payment.'
+                : 'This action changes request status only; it does not collect or confirm payment.';
+              if(!window.confirm(`${label} for ${description}?\n\n${warning}`))return;
+              for(const child of bar.querySelectorAll('button'))child.disabled=true;
+              msg(status,`Updating request to ${nextStatus}…`);
+              try{
+                await rpc('vxsk_market_owner_request_status',{
+                  p_request_id:row.id,p_status:nextStatus
+                });
+                await orders();
+              }catch(error){
+                msg(status,'Request update failed: '+err(error));
+                for(const child of bar.querySelectorAll('button'))child.disabled=false;
+              }
+            });
+            bar.append(button);
+          }
+          card.append(bar);
+        }
+        list.append(card);
+      }
     }catch(error){msg(status,'Owner-only requests unavailable: '+err(error));}
   }
 
