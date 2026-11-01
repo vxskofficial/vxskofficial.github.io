@@ -1,0 +1,10 @@
+/* P13: responsive live crew portraits, existing homepage layout retained. */
+.vxsk-team-group--leadership .vxsk-team-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));max-width:1020px}
+.vxsk-team-group--management .vxsk-team-grid,.vxsk-team-group--community .vxsk-team-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr));max-width:none}
+.vxsk-team-card .vxsk-team-image{aspect-ratio:4/5;background:linear-gradient(160deg,#fff,#e9e9ff)}
+.vxsk-team-card .vxsk-team-image img{width:100%;height:100%;object-fit:contain}
+.vxsk-team-card .vxsk-team-info{min-height:125px}
+.vxsk-p13-bio{margin-top:7px!important;font-size:12px!important;line-height:1.45!important;color:#aeb8d8!important}
+.vxsk-p13-empty{background:#181735;border:1px solid #615187;color:#cfc7f5;border-radius:15px;padding:24px;text-align:center}
+@media(max-width:640px){.vxsk-team-group--leadership .vxsk-team-grid,.vxsk-team-group--management .vxsk-team-grid,.vxsk-team-group--community .vxsk-team-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:390px){.vxsk-team-group--leadership .vxsk-team-grid,.vxsk-team-group--management .vxsk-team-grid,.vxsk-team-group--community .vxsk-team-grid{grid-template-columns:1fr}}

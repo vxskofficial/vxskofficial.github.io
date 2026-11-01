@@ -28,14 +28,6 @@
     matches.setAttribute('aria-pressed',String(kind.value==='match'));
     const heading=$('content-title');if(heading)heading.textContent='WEBSITE UPDATES & WHO VS WHO';
   }
-  // Staff applications require owner-authenticated backend intake; don't fake approvals.
-  const team=$('staff-view-team');
-  if(team && !$('vxsk-master-staff-apps')){
-    const section=make('section','vxsk-master-staff-apps');section.id='vxsk-master-staff-apps';
-    section.append(make('h3','','STAFF APPLICATIONS · PENDING SECURE BACKEND'),
-      make('p','','Planned: players apply, owner reviews, then the existing owner-only role RPC grants access. No one becomes staff merely by submitting a form. Staff portraits need member consent and approved media storage.'));
-    team.append(section);
-  }
   // Explain event/fixture separation: a calendar event is not a scoreable bracket match.
   const eventForm=$('staff-event-form');
   if(eventForm && !$('vxsk-master-event-help')){

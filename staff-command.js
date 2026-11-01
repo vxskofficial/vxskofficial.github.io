@@ -7,9 +7,9 @@
   if(!tabs.length||!views.length)return;
   const valid=new Set(views.map(node=>node.dataset.staffView));
   function open(name){
-    if(!valid.has(name))name='applications';
+    if(!valid.has(name))name='overview';
     const targetTab=document.querySelector('[data-staff-tab="'+name+'"]');
-    if(!targetTab||targetTab.hidden)name='applications';
+    if(!targetTab||targetTab.hidden)name='overview';
     for(const button of tabs){
       const active=button.dataset.staffTab===name;
       button.classList.toggle('is-active',active);
@@ -23,6 +23,7 @@
     }
     if(name==='tournaments')window.dispatchEvent(new Event('vxsk:staff-tournaments-open'));
     if(name==='team')window.dispatchEvent(new Event('vxsk:owner-team-open'));
+    if(name==='crew')window.dispatchEvent(new Event('vxsk:p13-crew-open')); 
     if(name==='bulletin')window.dispatchEvent(new Event('vxsk:staff-showmatches-open'));
     // Back/refresh should not silently open a hidden area.
     try{history.replaceState(null,'','#'+name);}catch(_){/* file preview */}
@@ -36,7 +37,7 @@
       if(opp)opp.hidden=true;
     }
     const chosen=location.hash.slice(1);
-    open(valid.has(chosen)?chosen:'applications');
+    open(valid.has(chosen)?chosen:'overview');
     // Showmatch queue is visible to MFA-verified reviewers; actual editing and
     // publishing is still gated separately by can_edit_match_center + Supabase RLS.
     const api=window.VXSK_STAFF_API;
@@ -44,7 +45,7 @@
       try{
         const {data,error}=await api.rpc('vxsk_hub_referee');
         const tab=document.querySelector('[data-staff-tab="bulletin"]');
-        if(tab&&(error||data!==true)){tab.hidden=true;if(!document.getElementById('staff-view-bulletin').hidden)open('applications');}
+        if(tab&&(error||data!==true)){tab.hidden=true;if(!document.getElementById('staff-view-bulletin').hidden)open('overview');}
       }catch(_){/* Server remains the authority. */}
     }
   });
