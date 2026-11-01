@@ -56,7 +56,7 @@
     const result=el('div','vxsk-mkt-booster-list');result.id='vxsk-mkt-booster-list';result.setAttribute('aria-live','polite');boost.append(result);
     const actions=el('div','vxsk-mkt-boost-actions');const request=el('button','vxsk-mkt-action','CONFIRM BOOST REQUEST');request.type='button';request.id='vxsk-mkt-boost-request';request.disabled=true;request.addEventListener('click',()=>openModal('boost'));const apply=el('button','vxsk-mkt-ghost','APPLY TO BECOME A BOOSTER');apply.type='button';apply.addEventListener('click',openApply);const edit=el('button','vxsk-mkt-ghost','EDIT MY BOOSTER PROFILE');edit.type='button';edit.addEventListener('click',openEditBoosterProfile);
     actions.append(request,apply,edit);boost.append(actions);
-    inside.append(boost);section.append(inside);(document.querySelector('main')||document.body).append(section);renderRankChoices();
+    inside.append(boost);inside.append(buildMyReviewPanel());section.append(inside);(document.querySelector('main')||document.body).append(section);renderRankChoices();
     const nav=$('nav-links');if(nav&&!nav.querySelector('a[href="#vxsk-marketplace"]')){const link=el('a','vxsk-master-shop-link','MERCH');link.href='#vxsk-marketplace';nav.append(link);}
     const stale=nav?.querySelector('a[href="#vxsk-master-shop"]');if(stale)stale.href='#vxsk-marketplace';
     loadBoosters();loadCoaches();
@@ -311,8 +311,71 @@
     pick.input.addEventListener('change',loadCoaches);const refresh=el('button','vxsk-mkt-ghost','REFRESH COACHES');refresh.type='button';refresh.addEventListener('click',loadCoaches);
     filters.append(pick.label,refresh);section.append(filters);
     const cards=el('div','vxsk-coach-grid');cards.id='vxsk-coach-list';cards.setAttribute('aria-live','polite');section.append(cards);
-    const apply=el('p','vxsk-mkt-hint','Want to coach? Applications and coach-set prices will open only after the private Supabase approval workflow is tested.');section.append(apply);
+    const help=el('p','vxsk-mkt-hint','Coach applications are reviewed by a verified VXSK owner. Approved coaches can set their own session price. No payment is collected here.');
+    const actions=el('div','vxsk-mkt-boost-actions');
+    const apply=el('button','vxsk-mkt-ghost','APPLY TO BE A COACH');apply.type='button';apply.addEventListener('click',openCoachApplication);
+    const edit=el('button','vxsk-mkt-ghost','EDIT MY COACH PROFILE');edit.type='button';edit.addEventListener('click',openEditCoachProfile);
+    actions.append(apply,edit);section.append(help,actions);
     return section;
+  }
+  // P10.8 — This section is a UI; Supabase SECURITY DEFINER functions enforce identity and owner review.
+  function openCoachApplication(){
+    const {contents}=modal('APPLY TO BE A COACH','Submit an application for owner review. Your proposed session price is not charged or collected here.');
+    const form=el('form','vxsk-mkt-order-form');
+    const game=textLabel('GAME / SPECIALTY','select',{required:''});
+    for(const [value,label] of Object.entries(GAME_LABELS)){const opt=el('option','',label);opt.value=value;game.input.append(opt);}
+    const pitch=textLabel('YOUR COACHING EXPERIENCE','textarea',{minlength:'25',maxlength:'450',rows:'5',required:'',placeholder:'Explain your experience, teaching approach and what players can expect. No passwords or personal IDs.'});
+    const price=textLabel('PROPOSED SESSION PRICE (DT)','input',{type:'number',min:'1',max:'1000',step:'1',required:''});
+    price.input.value='20';
+    const status=el('p','vxsk-mkt-status');status.setAttribute('role','status');
+    const send=el('button','vxsk-mkt-action','SEND COACH APPLICATION');send.type='submit';
+    form.append(game.label,pitch.label,price.label,status,send);contents.append(form);
+    form.addEventListener('submit',async e=>{
+      e.preventDefault();
+      if(!await getSession()){showStatus(status,'Sign in to VXSK first.');return;}
+      const n=Number(price.input.value);
+      if(!Number.isInteger(n)||n<1||n>1000){showStatus(status,'Enter a session price between 1 and 1000 DT.');return;}
+      send.disabled=true;
+      try{
+        await rpc('vxsk_coaching_apply',{p_game:game.input.value,p_pitch:pitch.input.value.trim(),p_price_tnd:n});
+        showStatus(status,'Application pending owner review. No payment made.',true);send.textContent='APPLICATION SENT';
+      }catch(error){showStatus(status,'Application not sent: '+errors(error));send.disabled=false;}
+    });
+  }
+  async function openEditCoachProfile(){
+    const {contents}=modal('EDIT MY COACH PROFILE','Only your own approved coach profiles are editable. Prices are checked by Supabase when a booking is requested.');
+    const status=el('p','vxsk-mkt-status','Loading your approved coach profiles…');status.setAttribute('role','status');contents.append(status);
+    if(!await getSession()){showStatus(status,'Sign in to VXSK first.');return;}
+    try{
+      const profiles=await rpc('vxsk_coaching_my_profiles');
+      const rows=Array.isArray(profiles)?profiles:[];
+      if(!rows.length){showStatus(status,'You have no approved coach profile. Apply first, then wait for Owner review.');return;}
+      showStatus(status,`${rows.length} coach profile(s) available.`,true);
+      const form=el('form','vxsk-mkt-order-form');
+      const selected=textLabel('COACH PROFILE','select');
+      for(const row of rows){const opt=el('option','',`${GAME_LABELS[row.game]||row.game} · ${row.nickname||'Coach'}`);opt.value=row.coach_id;selected.input.append(opt);}
+      const nickname=textLabel('DISPLAY NAME','input',{required:'',maxlength:'70',minlength:'2'});
+      const bio=textLabel('BIO','textarea',{maxlength:'700',rows:'5'});
+      const nationality=textLabel('NATIONALITY (optional)','input',{maxlength:'60'});
+      const price=textLabel('SESSION PRICE (DT)','input',{type:'number',min:'1',max:'1000',step:'1',required:''});
+      function load(){const r=rows.find(r=>r.coach_id===selected.input.value)||rows[0];nickname.input.value=r.nickname||'';bio.input.value=r.bio||'';nationality.input.value=r.nationality||'';price.input.value=String(r.price_tnd||20);}
+      selected.input.addEventListener('change',load);load();
+      const save=el('button','vxsk-mkt-action','SAVE MY COACH PROFILE');save.type='submit';
+      form.append(selected.label,nickname.label,bio.label,nationality.label,price.label,save);contents.append(form);
+      form.addEventListener('submit',async e=>{
+        e.preventDefault();const amount=Number(price.input.value);
+        if(!Number.isInteger(amount)||amount<1||amount>1000){showStatus(status,'Invalid session price.');return;}
+        save.disabled=true;
+        try{
+          await rpc('vxsk_coaching_update_my_profile',{
+            p_coach_id:selected.input.value,p_nickname:nickname.input.value.trim(),
+            p_bio:bio.input.value.trim(),p_nationality:nationality.input.value.trim(),p_price_tnd:amount
+          });
+          const row=rows.find(r=>r.coach_id===selected.input.value);if(row){row.nickname=nickname.input.value.trim();row.bio=bio.input.value.trim();row.nationality=nationality.input.value.trim();row.price_tnd=amount;}
+          showStatus(status,'Coach profile saved.',true);await loadCoaches();
+        }catch(error){showStatus(status,'Save failed: '+errors(error));}finally{save.disabled=false;}
+      });
+    }catch(error){showStatus(status,'Coach profiles unavailable: '+errors(error));}
   }
   const safePhoto=(uri)=>{try{const u=new URL(String(uri),location.href);return (u.origin===location.origin || (u.hostname==='opzqnmahfgehaewgciwg.supabase.co'&&u.pathname.startsWith('/storage/v1/object/public/')))?u.href:null;}catch{return null;}};
   function numberPrice(v){const n=Number(v);return Number.isInteger(n)&&n>0&&n<=1000?n:null;}
@@ -338,19 +401,57 @@
       if(!container.childElementCount)container.append(el('p','vxsk-mkt-hint','No coach profiles with approved pricing are available yet.'));
     }catch(e){container.replaceChildren(el('div','vxsk-coach-empty','☆☆☆☆☆ · No verified coaches or ratings available yet. The private approval backend must be installed first.'));}
   }
+  // P11 — review only the current signed-in player's own actually completed services.
+  // Server checks eligibility again at submission; client UI is never an authority.
+  function buildMyReviewPanel(){
+    const section=el('section','vxsk-coach-directory vxsk-my-reviews');section.id='vxsk-my-verified-reviews';
+    section.append(el('span','vxsk-mkt-kicker','VXSK / VERIFIED FEEDBACK'),
+      el('h2','','MY COMPLETED SERVICES & REVIEWS'),
+      el('p','vxsk-mkt-intro','After a verified service is completed, you can leave one honest review for that booking or boost. Reviews appear publicly only after staff moderation. No payment is collected here.'));
+    const button=el('button','vxsk-mkt-ghost','↻ CHECK MY COMPLETED SERVICES');button.type='button';button.addEventListener('click',refreshMyReviews);
+    const list=el('div','vxsk-coach-grid');list.id='vxsk-my-reviews-list';list.setAttribute('aria-live','polite');
+    section.append(button,list);return section;
+  }
+  async function refreshMyReviews(){
+    const list=$('vxsk-my-reviews-list');if(!list)return;
+    list.replaceChildren(el('p','vxsk-mkt-hint','Checking your completed services…'));
+    if(!await getSession()){
+      list.replaceChildren(el('p','vxsk-mkt-hint','Sign in to VXSK first, then check your completed services.'));
+      return;
+    }
+    try{
+      const response=await rpc('vxsk_market_my_reviewable_services');
+      const items=Array.isArray(response)?response:[];
+      list.replaceChildren();
+      if(!items.length){
+        list.append(el('p','vxsk-mkt-hint','No completed, unreviewed coaching or boost services yet. Pending, cancelled and rejected requests do not qualify.'));
+        return;
+      }
+      for(const record of items.slice(0,20)){
+        if(typeof record.profile_id!=='string')continue;
+        const card=el('article','vxsk-coach-card');
+        const name=String(record.profile_name||'VXSK provider').slice(0,70);
+        const category=record.service==='coaching'?'COACHING':'BOOST';
+        card.append(el('h3','',name),el('p','vxsk-mkt-hint',category+' · '+(GAME_LABELS[record.game]||'VXSK')));
+        const button=el('button','vxsk-mkt-action','WRITE VERIFIED REVIEW');button.type='button';
+        button.addEventListener('click',()=>openReviews(record.profile_id,name));
+        card.append(button);list.append(card);
+      }
+    }catch(error){list.replaceChildren(el('p','vxsk-mkt-hint','Could not load your completed services: '+errors(error)));}
+  }
   function validRating(c){const count=Number(c.reviews_count),avg=Number(c.reviews_avg);if(Number.isInteger(count)&&count>0&&Number.isFinite(avg)&&avg>=1&&avg<=5)return `★ ${avg.toFixed(1)} (${count} verified review${count===1?'':'s'})`;return '☆ No verified reviews yet';}
   async function openReviews(id,displayName){
     const {contents}=modal(`REVIEWS · ${displayName}`,'Verified player reviews only. Public reviews require completed sessions and moderation.');
     const list=el('div','vxsk-review-list');list.append(el('p','vxsk-mkt-hint','Checking verified reviews…'));contents.append(list);
     try{const data=await rpc('vxsk_market_verified_reviews',{p_profile_id:id});const rows=Array.isArray(data)?data:[];list.replaceChildren();
-      if(!rows.length){list.append(el('p','vxsk-mkt-hint','No verified reviews yet.'));return;}
+      if(!rows.length){list.append(el('p','vxsk-mkt-hint','No published reviews yet. Eligible players can submit the first review below.'));}
       for(const r of rows.slice(0,30)){
         const n=Number(r.stars);if(!Number.isInteger(n)||n<1||n>5)continue;
         const item=el('article','vxsk-review-entry');item.append(el('strong','',`${'★'.repeat(n)}${'☆'.repeat(5-n)} · Verified review`),el('p','',String(r.comment||'').slice(0,350)));list.append(item);
       }
     }catch{list.replaceChildren(el('p','vxsk-mkt-hint','Verified reviews are not available until the private feedback/reviews backend is installed.'));}
     const form=el('form','vxsk-review-submit');const heading=el('h3','','LEAVE A VERIFIED REVIEW');
-    const hint=el('p','vxsk-mkt-hint','Only players with a completed verified booking may leave a review. Staff and the server validate eligibility.');
+    const hint=el('p','vxsk-mkt-hint','Only players with a completed coaching booking or boost request may review that service. Reviews require independent staff approval.');
     const stars=textLabel('YOUR RATING','select');stars.input.required=true;
     for(let score=5;score>=1;score--){const opt=el('option','',`${'★'.repeat(score)}${'☆'.repeat(5-score)} · ${score}/5`);opt.value=String(score);stars.input.append(opt);}
     const comment=textLabel('REVIEW (20–350 characters)','textarea',{maxlength:'350',minlength:'20',rows:'3',required:'',placeholder:'Share what went well and what could improve. Avoid personal details.'});
@@ -360,7 +461,7 @@
     form.addEventListener('submit',async event=>{event.preventDefault();const msg=comment.input.value.trim();if(msg.length<20){showStatus(status,'Please write at least 20 characters.');return;}
       if(!await getSession()){showStatus(status,'Sign in to VXSK to leave a review.');return;}
       submit.disabled=true;try{await rpc('vxsk_market_submit_verified_review',{p_profile_id:id,p_stars:Number(stars.input.value),p_comment:msg});
-        showStatus(status,'Review submitted for verification. It is not public until accepted.',true);comment.input.value='';}
+        showStatus(status,'Review submitted for staff moderation. It is not public until approved.',true);comment.input.value='';submit.textContent='REVIEW SUBMITTED';refreshMyReviews();}
       catch{showStatus(status,'Review submission unavailable or you do not have a verified completed booking.');submit.disabled=false;}
     });
   }
