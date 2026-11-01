@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "teams": [
+    {
+      "id": "n2xt",
+      "name": "N2XT ESPORTS",
+      "label": "OFFICIAL VXSK PARTNER · TUNISIA",
+      "description": "Competitive Tunisian esports team with Rocket League, VALORANT, Fortnite and eFootball ambitions. Discipline, teamwork and community.",
+      "image": "assets/n2xt-official-logo.png",
+      "games": [
+        "Rocket League",
+        "VALORANT",
+        "Esports"
+      ],
+      "links": [
+        {
+          "label": "WEBSITE",
+          "url": "https://n2xtesports.netlify.app/"
+        },
+        {
+          "label": "INSTAGRAM",
+          "url": "https://www.instagram.com/n2xt.esports"
+        },
+        {
+          "label": "LINKTREE",
+          "url": "https://linktr.ee/teamn2xtesports"
+        }
+      ],
+      "featured": true
+    },
+    {
+      "id": "vortex",
+      "name": "VORTEX TN",
+      "label": "COMMUNITY TEAM · TUNISIA",
+      "description": "Competitive Rocket League teams, tryouts and tournaments; Minecraft SMP, PvP and community events. An active, welcoming gaming community.",
+      "image": "assets/vxsk-vortex-tn.webp",
+      "games": [
+        "Rocket League",
+        "Minecraft",
+        "Community events"
+      ],
+      "links": [
+        {
+          "label": "DISCORD",
+          "url": "https://discord.gg/Wb6QnDEaZg"
+        },
+        {
+          "label": "TIKTOK",
+          "url": "https://www.tiktok.com/@team_vortex_tn1"
+        }
+      ],
+      "featured": true
+    },
+    {
+      "id": "drax",
+      "name": "DRAX ESPORTS",
+      "label": "ROCKET LEAGUE · TUNISIA",
+      "description": "Rocket League-focused community bringing together competitive players, teammates and fans for tournaments and community matches.",
+      "image": "assets/vxsk-drax-dragon.webp",
+      "games": [
+        "Rocket League",
+        "Competition",
+        "Community"
+      ],
+      "links": [
+        {
+          "label": "DISCORD",
+          "url": "https://discord.gg/mvhgVg64tR"
+        },
+        {
+          "label": "TIKTOK",
+          "url": "https://www.tiktok.com/@drax_esports"
+        },
+        {
+          "label": "INSTAGRAM",
+          "url": "https://www.instagram.com/drax_esports__tn/"
+        },
+        {
+          "label": "EMAIL",
+          "url": "mailto:drax0esports@gmail.com"
+        }
+      ],
+      "featured": true
+    }
+  ]
+}

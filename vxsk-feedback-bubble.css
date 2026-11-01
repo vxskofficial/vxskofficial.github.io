@@ -1,0 +1,15 @@
+.vxsk-feedback-trigger{position:fixed;z-index:85;right:clamp(12px,2vw,26px);bottom:clamp(14px,2.7vw,29px);padding:13px 17px;border:1px solid #b88fff;border-radius:40px;color:#fff;background:linear-gradient(115deg,#7330c5,#292884);box-shadow:0 8px 27px #14063fa8,0 0 22px #9859ff70;font:900 12px 'Space Grotesk',system-ui,sans-serif;letter-spacing:.07em;cursor:pointer}
+.vxsk-feedback-trigger:hover{filter:brightness(1.18)}
+.vxsk-feedback-popover[hidden]{display:none!important}
+.vxsk-feedback-popover{position:fixed;z-index:86;bottom:85px;right:clamp(12px,2vw,26px);width:min(93vw,370px);max-height:min(75vh,510px);overflow:auto;padding:19px;border:1px solid #a17bdf;border-radius:19px;color:#f7f3ff;background:linear-gradient(135deg,#181235,#0d1331);box-shadow:0 24px 60px #030313e0;font-family:'Space Grotesk',system-ui,sans-serif}
+.vxsk-feedback-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.vxsk-feedback-head h2{font:900 28px 'Barlow Condensed',Impact,sans-serif;margin:0}.vxsk-feedback-close{width:32px;height:32px;border:1px solid #7f65bc;border-radius:8px;background:#282044;color:#fff}
+.vxsk-feedback-popover p{font:500 12px/1.7 'Space Grotesk',system-ui,sans-serif;color:#cec6e8}
+.vxsk-feedback-popover form{display:flex;flex-direction:column;gap:11px}.vxsk-feedback-popover select,.vxsk-feedback-popover textarea{width:100%;border:1px solid #6a569e;border-radius:9px;background:#0c1030;color:#fff;padding:12px;font:600 12px 'Space Grotesk',system-ui,sans-serif;box-sizing:border-box}
+.vxsk-feedback-popover textarea{resize:vertical}.vxsk-feedback-submit{border:1px solid #be8aff;border-radius:9px;padding:12px;background:#633cc2;color:#fff;font:900 12px 'Space Grotesk',system-ui,sans-serif}.vxsk-feedback-status{min-height:15px;margin:0!important}
+@media(max-width:500px){.vxsk-feedback-trigger{bottom:14px;right:10px;padding:11px 13px;font-size:10px}.vxsk-feedback-popover{right:10px;bottom:69px}}
+@media(prefers-reduced-motion:reduce){.vxsk-feedback-trigger{transition:none}}
+
+/* V12.9.4-p3 — feedback on LEFT; AI assistant remains on RIGHT. */
+.vxsk-feedback-trigger{right:auto;left:max(12px,env(safe-area-inset-left,0px))}
+.vxsk-feedback-popover{box-sizing:border-box;right:auto;left:max(12px,env(safe-area-inset-left,0px));width:min(370px,calc(100vw - 24px))}
+@media(max-width:500px){.vxsk-feedback-trigger{right:auto;left:max(10px,env(safe-area-inset-left,0px))}.vxsk-feedback-popover{right:auto;left:max(10px,env(safe-area-inset-left,0px));width:calc(100vw - 20px)}}

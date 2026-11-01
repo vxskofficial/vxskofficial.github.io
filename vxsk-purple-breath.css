@@ -1,0 +1,186 @@
+/*
+ VXSK V12.9.4 — PURPLE BREATH visual add-on
+ Layer this AFTER vxsk-header-galaxy.css / vxsk-home-refine.css.
+ Presentation only: no database, accounts, permissions, or API changes.
+ Designed for existing .ambient-backdrop/.ambient-wash and .header .nav-links.
+*/
+
+:root {
+  --vxsk-purple-night: #080513;
+  --vxsk-purple-deep: #170a30;
+  --vxsk-purple-violet: #9f5cff;
+  --vxsk-purple-lilac: #e9d4ff;
+}
+
+/* A darker, richer purple canvas. Existing videos and particles remain in place. */
+html { background-color: var(--vxsk-purple-night); }
+.ambient-backdrop,
+.ambient-wash { pointer-events: none; }
+.ambient-backdrop { overflow: hidden; }
+
+/* Nebula layers breathe independently — slow opacity/transform, not rapid flashes. */
+.ambient-backdrop::before,
+.ambient-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: -22%;
+  pointer-events: none;
+  border-radius: 50%;
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+.ambient-backdrop::before {
+  background:
+    radial-gradient(ellipse 36% 41% at 26% 31%, rgba(113,43,187,.39), transparent 78%),
+    radial-gradient(ellipse 34% 37% at 77% 58%, rgba(87,28,171,.25), transparent 77%);
+  opacity: .58;
+  animation: vxskPurpleNebulaBreath 12s ease-in-out infinite alternate;
+}
+.ambient-backdrop::after {
+  background:
+    radial-gradient(ellipse 28% 40% at 78% 17%, rgba(188,76,255,.17), transparent 81%),
+    radial-gradient(ellipse 33% 36% at 17% 82%, rgba(118,48,237,.18), transparent 80%);
+  opacity: .5;
+  animation: vxskPurpleNebulaFloat 19s ease-in-out infinite alternate;
+}
+
+.ambient-wash { overflow: hidden; }
+.ambient-wash::before,
+.ambient-wash::after {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.ambient-wash::before {
+  background: radial-gradient(ellipse 58% 28% at 50% 8%, rgba(135,58,222,.18), transparent 80%);
+  opacity: .52;
+  animation: vxskPurpleHaloBreath 7s ease-in-out infinite;
+}
+/* Tiny distant starlight drifting slowly, behind the main site content. */
+.ambient-wash::after {
+  background-image:
+    radial-gradient(circle, rgba(222,195,255,.67) 1px, transparent 1.5px),
+    radial-gradient(circle, rgba(169,109,255,.41) 1px, transparent 1.6px);
+  background-size: 239px 223px, 347px 293px;
+  background-position: 30px 60px, 150px 130px;
+  opacity: .25;
+  animation: vxskPurpleStardrift 30s linear infinite;
+}
+
+@keyframes vxskPurpleNebulaBreath {
+  0%   { opacity: .37; transform: translate3d(-1.2%,0,0) scale(.98); }
+  50%  { opacity: .68; transform: translate3d(1%,1%,0) scale(1.035); }
+  100% { opacity: .45; transform: translate3d(0,-1%,0) scale(1.015); }
+}
+@keyframes vxskPurpleNebulaFloat {
+  from { opacity: .32; transform: translate3d(-1.3%,1%,0) scale(1); }
+  to   { opacity: .62; transform: translate3d(1.2%,-1.5%,0) scale(1.055); }
+}
+@keyframes vxskPurpleHaloBreath {
+  0%,100% { opacity: .33; transform: scale(.96); }
+  50%     { opacity: .68; transform: scale(1.04); }
+}
+@keyframes vxskPurpleStardrift {
+  from { transform: translate3d(0,0,0); }
+  to   { transform: translate3d(-18px,-33px,0); }
+}
+
+/* Deep-purple header and category labels: keep original link widths/padding. */
+.header {
+  background: linear-gradient(180deg, rgba(12,6,31,.97), rgba(21,9,49,.90)) !important;
+  border-bottom: 1px solid rgba(161,97,235,.26);
+  box-shadow: 0 10px 36px rgba(13,5,34,.48), inset 0 -1px 0 rgba(186,121,255,.08);
+}
+.header .nav-links a,
+.header .nav-links a.vxsk-nav-merch {
+  position: relative;
+  isolation: isolate;
+  color: #e5caff !important;
+  background: linear-gradient(120deg, rgba(89,39,153,.19), rgba(32,11,79,.16));
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1px rgba(179,114,255,.13);
+  text-shadow: 0 0 8px rgba(172,93,246,.45) !important;
+  animation: none !important; /* replace old text pulsing with smooth backlight */
+  transition: background-color .25s ease, color .25s ease,
+              box-shadow .25s ease, transform .25s ease;
+}
+.header .nav-links a::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -4px -6px;
+  pointer-events: none;
+  border-radius: 12px;
+  background: radial-gradient(ellipse at 50% 60%, rgba(177,95,255,.60), rgba(101,30,183,.16) 57%, transparent 76%);
+  filter: blur(9px);
+  opacity: .29;
+  transform: scale(.94);
+  animation: vxskPurpleNavBreathe 5.8s ease-in-out infinite;
+}
+.header .nav-links a:nth-child(3n+2)::before { animation-delay: -1.9s; }
+.header .nav-links a:nth-child(3n)::before   { animation-delay: -3.8s; }
+
+.header .nav-links a .vxsk-nav-icon {
+  color: #c39aff !important;
+  filter: drop-shadow(0 0 6px rgba(171,92,255,.55));
+  animation: none !important;
+}
+.header .nav-links a:is(:hover, :focus-visible, .active) {
+  color: #fff5ff !important;
+  background: linear-gradient(120deg, rgba(107,44,190,.36), rgba(59,21,133,.28));
+  box-shadow: inset 0 0 0 1px rgba(205,150,255,.50), 0 0 18px rgba(147,74,238,.18);
+  text-shadow: 0 0 12px rgba(230,186,255,.85) !important;
+  transform: translateY(-1px);
+}
+.header .nav-links a:is(:hover, :focus-visible, .active)::before { opacity: .82; }
+.header .nav-links a:focus-visible { outline: 2px solid #d0a2ff; outline-offset: 3px; }
+.header .nav-links a:is(:hover, :focus-visible, .active) .vxsk-nav-icon {
+  color: #e6c6ff !important;
+  filter: drop-shadow(0 0 9px rgba(194,125,255,.80));
+}
+.header .nav-links a.vxsk-nav-merch::after {
+  background: linear-gradient(90deg,transparent,#a45cff,#dfb3ff,transparent);
+  filter: drop-shadow(0 0 7px rgba(172,91,255,.72));
+}
+
+@keyframes vxskPurpleNavBreathe {
+  0%,100% { opacity: .22; transform: scale(.94); }
+  50%     { opacity: .62; transform: scale(1.035); }
+}
+
+/* A little extra glow on the featured-team cards, without changing their dimensions. */
+.vxsk-partner-card {
+  transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+}
+.vxsk-partner-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(182,114,255,.75);
+  box-shadow: 0 18px 44px rgba(12,5,33,.64), 0 0 23px rgba(132,55,215,.14);
+}
+
+/* Respect existing low-lag setting, reduced-motion preferences and small screens. */
+html.vxsk-low-lag .ambient-backdrop::before,
+html.vxsk-low-lag .ambient-backdrop::after,
+html.vxsk-low-lag .ambient-wash::before,
+html.vxsk-low-lag .ambient-wash::after,
+html.vxsk-low-lag .header .nav-links a::before {
+  animation: none !important;
+  will-change: auto;
+}
+@media (max-width: 720px) {
+  .ambient-backdrop::before, .ambient-backdrop::after { opacity: .36; }
+  .ambient-wash::after { opacity: .15; }
+  .header .nav-links a { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ambient-backdrop::before, .ambient-backdrop::after,
+  .ambient-wash::before, .ambient-wash::after,
+  .header .nav-links a::before,
+  .vxsk-partner-card {
+    animation: none !important;
+    transition: none !important;
+    will-change: auto;
+  }
+}

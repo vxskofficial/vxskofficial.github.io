@@ -1,0 +1,47 @@
+/* VXSK home Phase 2 — unobtrusive community spotlight + arena bubble */
+.vxsk-arena-orb{margin:18px 0 6px;display:inline-flex;align-items:center;gap:14px;padding:11px 19px 11px 13px;border-radius:50px;border:1px solid #b188ff83;background:linear-gradient(110deg,#2f1b61d9,#102e6bb5);box-shadow:0 0 0 1px #7348ac33,0 12px 30px #130c3677;max-width:100%;transition:box-shadow .3s,transform .3s;text-decoration:none;color:#fff}
+.vxsk-arena-orb:hover,.vxsk-arena-orb:focus-visible{box-shadow:0 0 24px #8448ff91;transform:translateY(-2px)}
+.vxsk-arena-orb-icon{font:900 25px 'Space Grotesk',sans-serif;display:grid;place-items:center;width:42px;height:42px;flex:0 0 42px;border-radius:100%;background:#6c39c8;color:#fff;box-shadow:0 0 20px #9e66ff8a;animation:vxskOrbPulse 3.6s ease-in-out infinite}
+.vxsk-arena-orb strong{display:block;font:900 18px 'Barlow Condensed',Impact,sans-serif;letter-spacing:.08em}
+.vxsk-arena-orb small{font:800 9px 'Space Grotesk',system-ui,sans-serif;color:#c7d5ff;letter-spacing:.09em}
+@keyframes vxskOrbPulse{50%{box-shadow:0 0 35px #945affcb;transform:rotate(18deg)}}
+.vxsk-teams-section{padding:clamp(48px,6vw,85px) 0}
+.vxsk-partner-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:19px;margin-top:30px}
+.vxsk-partner-card{min-width:0;display:flex;gap:20px;align-items:center;padding:clamp(18px,2vw,27px);border-radius:19px;border:1px solid #7956d18a;background:linear-gradient(135deg,#191332,#0d1231);box-shadow:0 14px 45px #05030b50;overflow:hidden}
+.vxsk-partner-visual{width:140px;flex:0 0 140px;height:150px;display:grid;place-items:center;border-radius:14px;background:radial-gradient(ellipse,#40247c,#0b0c24 70%);overflow:hidden}
+.vxsk-partner-visual img{width:100%;height:100%;object-fit:contain}
+.vxsk-partner-vortex .vxsk-partner-visual img{object-fit:cover}
+.vxsk-drax-art{background:radial-gradient(ellipse,#471327,#080a21 80%)}
+.vxsk-drax-art img{object-fit:contain;width:84%;height:92%;filter:drop-shadow(0 0 14px #ea483a88)}
+.vxsk-partner-copy{min-width:0;flex:1}
+.vxsk-team-label{display:block;font:850 10px/1.45 'Space Grotesk',sans-serif;color:#bba6ff;letter-spacing:.115em}
+.vxsk-partner-copy h3{font:900 clamp(24px,3vw,35px)/1.05 'Barlow Condensed',Impact,sans-serif;color:#fff;margin:6px 0 9px}
+.vxsk-partner-copy p{font:500 12px/1.65 'Space Grotesk',sans-serif;color:#d4cdee;margin:0 0 11px}
+.vxsk-team-chips,.vxsk-team-links{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.vxsk-team-chips span{border:1px solid #6e509e;padding:5px 7px;border-radius:9px;font:700 9px 'Space Grotesk',sans-serif;color:#e1d9ff}
+.vxsk-team-links a{font:800 10px 'Space Grotesk',sans-serif;color:#bcb3ff;border-bottom:1px solid #8966e6;padding:5px 3px}
+.vxsk-team-links a:hover{color:white;text-shadow:0 0 9px #b983ff}
+.vxsk-weekly-standings{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;margin:20px 0 0;padding:20px 24px;border-radius:18px;border:1px solid #564b85;background:#0e1130d9}
+.vxsk-weekly-standings h3{font:900 25px 'Barlow Condensed',Impact,sans-serif;color:#fff;margin:5px 0 9px}
+.vxsk-weekly-standings p{font:500 12px/1.65 'Space Grotesk',sans-serif;color:#d8d2ee;margin:0}
+.vxsk-weekly-list{display:grid;gap:8px;align-content:center}
+.vxsk-weekly-list:empty::before{content:'Leaderboard inactive — verified scoring backend pending';padding:14px 16px;color:#bcb1d6;font:700 12px 'Space Grotesk',sans-serif;border:1px dashed #67578e;border-radius:11px}
+.vxsk-weekly-row{display:flex;justify-content:space-between;gap:12px;padding:10px 14px;border:1px solid #594b8e;border-radius:10px;background:#1d1740;color:#fff;font:750 12px 'Space Grotesk',sans-serif}
+@media(max-width:900px){.vxsk-partner-grid{grid-template-columns:1fr}.vxsk-weekly-standings{grid-template-columns:1fr}}
+@media(max-width:540px){.vxsk-partner-card{flex-direction:column;align-items:start}.vxsk-partner-visual{width:100%;height:175px;flex-basis:auto}.vxsk-partner-visual img{max-width:240px}.vxsk-arena-orb{padding:9px 12px 9px 9px;gap:9px}.vxsk-arena-orb-icon{width:35px;height:35px;flex-basis:35px}.vxsk-arena-orb small{font-size:8px}.vxsk-weekly-standings{padding:18px}}
+@media(prefers-reduced-motion:reduce){.vxsk-arena-orb-icon{animation:none}.vxsk-arena-orb{transition:none}}
+
+/* V12.9.4-p3 — N2XT, VORTEX and DRAX in one unified partner spotlight. */
+.vxsk-anchor-target{display:block;position:relative;top:-95px;visibility:hidden;height:0}
+.vxsk-partner-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.vxsk-partner-card{flex-direction:column;align-items:stretch;gap:13px;padding:20px}
+.vxsk-partner-visual{width:100%;height:160px;flex:0 0 160px}
+.vxsk-partner-visual img{max-width:100%;max-height:100%;object-fit:contain}
+.vxsk-partner-vortex .vxsk-partner-visual img{object-fit:contain}
+.vxsk-n2xt-art{background:radial-gradient(ellipse at center,#30205f,#0e102c 73%)}
+.vxsk-n2xt-art img{width:min(160px,100%);height:100%;object-fit:contain}
+.vxsk-partner-copy{display:flex;flex-direction:column;flex:1}
+.vxsk-partner-copy p{flex:1}
+.vxsk-team-links{margin-top:auto;padding-top:10px}
+@media(max-width:980px){.vxsk-partner-grid{grid-template-columns:1fr}.vxsk-partner-card{flex-direction:row;align-items:center}.vxsk-partner-visual{width:150px;height:155px;flex:0 0 150px}.vxsk-partner-copy{min-width:0}}
+@media(max-width:540px){.vxsk-partner-card{flex-direction:column;align-items:stretch}.vxsk-partner-visual{width:100%;flex-basis:165px;height:165px}}

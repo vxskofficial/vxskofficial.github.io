@@ -1,0 +1,24 @@
+/* VXSK V12.9.4: subtle animated nebula nav, preserves existing header / breakpoints. */
+.header .nav-links a{position:relative;isolation:isolate;font-family:'Space Grotesk',system-ui,sans-serif;font-weight:800!important;letter-spacing:.035em!important;color:#d4d0f0!important;text-shadow:0 0 9px #6036b643;transition:color .25s,text-shadow .25s,transform .25s}
+.header .nav-links a:hover,.header .nav-links a:focus-visible,.header .nav-links a.active{color:#fff!important;text-shadow:0 0 12px #a873ff,0 0 25px #507cff80}
+.header .nav-links a .vxsk-nav-icon{color:#b7a5ff;filter:drop-shadow(0 0 6px #9c74ff66);transition:transform .2s}
+.header .nav-links a:hover .vxsk-nav-icon{transform:translateY(-2px);filter:drop-shadow(0 0 10px #bc82ff)}
+.header .nav-links a.vxsk-nav-merch{color:#eddcff!important;text-shadow:0 0 12px #8864ff99}
+.header .nav-links a.vxsk-nav-merch::after{content:'';position:absolute;inset:auto 0 -7px;height:2px;background:linear-gradient(90deg,transparent,#b479ff,#5ea6ff,transparent);filter:drop-shadow(0 0 7px #a97bff);opacity:.8;animation:vxskNavShimmer 4s ease-in-out infinite}
+.header .nav-links a .vxsk-nav-icon{animation:vxskIconGlow 5.2s ease-in-out infinite}
+.header .nav-links a:nth-child(3n) .vxsk-nav-icon{animation-delay:-1.7s}
+.header .nav-links a:nth-child(3n + 2) .vxsk-nav-icon{animation-delay:-3.3s}
+@keyframes vxskIconGlow{0%,100%{filter:drop-shadow(0 0 3px #7f65ed55)}50%{filter:drop-shadow(0 0 10px #ab75ffab)}}
+@keyframes vxskNavShimmer{50%{opacity:.4;transform:scaleX(.65)}}
+@media(prefers-reduced-motion:reduce){.header .nav-links a.vxsk-nav-merch::after,.header .nav-links a .vxsk-nav-icon{animation:none}.header .nav-links a,.header .nav-links a .vxsk-nav-icon{transition:none}}
+
+/* V12.9.4-p3 — stronger VXSK nebula glow, NOT a third-party UI copy. */
+.header .nav-links a{z-index:0;color:#f0e8ff!important;text-shadow:0 0 7px #bd8dff85,0 0 17px #476cf65c;animation:vxskNavLightPulse 5.5s ease-in-out infinite}
+.header .nav-links a:nth-child(3n+2){animation-delay:-1.8s}
+.header .nav-links a:nth-child(3n){animation-delay:-3.7s}
+.header .nav-links a::before{content:"";position:absolute;z-index:-1;pointer-events:none;inset:-6px -8px;border-radius:11px;background:linear-gradient(115deg,#6b39b32b,#3860b324,#b454c51d);filter:blur(7px);opacity:.45;animation:vxskNavAuraFlow 5.5s ease-in-out infinite}
+.header .nav-links a:hover::before,.header .nav-links a:focus-visible::before{opacity:.95;filter:blur(5px)}
+.header .nav-links a:hover,.header .nav-links a:focus-visible{color:#fff!important;text-shadow:0 0 12px #e3b8ff,0 0 26px #4e9dff}
+@keyframes vxskNavLightPulse{0%,100%{text-shadow:0 0 6px #ab7cff75,0 0 12px #5176fb4d}50%{text-shadow:0 0 13px #c796ffbd,0 0 24px #5b88ff8c}}
+@keyframes vxskNavAuraFlow{0%,100%{opacity:.25;transform:scaleX(.95)}50%{opacity:.68;transform:scaleX(1.02)}}
+@media(prefers-reduced-motion:reduce){.header .nav-links a,.header .nav-links a::before{animation:none!important}}
