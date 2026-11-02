@@ -13,7 +13,8 @@
   const $=(scene,s)=>scene.querySelector(s);
   const film=scene=>$(scene,'video.vxsk-world-film');
   const lowLag=()=>document.documentElement.classList.contains('vxsk-low-lag')||document.body.classList.contains('vxsk-low-lag');
-  const allowAutoplay=()=>!document.hidden&&!lowLag()&&!media?.matches&&!connection?.saveData;
+  const mobileScreen=window.matchMedia?.('(max-width: 760px)');
+  const allowAutoplay=()=>!document.hidden&&!lowLag()&&!mobileScreen?.matches&&!media?.matches&&!connection?.saveData;
   function ensure(scene){
     const v=film(scene);if(v.dataset.vxskLoaded)return;
     const source=v.querySelector('source[data-src]');if(!source)return;
@@ -28,6 +29,8 @@
     button.setAttribute('aria-label',playing?'Pause background video':'Play background video');
     if(v.error)status.textContent='VIDEO UNAVAILABLE · USE FULL CLIP';
     else if(playing)status.textContent='● BACKGROUND PLAYING · MUTED';
+    else if(lowLag())status.textContent='PAUSED · LOW-LAG MODE';
+    else if(mobileScreen?.matches)status.textContent='BACKGROUND PAUSED · TAP TO PLAY';
     else if(v.dataset.vxskLoaded)status.textContent='BACKGROUND PAUSED';
     else status.textContent='BACKGROUND VIDEO · READY';
   }
@@ -37,6 +40,7 @@
   }
   async function play(scene,manual=false){
     if(manual)manuallyPaused.delete(scene);
+    if(lowLag()){pause(scene);update(scene);return;}
     if(!manual&&!allowAutoplay())return;
     for(const other of scenes)if(other!==scene&&!film(other).paused)pause(other);
     ensure(scene);
