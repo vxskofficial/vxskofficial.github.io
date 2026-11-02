@@ -268,3 +268,30 @@ html.vxsk-low-lag .vxsk-galaxy-stage canvas { opacity: .2 !important; }
     will-change: auto !important;
   }
 }
+
+/* Keep the signed-in squad identity available as a compact avatar. */
+@media (max-width: 760px) {
+  #nav-user-chip:not([hidden]) {
+    display: inline-flex !important;
+    flex: 0 0 32px;
+    width: 32px;
+    max-width: 32px;
+    min-width: 32px;
+    margin: 0;
+    padding: 0;
+    gap: 0;
+  }
+  #nav-user-chip[hidden] { display: none !important; }
+  #nav-user-chip #nav-nickname,
+  #nav-user-chip .nav-security,
+  #nav-user-chip .vxsk-avatar-edit-button {
+    display: none !important;
+  }
+  #nav-user-chip .nav-avatar-zone,
+  #nav-user-chip img,
+  #nav-user-chip .nav-avatar-fallback {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+  }
+}
