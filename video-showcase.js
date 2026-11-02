@@ -1,9 +1,24 @@
-/* VXSK STEP 3 — video is a clear background to real page sections.
-   One visible clip maximum; lazy source loading; data-saver and reduced-motion safe.
-   No user/social/staff/auth logic is touched. */
+/* VXSK cinematic sections.
+   Videos are lazy-loaded only when their source is present in the deployment.
+   When a large clip is omitted on staging, its local poster stays visible and
+   playback controls are disabled instead of producing broken media requests. */
 'use strict';
 (() => {
-  const scenes=[...document.querySelectorAll('[data-vxsk-world]')];
+  const allScenes=[...document.querySelectorAll('[data-vxsk-world]')];
+  if(!allScenes.length)return;
+  const hasSource=scene=>Boolean(scene.querySelector('video.vxsk-world-film source[data-src],video.vxsk-world-film source[src]'));
+  for(const scene of allScenes){
+    if(hasSource(scene))continue;
+    const video=scene.querySelector('video.vxsk-world-film');
+    const button=scene.querySelector('[data-world-toggle]');
+    const status=scene.querySelector('.vxsk-world-playback');
+    const full=scene.querySelector('.vxsk-world-full');
+    if(video){video.pause();video.removeAttribute('src');video.querySelectorAll('source').forEach(source=>source.remove());}
+    if(button){button.disabled=true;button.setAttribute('aria-disabled','true');button.textContent='STATIC PREVIEW';}
+    if(status)status.textContent='STATIC PREVIEW · VIDEO HOSTING PENDING';
+    if(full){const note=document.createElement('span');note.className=full.className;note.textContent='VIDEO HOSTING PENDING';full.replaceWith(note);}
+  }
+  const scenes=allScenes.filter(hasSource);
   if(!scenes.length)return;
   const media=window.matchMedia?.('(prefers-reduced-motion: reduce)');
   const connection=navigator.connection;
