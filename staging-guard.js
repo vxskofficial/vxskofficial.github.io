@@ -1,11 +1,13 @@
-/* Hard stop if a test Netlify hostname is accidentally configured against VXSK production. */
+/* Hard stop if a preview deployment (GitHub Pages, Netlify, or Cloudflare) is pointed at a non-staging Supabase project. */
 'use strict';
 (() => {
   const cfg=window.VXSK_SUPABASE||{};
   const host=location.hostname.toLowerCase();
-  const isPreview=(host.endsWith('.netlify.app')&&host!=='vxsk-events.netlify.app') || host.endsWith('.github.io');
+  const isNetlifyPreview=host.endsWith('.netlify.app')&&host!=='vxsk-events.netlify.app';
+  const isCloudflarePreview=host.endsWith('.workers.dev')||host.endsWith('.pages.dev');
+  const isPreview=isNetlifyPreview||host.endsWith('.github.io')||isCloudflarePreview;
   const expectedStaging='https://opzqnmahfgehaewgciwg.supabase.co';
-  const blocked=isPreview && String(cfg.url||'').toLowerCase()!==expectedStaging;
+  const blocked=isPreview&&String(cfg.url||'').toLowerCase()!==expectedStaging;
   Object.defineProperty(window,'VXSK_STAGING_BLOCKED',{value:blocked,writable:false,configurable:false});
   if(!blocked)return;
   const banner=document.createElement('div');banner.className='vxsk-staging-guard';
