@@ -216,3 +216,58 @@
 @media (prefers-reduced-motion: reduce) {
   .vxsk-app-download { transition: none; }
 }
+
+
+/* Native app release cards. Download controls stay disabled until real packages exist. */
+.vxsk-app-platforms {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 25px 0 15px;
+}
+.vxsk-app-platform {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 17px;
+  border: 1px solid rgba(153, 136, 255, .2);
+  border-radius: 14px;
+  background: rgba(10, 13, 35, .54);
+}
+.vxsk-app-platform-kicker {
+  color: #a995ff;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+.vxsk-app-platform strong {
+  color: #f6f6ff;
+  font-family: var(--display, "Barlow Condensed", Impact, sans-serif);
+  font-size: 23px;
+  font-weight: 800;
+}
+.vxsk-app-platform .vxsk-app-download {
+  width: 100%;
+  min-height: 43px;
+  padding: 9px 12px;
+  font-size: 10px;
+  line-height: 1.4;
+  text-align: center;
+}
+.vxsk-app-platform .vxsk-app-download:disabled {
+  border-color: rgba(158, 165, 205, .15);
+  background: rgba(111, 120, 157, .15);
+  box-shadow: none;
+  color: #9ca4c1;
+  opacity: 1;
+}
+.vxsk-app-platform small {
+  color: #818aa9;
+  font-size: 9px;
+  line-height: 1.5;
+}
+@media (max-width: 560px) {
+  .vxsk-app-platforms { grid-template-columns: 1fr; }
+}
