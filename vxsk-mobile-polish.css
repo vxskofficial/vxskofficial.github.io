@@ -1,0 +1,270 @@
+/* VXSK MOBILE EXPERIENCE / PERFORMANCE POLISH
+   Visual-only navigation and rendering improvements. Account, match, chat and call logic stay intact. */
+@media (max-width: 760px) {
+  .header {
+    background: rgba(8, 10, 28, .98) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    box-shadow: 0 5px 18px rgba(2, 4, 18, .34);
+  }
+  .nav.shell {
+    width: calc(100% - 24px);
+    height: 64px;
+    min-height: 64px;
+    gap: 7px;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .nav-logo { flex: 0 0 auto; min-width: 0; margin-right: auto; }
+  .nav-logo img { width: 92px; max-width: 100%; }
+  .vxsk-community-nav {
+    position: relative;
+    z-index: 4;
+    flex: 0 0 auto;
+    align-self: center;
+    gap: 0;
+    margin: 0;
+  }
+  .nav-player-search, #nav-add-friend { display: none !important; }
+  #nav-friends-toggle {
+    display: grid;
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+    margin: 0;
+  }
+  .nav-friends-panel {
+    position: fixed;
+    z-index: 110;
+    top: 72px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-width: 420px;
+    max-height: calc(100dvh - 86px);
+    margin-inline: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  #vxsk-call-ringtone-toggle, #vxsk-low-lag-toggle, #music-toggle,
+  .nav-user-chip, .nav-staff-link, .nav-cta { display: none !important; }
+  #vxsk-updates-widget {
+    display: block;
+    flex: 0 0 36px;
+    min-width: 36px;
+    margin: 0;
+  }
+  .vxsk-updates-toggle {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+  }
+  .vxsk-updates-toggle span { display: none !important; }
+  .vxsk-updates-panel {
+    position: fixed;
+    z-index: 110;
+    top: 72px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-width: 420px;
+    max-height: calc(100dvh - 86px);
+    margin-inline: auto;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .account-nav {
+    display: grid !important;
+    place-items: center;
+    flex: 0 0 36px;
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+    margin: 0;
+    padding: 0;
+  }
+  #nav-account-label { display: none !important; }
+  .account-nav svg { width: 19px; height: 19px; }
+  .menu-toggle {
+    display: flex !important;
+    flex: 0 0 36px;
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+    margin: 0;
+    padding: 0;
+  }
+  .nav-links {
+    position: absolute;
+    z-index: 105;
+    top: calc(100% + 1px);
+    left: 12px;
+    right: 12px;
+    display: none;
+    width: auto;
+    max-height: calc(100dvh - 78px);
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 4px;
+    margin: 0;
+    padding: 10px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid rgba(157, 128, 238, .28);
+    border-top: 0;
+    border-radius: 0 0 15px 15px;
+    background: rgba(9, 13, 34, .99);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, .38);
+  }
+  .nav-links.open { display: flex !important; }
+  .nav-links a {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 42px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.25;
+    white-space: normal;
+  }
+  .nav-links a .vxsk-nav-icon { width: 15px; height: 15px; flex: 0 0 15px; }
+}
+@media (max-width: 480px) {
+  .announcement-bar {
+    height: 27px;
+    min-height: 27px;
+    gap: 8px;
+    padding-inline: 8px;
+    font-size: 9px;
+    letter-spacing: .09em;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .announcement-bar .bar-extra, .announcement-bar .staging-build-label { display: none !important; }
+  .nav.shell { width: calc(100% - 20px); gap: 6px; }
+  .nav-logo img { width: 88px; }
+}
+
+/* Static mobile visuals: preserve VXSK colors without animating full-screen layers. */
+@media (max-width: 760px) {
+  .ambient-backdrop, .ambient-wash,
+  .ambient-backdrop::before, .ambient-backdrop::after,
+  .ambient-wash::before, .ambient-wash::after,
+  .site-noise, .particles, .particle {
+    animation: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+  .ambient-backdrop { transform: none !important; }
+  .site-noise, .particles { display: none !important; }
+  .ticker-track, .hero-art-wrap, .hero-art-halo,
+  .live-ping, .chip-dot, .vxsk-arena-orb-icon,
+  .header .nav-links a, .header .nav-links a::before,
+  .header .nav-links a::after, .header .nav-links a .vxsk-nav-icon,
+  .vxsk-galaxy-stage .vxsk-galaxy-nebula,
+  .vxsk-galaxy-stage .vxsk-galaxy-orbit,
+  .vxsk-galaxy-stage .vxsk-galaxy-meteor,
+  body.vxsk-galaxy-active .vxsk-galaxy-enter {
+    animation: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+  .hero-art-wrap, .hero-art-halo, .header .nav-links a,
+  .header .nav-links a::before, .header .nav-links a .vxsk-nav-icon {
+    transform: none !important;
+    filter: none !important;
+  }
+  .live-ping, .chip-dot { box-shadow: 0 0 0 3px rgba(122, 255, 223, .10); }
+  .vxsk-galaxy-stage .vxsk-galaxy-nebula { filter: none !important; opacity: .16 !important; }
+  .vxsk-galaxy-stage .vxsk-galaxy-orbit, .vxsk-galaxy-stage .vxsk-galaxy-meteor { display: none !important; }
+  .vxsk-galaxy-stage canvas { opacity: .23 !important; }
+  html.motion-ready .reveal:not(.visible) {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+  .reveal, .reveal.visible { transition: none !important; }
+  .vxsk-world-film { transition: none !important; will-change: auto !important; }
+}
+
+/* Low-Lag is a true static-visual mode; private call tracks are never selected. */
+html.vxsk-low-lag .site-noise,
+html.vxsk-low-lag .particles,
+html.vxsk-low-lag .particle { display: none !important; }
+
+html.vxsk-low-lag .ambient-backdrop,
+html.vxsk-low-lag .ambient-wash,
+html.vxsk-low-lag .ambient-backdrop::before,
+html.vxsk-low-lag .ambient-backdrop::after,
+html.vxsk-low-lag .ambient-wash::before,
+html.vxsk-low-lag .ambient-wash::after,
+html.vxsk-low-lag .ticker-track,
+html.vxsk-low-lag .hero-art-wrap,
+html.vxsk-low-lag .hero-art-halo,
+html.vxsk-low-lag .live-ping,
+html.vxsk-low-lag .chip-dot,
+html.vxsk-low-lag .vxsk-arena-orb-icon,
+html.vxsk-low-lag .header .nav-links a,
+html.vxsk-low-lag .header .nav-links a::before,
+html.vxsk-low-lag .header .nav-links a::after,
+html.vxsk-low-lag .header .nav-links a .vxsk-nav-icon,
+html.vxsk-low-lag .vxsk-galaxy-stage .vxsk-galaxy-nebula,
+html.vxsk-low-lag .vxsk-galaxy-stage .vxsk-galaxy-orbit,
+html.vxsk-low-lag .vxsk-galaxy-stage .vxsk-galaxy-meteor,
+html.vxsk-low-lag .vxsk-galaxy-enter,
+html.vxsk-low-lag .reveal,
+html.vxsk-low-lag .reveal.visible {
+  animation: none !important;
+  transition: none !important;
+  will-change: auto !important;
+}
+html.vxsk-low-lag .header {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+html.vxsk-low-lag .ambient-backdrop,
+html.vxsk-low-lag .hero-art-wrap,
+html.vxsk-low-lag .hero-art-halo,
+html.vxsk-low-lag .header .nav-links a,
+html.vxsk-low-lag .header .nav-links a::before,
+html.vxsk-low-lag .header .nav-links a .vxsk-nav-icon,
+html.vxsk-low-lag .reveal:not(.visible) {
+  transform: none !important;
+  filter: none !important;
+}
+html.vxsk-low-lag .reveal:not(.visible) { opacity: 1 !important; }
+html.vxsk-low-lag .vxsk-galaxy-stage .vxsk-galaxy-nebula {
+  filter: none !important;
+  opacity: .15 !important;
+}
+html.vxsk-low-lag .vxsk-galaxy-stage .vxsk-galaxy-orbit,
+html.vxsk-low-lag .vxsk-galaxy-stage .vxsk-galaxy-meteor { display: none !important; }
+html.vxsk-low-lag .vxsk-galaxy-stage canvas { opacity: .2 !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-backdrop, .ambient-wash,
+  .ambient-backdrop::before, .ambient-backdrop::after,
+  .ambient-wash::before, .ambient-wash::after,
+  .ticker-track, .hero-art-wrap, .hero-art-halo,
+  .live-ping, .chip-dot, .vxsk-arena-orb-icon,
+  .header .nav-links a, .header .nav-links a::before,
+  .header .nav-links a .vxsk-nav-icon,
+  .vxsk-galaxy-stage .vxsk-galaxy-nebula,
+  .vxsk-galaxy-stage .vxsk-galaxy-orbit,
+  .vxsk-galaxy-stage .vxsk-galaxy-meteor,
+  .reveal {
+    animation: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+}
