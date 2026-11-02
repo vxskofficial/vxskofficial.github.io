@@ -358,12 +358,23 @@
             <li>MATCH CENTER</li>
             <li>COMMUNITY</li>
           </ul>
-          <div class="vxsk-app-actions">
-            <button type="button" class="vxsk-app-download" id="vxsk-app-install">INSTALL VXSK APP <span aria-hidden="true">↗</span></button>
-            <a class="vxsk-app-explore" href="#match-center">EXPLORE THE ARENA ↓</a>
+          <div class="vxsk-app-platforms" aria-label="VXSK native application downloads">
+            <article class="vxsk-app-platform">
+              <span class="vxsk-app-platform-kicker">DESKTOP / WINDOWS</span>
+              <strong>VXSK FOR PC</strong>
+              <button type="button" class="vxsk-app-download" disabled aria-disabled="true">WINDOWS DOWNLOAD · COMING SOON</button>
+              <small>EXE / ZIP PACKAGE · NOT RELEASED YET</small>
+            </article>
+            <article class="vxsk-app-platform">
+              <span class="vxsk-app-platform-kicker">MOBILE / ANDROID</span>
+              <strong>VXSK FOR ANDROID</strong>
+              <button type="button" class="vxsk-app-download" disabled aria-disabled="true">ANDROID DOWNLOAD · COMING SOON</button>
+              <small>APK PACKAGE · NOT RELEASED YET</small>
+            </article>
           </div>
-          <p class="vxsk-app-status" id="vxsk-app-install-status" role="status" aria-live="polite">Install the official VXSK experience directly from a supported browser. No separate installer is required.</p>
-          <p class="vxsk-app-note">INSTALL AVAILABILITY DEPENDS ON YOUR DEVICE AND BROWSER.</p>
+          <a class="vxsk-app-explore" href="#match-center">EXPLORE THE ARENA ↓</a>
+          <p class="vxsk-app-status" role="status">Native app downloads will be enabled after the Windows and Android packages are built, tested and published.</p>
+          <p class="vxsk-app-note">ONLY DOWNLOAD OFFICIAL VXSK RELEASES FROM THIS WEBSITE.</p>
         </div>
         <div class="vxsk-app-visual" aria-label="VXSK official app promotion">
           <span class="vxsk-app-orbit" aria-hidden="true"></span>
@@ -529,7 +540,6 @@
       <div class="account-foot"><span class="account-lock" aria-hidden="true">◆</span> ACCOUNTS PROTECTED BY SUPABASE AUTH · HTTPS ON GITHUB PAGES</div>
     </div>
   </dialog>
-  <script src="vxsk-app-install.js?v=1.0.0" defer></script>
   <script src="vxsk-ai-pilot.js?v=12.9.1" defer></script>
 </body>
 </html>
