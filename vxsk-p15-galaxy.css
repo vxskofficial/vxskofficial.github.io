@@ -1,0 +1,64 @@
+/* VXSK P15 / GALAXY MOTION — presentation only; zero changes to authentication or data.
+   One shared visual system across the homepage, Game Hub, marketplace and staff command.
+   Entire scene is inert, aria-hidden and pointer-events:none. */
+:root{--vxsk-galaxy-purple:#a36bff;--vxsk-galaxy-blue:#318bff;--vxsk-galaxy-hot:#cb65fa}
+body.vxsk-galaxy-active{isolation:isolate}
+body.vxsk-galaxy-active > main{position:relative;z-index:1}
+body.vxsk-galaxy-active > footer{position:relative;z-index:1}
+/* The marketplace is mounted as its own body section on some pages. Keep it above the sky. */
+body.vxsk-galaxy-active .vxsk-marketplace{position:relative;z-index:1;
+ background:linear-gradient(142deg,rgba(7,11,29,.87) 2%,rgba(24,16,55,.89) 56%,rgba(11,13,37,.86))}
+body.vxsk-galaxy-active > .vxsk-galaxy-stage{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;user-select:none;contain:strict;opacity:.96}
+.vxsk-galaxy-stage .vxsk-galaxy-sky{position:absolute;inset:0;background:
+ radial-gradient(ellipse 48% 55% at 12% 17%,rgba(112,39,238,.27),transparent 78%),
+ radial-gradient(ellipse 53% 53% at 82% 24%,rgba(27,109,224,.18),transparent 70%),
+ radial-gradient(ellipse 48% 54% at 58% 83%,rgba(113,24,189,.15),transparent 75%);
+ opacity:.78}
+.vxsk-galaxy-stage .vxsk-galaxy-nebula{position:absolute;inset:-28%;will-change:transform;filter:blur(28px);opacity:.48;transform-origin:center;background:
+ radial-gradient(ellipse 25% 32% at 16% 22%,rgba(147,37,240,.30),transparent 80%),
+ radial-gradient(ellipse 38% 28% at 89% 24%,rgba(37,102,253,.26),transparent 78%),
+ radial-gradient(ellipse 35% 25% at 49% 93%,rgba(200,54,237,.14),transparent 80%);
+ animation:vxsk-galaxy-breathe 37s ease-in-out infinite alternate}
+.vxsk-galaxy-stage .vxsk-galaxy-nebula-two{animation-duration:51s;animation-delay:-14s;opacity:.3;transform:scale(-1);filter:blur(52px)}
+.vxsk-galaxy-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:.87}
+.vxsk-galaxy-stage .vxsk-galaxy-orbit{position:absolute;inset:auto;width:min(62vw,820px);aspect-ratio:1;border-radius:50%;border:1px solid rgba(155,131,255,.08);box-shadow:inset 0 0 34px rgba(88,53,206,.055),0 0 50px rgba(49,82,195,.05);transform:rotate(-23deg) scaleX(1.7);right:-32%;top:-55%;opacity:.55;animation:vxsk-galaxy-orbit 95s linear infinite}
+.vxsk-galaxy-stage .vxsk-galaxy-orbit::after{content:"";position:absolute;inset:12%;border:1px solid rgba(128,172,255,.08);border-radius:50%}
+.vxsk-galaxy-stage .vxsk-galaxy-meteor{position:absolute;width:clamp(70px,13vw,180px);height:1px;left:76%;top:18%;transform:rotate(-35deg) translate3d(0,0,0);background:linear-gradient(90deg,transparent 0%,rgba(137,150,255,.05) 18%,rgba(189,178,255,.9) 96%,#fff 100%);filter:drop-shadow(0 0 5px rgba(103,129,255,.8));opacity:0;animation:vxsk-galaxy-meteor 17s linear infinite;animation-delay:4s}
+.vxsk-galaxy-stage .vxsk-galaxy-meteor:nth-last-child(1){top:67%;left:89%;animation-delay:12s;animation-duration:23s;opacity:0}
+@keyframes vxsk-galaxy-breathe{0%{transform:translate3d(-3%,1%,0) scale(1)}50%{transform:translate3d(4%,-3%,0) scale(1.09)}100%{transform:translate3d(-1%,4%,0) scale(1.025)}}
+@keyframes vxsk-galaxy-orbit{to{transform:rotate(337deg) scaleX(1.7)}}
+@keyframes vxsk-galaxy-meteor{0%,52%{opacity:0;transform:rotate(-35deg) translate3d(0,0,0)}54%{opacity:.72}59%{opacity:0;transform:rotate(-35deg) translate3d(-490px,0,0)}100%{opacity:0}}
+/* Subtle palette shifts keep different departments in one universe. */
+body.vxsk-galaxy-arena{--vxsk-galaxy-purple:#9084ff;--vxsk-galaxy-blue:#389fff}
+body.vxsk-galaxy-arena .vxsk-galaxy-sky{filter:hue-rotate(16deg);opacity:.95}
+body.vxsk-galaxy-staff .vxsk-galaxy-sky{opacity:.53}
+body.vxsk-galaxy-staff .vxsk-galaxy-stage canvas{opacity:.68}
+body.vxsk-galaxy-merch .vxsk-galaxy-sky{opacity:.94}
+body.vxsk-galaxy-home .vxsk-galaxy-stage{opacity:.79}
+/* Raised material, glass edges and focused hover. Existing layout and click events are untouched. */
+body.vxsk-galaxy-active :is(.season-phase-card,.vxsk-master-shop-card,.vxsk-mkt-card,.vxsk-p14-metric,.vxsk-th-card,.p12-stage,.p12-match,.vxsk-p13-launch-card,.vxsk-p14-market-row,.vxsk-p14-merch-tabs button){
+ backface-visibility:hidden;transition:box-shadow .35s ease,border-color .35s ease,filter .35s ease}
+@media (hover:hover) and (pointer:fine){
+body.vxsk-galaxy-active :is(.season-phase-card,.vxsk-master-shop-card,.vxsk-mkt-card,.vxsk-p14-metric,.vxsk-th-card,.p12-stage,.p12-match,.vxsk-p13-launch-card,.vxsk-p14-market-row):hover{
+ box-shadow:0 13px 43px rgba(24,26,88,.35),0 0 0 1px rgba(150,107,255,.22),0 0 34px rgba(99,69,232,.12);filter:brightness(1.055)}
+}
+body.vxsk-galaxy-active :is(.arena-tabs button,.vxsk-p14-merch-tabs button,.vxsk-p13-nav button,.vxsk-p14-market-tabs button):focus-visible{
+ outline:2px solid #b9abff;outline-offset:3px;box-shadow:0 0 0 5px rgba(93,93,239,.15)}
+/* Gentle entrance once an existing panel becomes visible, never set opacity:0 prior to observing. */
+body.vxsk-galaxy-active .vxsk-galaxy-enter{animation:vxsk-galaxy-enter .72s cubic-bezier(.18,.7,.2,1) backwards}
+@keyframes vxsk-galaxy-enter{from{opacity:.40;translate:0 13px;filter:brightness(.85)}to{opacity:1;translate:0 0;filter:brightness(1)}}
+/* Readable panels over animated background. Transparent enough to reveal the cosmos in gaps. */
+body.vxsk-galaxy-active :is(.vxsk-p14-merch-top,.vxsk-p14-market-shell,.p12-workspace,.vxsk-th-panel){backdrop-filter:blur(9px)}
+/* Avoid static site's pre-existing animations competing on smaller screens. */
+@media(max-width:720px){
+ .vxsk-galaxy-stage .vxsk-galaxy-nebula{filter:blur(32px);opacity:.32;animation-duration:60s}
+ .vxsk-galaxy-stage .vxsk-galaxy-meteor{display:none}
+ .vxsk-galaxy-stage .vxsk-galaxy-orbit{display:none}
+ body.vxsk-galaxy-staff .vxsk-galaxy-stage canvas{opacity:.5}
+}
+@media(prefers-reduced-motion:reduce){
+ .vxsk-galaxy-stage .vxsk-galaxy-nebula,.vxsk-galaxy-stage .vxsk-galaxy-orbit,.vxsk-galaxy-stage .vxsk-galaxy-meteor{animation:none!important;will-change:auto!important}
+ .vxsk-galaxy-stage .vxsk-galaxy-meteor{display:none}
+ body.vxsk-galaxy-active .vxsk-galaxy-enter{animation:none!important}
+ body.vxsk-galaxy-active :is(.season-phase-card,.vxsk-master-shop-card,.vxsk-mkt-card,.vxsk-p14-metric,.vxsk-th-card,.p12-stage,.p12-match,.vxsk-p13-launch-card){transition:none!important}
+}

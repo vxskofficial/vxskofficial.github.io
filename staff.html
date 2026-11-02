@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="noindex,nofollow" name="robots"/><meta content="#07091b" name="theme-color"/>
-<title>VXSK — Staff Dashboard</title><link href="favicon.svg" rel="icon" type="image/svg+xml"/>
+<title>VXSK — Control Center</title><link href="favicon.svg" rel="icon" type="image/svg+xml"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <link href="staff.css?v=12.8.34" rel="stylesheet"/>
@@ -16,14 +16,17 @@
 <script defer="" src="vxsk-boost-review.js?v=12.9.4-p11"></script>
 <link href="vxsk-owner-cleanup.css?v=12.9.4-p3" rel="stylesheet"/>
 <script defer="" src="vxsk-owner-cleanup.js?v=12.9.4-p3"></script>
-<link href="vxsk-p13-staff.css?v=13.0.1" rel="stylesheet"/><script defer="" src="vxsk-p13-staff.js?v=13.0.1"></script></head>
+<link href="vxsk-p13-staff.css?v=13.0.1" rel="stylesheet"/><script defer="" src="vxsk-p13-staff.js?v=13.0.1"></script><link href="vxsk-p14-control.css?v=14.0.1" rel="stylesheet"/><script defer src="vxsk-p14-control.js?v=14.0.1"></script>
+<link rel="stylesheet" href="vxsk-p15-galaxy.css?v=15.0.1">
+<script defer src="vxsk-p15-galaxy.js?v=15.0.1"></script>
+</head>
 <body>
 <a class="skip-link" href="#workspace">Skip to workspace</a>
-<header class="bar"><a class="brand" href="./"><img alt="VXSK" height="48" src="assets/vxsk-logo.png" width="52"/></a><div><span class="eyebrow">VXSK // AUTHORIZED PERSONNEL</span><h1>STAFF <em>COMMAND.</em></h1></div><a class="back" href="./">← BACK TO ARENA</a></header>
+<header class="bar"><a class="brand" href="./"><img alt="VXSK" height="48" src="assets/vxsk-logo.png" width="52"/></a><div><span class="eyebrow">VXSK // AUTHORIZED PERSONNEL</span><h1>STAFF <em>CONTROL.</em></h1></div><a class="back" href="./">← BACK TO ARENA</a></header>
 <main class="wrap" id="workspace">
 <section aria-live="polite" class="gate" id="gate" role="status"><div aria-hidden="true" class="gate-icon">◆</div><h2 id="gate-title">Checking access…</h2><p id="gate-message">Please wait while we verify your VXSK login, staff role and two-factor authentication.</p><a class="back-action" href="./">RETURN TO VXSK ↗</a></section>
 <div hidden="" id="dashboard">
-<div class="welcome"><div><span class="eyebrow">SECURE OPERATIONS CENTER</span><h2>YOUR <em>CONTROL CENTER.</em></h2><p>Choose a workspace below. Every action stays protected by your VXSK account and 2FA.</p></div><div class="identity"><span id="my-role">STAFF</span><small id="my-user">Signed in</small></div></div><nav aria-label="Staff command sections" class="staff-command-nav vxsk-p13-nav" id="staff-command-nav">
+<div class="welcome"><div><span class="eyebrow">SECURE OPERATIONS CENTER</span><h2>MARKETPLACE &amp; <em>STAFF CONTROL.</em></h2><p>One clear workspace for VXSK operations. Actions are protected by account permissions and 2FA.</p></div><div class="identity"><span id="my-role">STAFF</span><small id="my-user">Signed in</small></div></div><nav aria-label="Staff command sections" class="staff-command-nav vxsk-p13-nav" id="staff-command-nav">
 <button aria-pressed="true" class="is-active" data-staff-tab="overview" type="button"><span aria-hidden="true" class="vxsk-p13-nav-icon"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><rect height="7" rx="1.5" width="7" x="3" y="3"></rect><rect height="7" rx="1.5" width="7" x="14" y="3"></rect><rect height="7" rx="1.5" width="7" x="3" y="14"></rect><rect height="7" rx="1.5" width="7" x="14" y="14"></rect></svg></span><span>OVERVIEW</span></button>
 <button aria-pressed="false" data-staff-tab="applications" type="button"><span aria-hidden="true" class="vxsk-p13-nav-icon"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="M8 3h9l4 4v14H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"></path><path d="M17 3v5h5M10 12h7M10 16h7M3 7v12"></path></svg></span><span>APPLICATIONS <b id="regular-inbox-count">—</b></span></button>
 <button aria-pressed="false" data-staff-tab="tournaments" type="button"><span aria-hidden="true" class="vxsk-p13-nav-icon"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="M8 21h8M12 17v4M7 4h10v6a5 5 0 0 1-10 0V4Z"></path><path d="M7 6H3v3a4 4 0 0 0 4 4M17 6h4v3a4 4 0 0 1-4 4"></path></svg></span><span>TOURNAMENTS</span></button>
@@ -34,7 +37,13 @@
 <button aria-pressed="false" data-staff-tab="cleanup" hidden="" id="vxsk-owner-cleanup-tab" type="button"><span aria-hidden="true" class="vxsk-p13-nav-icon"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><rect height="16" rx="2" width="16" x="4" y="5"></rect><path d="M3 5h18M9 3h6M10 10v7M14 10v7"></path></svg></span><span>RECORDS</span></button>
 </nav>
 <section aria-labelledby="vxsk-p13-overview-title" data-staff-view="overview" id="staff-view-overview">
-<div class="vxsk-p13-overview-head"><div><span class="eyebrow">VXSK / COMMAND CENTER</span><h2 id="vxsk-p13-overview-title">WHAT ARE WE <em>WORKING ON?</em></h2><p>Pick one category. No endless dashboard scrolling.</p></div></div>
+<div class="vxsk-p13-overview-head"><div><span class="eyebrow">VXSK / COMMAND CENTER</span><h2 id="vxsk-p13-overview-title">CHOOSE YOUR <em>WORKSPACE.</em></h2><p>Manage your event, community and services from one place.</p></div></div>
+<section class="vxsk-p14-metrics" aria-label="Live staff counters">
+<div class="vxsk-p14-metric violet"><span class="vxsk-p14-metric-icon" aria-hidden="true">✧</span><div><small>PENDING REGISTRATIONS</small><strong id="vxsk-p14-pending">—</strong></div></div>
+<div class="vxsk-p14-metric blue"><span class="vxsk-p14-metric-icon" aria-hidden="true">♢</span><div><small>COACH APPLICATIONS</small><strong id="vxsk-p14-coaches">—</strong></div></div>
+<div class="vxsk-p14-metric pink"><span class="vxsk-p14-metric-icon" aria-hidden="true">☆</span><div><small>PENDING REVIEWS</small><strong id="vxsk-p14-reviews">—</strong></div></div>
+<div class="vxsk-p14-metric cyan"><span class="vxsk-p14-metric-icon" aria-hidden="true">▣</span><div><small>COACH BOOKINGS</small><strong id="vxsk-p14-bookings">—</strong></div></div>
+</section>
 <div class="vxsk-p13-launch-grid" id="vxsk-p13-launch-grid">
 <button data-p13-go="applications" type="button"><span class="vxsk-p13-launch-icon violet"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="M8 3h9l4 4v14H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"></path><path d="M17 3v5h5M10 12h7M10 16h7M3 7v12"></path></svg></span><strong>APPLICATIONS</strong><small>Review player registrations</small><span class="vxsk-p13-launch-arrow">↗</span></button>
 <button data-p13-go="tournaments" type="button"><span class="vxsk-p13-launch-icon blue"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="M8 21h8M12 17v4M7 4h10v6a5 5 0 0 1-10 0V4Z"></path><path d="M7 6H3v3a4 4 0 0 0 4 4M17 6h4v3a4 4 0 0 1-4 4"></path></svg></span><strong>TOURNAMENTS</strong><small>Brackets, scores &amp; referees</small><span class="vxsk-p13-launch-arrow">↗</span></button>
@@ -226,7 +235,17 @@
 </div>
 </section>
 <section aria-labelledby="staff-boost-heading" data-staff-view="boosters" hidden="" id="staff-view-boosters">
-<div class="command-section-title"><div><span class="eyebrow">VXSK / APPLICATION REVIEW</span><h2 id="staff-boost-heading">BOOSTER <em>APPLICATIONS.</em></h2><p>Approve VXSK play-together boosters. Only Owner / Reviewer accounts verified with 2FA can review applicants; the database enforces these permissions.</p></div></div>
+<div class="command-section-title"><div><span class="eyebrow">VXSK / APPLICATION REVIEW</span><h2 id="staff-boost-heading">MARKETPLACE <em>DESK.</em></h2><p>Coaches, boosters, bookings and reviews — organized in one place.</p></div></div>
+<div class="vxsk-p14-market-ui">
+<nav class="vxsk-p14-market-tabs" aria-label="Marketplace staff sections">
+<button type="button" data-p14-market="applications" aria-pressed="true" class="is-active">✧ Applications</button>
+<button type="button" data-p14-market="requests" aria-pressed="false">▣ Requests &amp; Bookings</button>
+<button type="button" data-p14-market="reviews" aria-pressed="false">☆ Reviews</button>
+<button type="button" data-p14-market="feedback" aria-pressed="false">◈ Feedback</button>
+</nav>
+<div class="vxsk-p14-market-tools"><label class="vxsk-p14-search-label"><span>SEARCH VISIBLE RECORDS</span><input id="vxsk-p14-record-search" type="search" placeholder="Search member, game or status…" maxlength="100" autocomplete="off"></label><label class="vxsk-p14-status-label"><span>STATUS</span><select id="vxsk-p14-record-status"><option value="all">All statuses</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select></label><button type="button" id="vxsk-p14-record-refresh" class="vxsk-p14-refresh">↻ Refresh visible</button></div>
+<div class="vxsk-p14-market-hint" role="status" id="vxsk-p14-market-hint">Loading your permitted workspace…</div>
+</div>
 <div class="staff-arena-card"><button id="vxsk-boost-refresh" type="button">↻ REFRESH APPLICATIONS</button><p aria-live="polite" class="notice" id="vxsk-boost-staff-status" role="status">Open this tab to review applications.</p><div class="vxsk-boost-staff-list" id="vxsk-boost-staff-list"></div></div>
 <div class="staff-arena-card"><h3>OWNER-ONLY SERVICE REQUESTS</h3><p class="small-muted">Bookings are requests, not proof of payment. Only the Owner with 2FA may see this list. No private payment codes are collected here.</p><button id="vxsk-boost-orders-refresh" type="button">↻ REFRESH REQUESTS</button><p aria-live="polite" class="notice" id="vxsk-boost-owner-status" role="status"></p><div id="vxsk-boost-owner-list"></div></div>
 </section>
