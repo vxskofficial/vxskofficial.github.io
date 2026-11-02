@@ -21,7 +21,10 @@
     const ctx = canvas && canvas.getContext('2d',{ alpha:true });
     const motion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
     const smallScreen = window.matchMedia && window.matchMedia('(max-width:720px)');
+    const connection = navigator.connection;
     let reduced = Boolean(motion && motion.matches);
+    const lowLag = () => document.documentElement.classList.contains('vxsk-low-lag') || document.body.classList.contains('vxsk-low-lag');
+    const shouldAnimate = () => !reduced && !document.hidden && !lowLag() && !(smallScreen && smallScreen.matches) && !connection?.saveData;
     let stars=[], width=0,height=0,dpr=1,lastFrame=0,raf=0,seed=78131;
     const random = () => {seed=(seed*1664525+1013904223)>>>0; return seed/4294967296;};
     const resize = () => {
@@ -33,7 +36,7 @@
       width=w;height=h;dpr=ratio;
       canvas.width=Math.round(w*ratio);canvas.height=Math.round(h*ratio);
       ctx.setTransform(ratio,0,0,ratio,0,0);
-      const count = Math.min(140, Math.max(36, Math.round((w*h)/13500)));
+      const count = smallScreen && smallScreen.matches ? 22 : Math.min(140, Math.max(36, Math.round((w*h)/13500)));
       stars=[];seed=78131;
       for(let i=0;i<count;i++){
         stars.push({x:random()*w,y:random()*h,r:.34+random()*1.05,alpha:.20+random()*.59,
@@ -60,7 +63,7 @@
     };
     const loop = (t) => {
       raf=0;
-      if(reduced || document.hidden)return;
+      if(!shouldAnimate())return;
       if(t-lastFrame >= 31){lastFrame=t;draw(t);}
       raf=requestAnimationFrame(loop);
     };
@@ -68,7 +71,7 @@
       reduced=Boolean(motion && motion.matches);
       if(raf)cancelAnimationFrame(raf);
       raf=0;draw(0);
-      if(!reduced && !document.hidden)raf=requestAnimationFrame(loop);
+      if(shouldAnimate())raf=requestAnimationFrame(loop);
     };
     if(ctx){
       resize();motionChange();
@@ -78,7 +81,10 @@
         resizeToken=requestAnimationFrame(()=>{resizeToken=0;resize();});
       },{passive:true});
       document.addEventListener('visibilitychange',motionChange);
+      document.addEventListener('vxsk:performance-mode',motionChange);
       if(motion && motion.addEventListener) motion.addEventListener('change',motionChange);
+      if(smallScreen && smallScreen.addEventListener) smallScreen.addEventListener('change',motionChange);
+      connection?.addEventListener?.('change',motionChange);
     }
     // Progressive enhancement: panels remain visible if there is no observer, scripting fails,
     // the owner is not authorized, or reduced-motion is enabled.
