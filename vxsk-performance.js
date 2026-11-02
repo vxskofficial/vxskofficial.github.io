@@ -15,7 +15,7 @@
       button.textContent = enabled ? '⚡ LOW-LAG ON' : '⚡ LOW-LAG OFF';
     }
     if (enabled) {
-      document.querySelectorAll('video.vxsk-hero-film, video.vxsk-ambient-film').forEach(video => {
+      document.querySelectorAll('video.vxsk-hero-film, video.vxsk-ambient-film, video.vxsk-world-film').forEach(video => {
         video.classList.remove('vxsk-film-ready');
         video.pause();
       });
@@ -34,7 +34,7 @@
   // Never pause/modify RTC call tracks; only the muted decorative site film.
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) return;
-    document.querySelectorAll('video.vxsk-hero-film, video.vxsk-ambient-film').forEach(video => {
+    document.querySelectorAll('video.vxsk-hero-film, video.vxsk-ambient-film, video.vxsk-world-film').forEach(video => {
       video.classList.remove('vxsk-film-ready');
       video.pause();
     });
