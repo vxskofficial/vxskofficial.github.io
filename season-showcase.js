@@ -7,19 +7,19 @@
   const buttons=[...document.querySelectorAll('[data-season]')];
   if(!root||!grid||!buttons.length) return;
   const media={
-    rocket:{game:'Rocket League',title:'ROCKET LEAGUE',desc:'Four challenges. One unforgettable season.',images:['assets/mode-duel.webp','assets/mode-duo.webp','assets/mode-trio.webp','assets/mode-freestyle.webp'],accent:'rocket',months:[
+    rocket:{game:'Rocket League',title:'ROCKET LEAGUE',desc:'Four challenges. One unforgettable season.',images:['assets/vxsk-rl-1v1-white.webp','assets/vxsk-rl-2v2-white.webp','assets/vxsk-rl-3v3-white.webp','assets/vxsk-rl-freestyle-white.webp'],accent:'rocket',months:[
       {mode:'1v1',title:'1V1 DUELS',from:'2026-10-17',to:'2026-11-17',description:'The solo challenge.'},
       {mode:'2v2',title:'2V2 SHOWMATCHES',from:'2026-11-20',to:'2026-12-20',description:'Two players. One team.'},
       {mode:'3v3',title:'3V3 SHOWMATCHES',from:'2026-12-25',to:'2027-01-25',description:'The ultimate team battle.'},
       {mode:'Freestyle',title:'FREESTYLE MASTERS',from:'2027-02-01',to:'2027-02-28',description:'The art of the impossible.'}
     ]},
-    lol:{game:'League of Legends',title:'LEAGUE OF LEGENDS',desc:'ARAM battles, Summoner’s Rift and a special Mundo showdown.',images:['assets/lol-1v1-howling-abyss.jpg','assets/lol-5v5-aram-ornn.webp','assets/game-league-custom.webp','assets/lol-mundo-showmatch.jpg'],accent:'lol',months:[
+    lol:{game:'League of Legends',title:'LEAGUE OF LEGENDS',desc:'ARAM battles, Summoner’s Rift and a special Mundo showdown.',images:['assets/vxsk-lol-1v1-aram-white.webp','assets/vxsk-lol-5v5-aram-white.webp','assets/vxsk-lol-5v5-rift-white.webp','assets/vxsk-lol-mundo-white.webp'],accent:'lol',months:[
       {mode:'1v1 ARAM',title:'1V1 ARAM',from:'2027-03-01',to:'2027-03-28',description:'One versus one on the Howling Abyss.'},
       {mode:'5v5 ARAM',title:'5V5 ARAM',from:'2027-04-01',to:'2027-04-28',description:'Full-team ARAM showmatches.'},
       {mode:"5v5 Summoner's Rift",title:'5V5 SUMMONER’S RIFT',from:'2027-05-01',to:'2027-05-28',description:'Five-player teams on Summoner’s Rift.'},
       {mode:'Mundo Showmatch',title:'MUNDO SHOWMATCH',from:'2027-07-01',to:'2027-07-28',description:'Special Dr. Mundo-themed showmatches.'}
     ]},
-    valorant:{game:'VALORANT',title:'VALORANT',desc:'Skirmishes, team showmatches and a points-based Deathmatch finale.',images:['assets/showcase-valorant-team.webp','assets/valorant-5v5-phoenix-jett.webp','assets/valorant-2v2-skirmish.jpg','assets/game-valorant-custom.webp'],accent:'valorant',months:[
+    valorant:{game:'VALORANT',title:'VALORANT',desc:'Skirmishes, team showmatches and a points-based Deathmatch finale.',images:['assets/vxsk-valorant-1v1-white.webp','assets/vxsk-valorant-5v5-white.webp','assets/vxsk-valorant-2v2-white.webp','assets/vxsk-valorant-deathmatch-white.webp'],accent:'valorant',months:[
       {mode:'1v1 Skirmish',title:'1V1 SKIRMISH',from:'2027-08-01',to:'2027-08-28',description:'One-on-one tactical duels.'},
       {mode:'5v5 Showmatch',title:'5V5 SHOWMATCH',from:'2027-09-01',to:'2027-09-28',description:'Five-player tactical showmatches.'},
       {mode:'2v2 Skirmish',title:'2V2 SKIRMISH',from:'2027-10-01',to:'2027-10-28',description:'Duo tactical battles.'},
@@ -51,14 +51,15 @@
     game.months.forEach((item,i)=>{
       const card=document.createElement('article');card.className='season-phase-card';card.style.setProperty('--entry-order',String(i));
       const visual=document.createElement('div');visual.className='season-phase-art';
-      const img=document.createElement('img');img.src=game.images[i];img.alt='';img.loading='lazy';visual.append(img);
-      const top=document.createElement('span');top.className='season-phase-index';top.textContent='PHASE '+String(i+1).padStart(2,'0')+' / 04';visual.append(top);
-      const flag=document.createElement('span');flag.className='season-phase-status';flag.textContent=label(item);visual.append(flag);
+      const img=document.createElement('img');img.src=game.images[i];img.alt=game.title+' '+item.title+' — VXSK event poster';img.loading='lazy';img.decoding='async';img.width=768;img.height=1152;visual.append(img);
+      const top=document.createElement('span');top.className='season-phase-index';top.textContent='PHASE '+String(i+1).padStart(2,'0')+' / 04';
+      const flag=document.createElement('span');flag.className='season-phase-status';flag.textContent=label(item);
       const body=document.createElement('div');body.className='season-phase-body';
+      const tags=document.createElement('div');tags.className='season-phase-meta';tags.append(top,flag);body.append(tags);
       const timeframe=document.createElement('p');timeframe.className='season-phase-timeframe';timeframe.textContent=d(item.from)+' — '+d(item.to);
       const h=document.createElement('h4');h.textContent=item.title;
       const description=document.createElement('p');description.className='season-phase-description';description.textContent=item.description;
-      const cta=document.createElement('button');cta.type='button';cta.className='season-phase-cta';cta.textContent='APPLY FOR '+item.mode.toUpperCase()+' ↗';
+      const cta=document.createElement('button');cta.type='button';cta.className='season-phase-cta';cta.textContent='APPLY NOW ↗';cta.setAttribute('aria-label','Apply for '+game.game+' '+item.mode);
       cta.addEventListener('click',()=>{
         if(typeof window.VXSKOpenRegistration!=='function')return;
         window.VXSKOpenRegistration(game.game,item.mode,cta);
