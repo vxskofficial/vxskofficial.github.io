@@ -33,7 +33,8 @@ if (film) {
   const src = film.dataset.cinematicSrc;
   let activated = false;
   let onscreen = true;
-  const canPlay = () => !media.matches && !saveData && !document.hidden && onscreen && !document.body.classList.contains('vxsk-low-lag');
+  const mobileLite = window.matchMedia('(max-width: 760px)').matches;
+  const canPlay = () => !media.matches && !saveData && !mobileLite && !document.hidden && onscreen && !document.documentElement.classList.contains('vxsk-low-lag') && !document.body.classList.contains('vxsk-low-lag');
   const syncVideo = () => {
     if (!canPlay()) {
       // Hide the last decoded frame first: never display a frozen or black frame.
@@ -84,7 +85,9 @@ if (film) {
   addEventListener('resize', paintProgress, {passive:true});
   paintProgress();
 
-  if (!reduceMotion) {
+  const mobileLite = window.matchMedia('(max-width: 760px)').matches || Boolean(navigator.connection?.saveData);
+  const lowLag = root.classList.contains('vxsk-low-lag') || document.body.classList.contains('vxsk-low-lag');
+  if (!reduceMotion && !mobileLite && !lowLag) {
     const particles = document.getElementById('particles');
     if (particles) {
       const count = Math.min(34, Math.max(12, Math.floor(innerWidth / 37)));
