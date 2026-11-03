@@ -107,17 +107,26 @@
   headerCluster.append(squadLink, joinHeader); // No second header RING button
   if (headerNav) {
     const bellParent = bell.closest('.vxsk-community-nav');
-    // On phones/tablets put the controls in a real header sub-row, never a floating
-    // bottom-right overlay. One set of nodes is moved between positions on resize.
+    // Keep the SQUADS shortcut beside Friends on phones; tablet layouts retain
+    // the compact header sub-row. The same nodes move between placements on resize.
     const compact = window.matchMedia('(max-width: 1050px)');
+    const phone = window.matchMedia('(max-width: 760px)');
     const place = () => {
-      if (compact.matches) headerNav.insertAdjacentElement('afterend', headerCluster);
-      else if (bellParent) bellParent.insertAdjacentElement('afterend', headerCluster);
-      else headerNav.append(headerCluster);
+      if (phone.matches && bellParent) {
+        bellParent.prepend(headerCluster);
+      } else if (compact.matches) {
+        headerNav.insertAdjacentElement('afterend', headerCluster);
+      } else if (bellParent) {
+        bellParent.insertAdjacentElement('afterend', headerCluster);
+      } else {
+        headerNav.append(headerCluster);
+      }
     };
     place();
     if (compact.addEventListener) compact.addEventListener('change', place);
     else compact.addListener?.(place);
+    if (phone.addEventListener) phone.addEventListener('change', place);
+    else phone.addListener?.(place);
   }
   function stopRing() {
     if (ringTimeout) { clearTimeout(ringTimeout); ringTimeout = null; }
