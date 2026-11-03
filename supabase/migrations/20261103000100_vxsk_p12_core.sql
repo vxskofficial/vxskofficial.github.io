@@ -178,10 +178,6 @@ CREATE TABLE public.vxsk_p12_reports (
 CREATE INDEX vxsk_p12_reports_queue
   ON public.vxsk_p12_reports (state, created_at DESC);
 
-CREATE UNIQUE INDEX vxsk_p12_one_pending_score_report_per_match
-  ON public.vxsk_p12_reports (match_id)
-  WHERE kind = 'score' AND state = 'pending';
-
 CREATE TABLE public.vxsk_p12_audit (
   id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   actor_id uuid REFERENCES auth.users(id) ON DELETE SET NULL,
@@ -382,6 +378,7 @@ BEGIN
   FROM (
     SELECT id, title, game, mode, starts_at, status, published, created_at
     FROM public.vxsk_p12_tournaments
+    WHERE v_is_owner OR published = true
     ORDER BY created_at DESC
     LIMIT 300
   ) q;
@@ -389,38 +386,46 @@ BEGIN
   SELECT COALESCE(jsonb_agg(to_jsonb(q) ORDER BY q.created_at, q.name), '[]'::jsonb)
   INTO v_teams
   FROM (
-    SELECT id, tournament_id, name, created_at
-    FROM public.vxsk_p12_teams
-    ORDER BY created_at, name
+    SELECT tm.id, tm.tournament_id, tm.name, tm.created_at
+    FROM public.vxsk_p12_teams tm
+    JOIN public.vxsk_p12_tournaments t ON t.id = tm.tournament_id
+    WHERE v_is_owner OR t.published = true
+    ORDER BY tm.created_at, tm.name
     LIMIT 3000
   ) q;
 
   SELECT COALESCE(jsonb_agg(to_jsonb(q) ORDER BY q.tournament_id, q.stage_order), '[]'::jsonb)
   INTO v_stages
   FROM (
-    SELECT id, tournament_id, name, format, stage_order
-    FROM public.vxsk_p12_stages
-    ORDER BY tournament_id, stage_order
+    SELECT st.id, st.tournament_id, st.name, st.format, st.stage_order
+    FROM public.vxsk_p12_stages st
+    JOIN public.vxsk_p12_tournaments t ON t.id = st.tournament_id
+    WHERE v_is_owner OR t.published = true
+    ORDER BY st.tournament_id, st.stage_order
     LIMIT 1500
   ) q;
 
   SELECT COALESCE(jsonb_agg(to_jsonb(q) ORDER BY q.starts_at NULLS LAST, q.round_no, q.slot), '[]'::jsonb)
   INTO v_matches
   FROM (
-    SELECT id, tournament_id, stage_id, team_a, team_b,
-           round_no, slot, bracket, group_name, starts_at,
-           state, score_a, score_b, created_at
-    FROM public.vxsk_p12_matches
-    ORDER BY starts_at NULLS LAST, round_no, slot
+    SELECT m.id, m.tournament_id, m.stage_id, m.team_a, m.team_b,
+           m.round_no, m.slot, m.bracket, m.group_name, m.starts_at,
+           m.state, m.score_a, m.score_b, m.created_at
+    FROM public.vxsk_p12_matches m
+    JOIN public.vxsk_p12_tournaments t ON t.id = m.tournament_id
+    WHERE v_is_owner OR t.published = true
+    ORDER BY m.starts_at NULLS LAST, m.round_no, m.slot
     LIMIT 5000
   ) q;
 
   SELECT COALESCE(jsonb_agg(to_jsonb(q) ORDER BY q.created_at DESC), '[]'::jsonb)
   INTO v_updates
   FROM (
-    SELECT id, tournament_id, kind, title, body, status_after, created_at
-    FROM public.vxsk_p12_updates
-    ORDER BY created_at DESC
+    SELECT u.id, u.tournament_id, u.kind, u.title, u.body, u.status_after, u.created_at
+    FROM public.vxsk_p12_updates u
+    JOIN public.vxsk_p12_tournaments t ON t.id = u.tournament_id
+    WHERE v_is_owner OR t.published = true
+    ORDER BY u.created_at DESC
     LIMIT 1000
   ) q;
 
@@ -778,6 +783,14 @@ BEGIN
     RAISE EXCEPTION 'Invalid referee report' USING ERRCODE = '22023';
   END IF;
 
+  IF NOT EXISTS (
+    SELECT 1 FROM public.vxsk_p12_tournaments
+    WHERE id = p_tournament AND published = true
+  ) THEN
+    RAISE EXCEPTION 'Reports may only be submitted for published tournaments'
+      USING ERRCODE = '42501';
+  END IF;
+
   IF p_kind = 'score' THEN
     IF p_match IS NULL OR p_a IS NULL OR p_b IS NULL
        OR p_a NOT BETWEEN 0 AND 99 OR p_b NOT BETWEEN 0 AND 99 THEN
@@ -793,6 +806,14 @@ BEGIN
     IF NOT FOUND OR v_match_state NOT IN ('scheduled', 'live') THEN
       RAISE EXCEPTION 'Only scheduled or live matches can receive a score report'
         USING ERRCODE = '22023';
+    END IF;
+
+    -- The match row lock serializes referee submissions for this fixture.
+    IF EXISTS (
+      SELECT 1 FROM public.vxsk_p12_reports
+      WHERE match_id = p_match AND kind = 'score' AND state = 'pending'
+    ) THEN
+      RAISE EXCEPTION 'A score report is already awaiting Owner review';
     END IF;
   ELSE
     IF p_a IS NOT NULL OR p_b IS NOT NULL THEN
