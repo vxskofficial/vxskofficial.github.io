@@ -27,7 +27,13 @@
    if([...node.options].some(o=>o.value===current))node.value=current;
  }
  const ofTournament=(key,id,d)=> (d?.[key]||[]).filter(x=>x.tournament_id===id);
- const teamName=(d,id)=>d.teams.find(x=>x.id===id)?.name||'Team TBA';
+ const teamName=(d,id)=>id ? (d.teams.find(x=>x.id===id)?.name||'Unknown team') : 'TBD';
+ function roundTitle(round,total){
+  if(round===total)return 'FINAL';
+  if(round===total-1)return 'SEMIFINAL';
+  if(round===total-2)return 'QUARTERFINAL';
+  return 'ROUND OF '+(2 ** (total-round+1));
+ }
  function standings(teams,matches){
   const scores=new Map(teams.map(x=>[x.id,{team:x,played:0,wins:0,draws:0,losses:0,for:0,against:0,points:0}]));
   for(const m of matches){
@@ -46,19 +52,54 @@
    standings(members,fixtures).forEach((r,i)=>{const line=wrap('div','p12-standing');[i+1,r.team.name,r.played,r.wins,r.draws,r.losses,r.points].forEach(v=>line.append(text('span',v)));root.append(line);});
    return root;
  }
- function matchCard(m,d){
-  const n=wrap('article','p12-match');const a=wrap('div','p12-match-side'),b=wrap('div','p12-match-side');
+ function matchCard(m,d,admin=false){
+  const n=wrap('article','p12-match');
+  const a=wrap('div','p12-match-side'),b=wrap('div','p12-match-side');
   const scoreSet=m.score_a!=null&&m.score_b!=null;
   a.append(text('strong',teamName(d,m.team_a)),text('b',scoreSet?m.score_a:'—'));
   b.append(text('strong',teamName(d,m.team_b)),text('b',scoreSet?m.score_b:'—'));
-  const winner=scoreSet&&m.state==='completed'?(m.score_a>m.score_b?m.team_a:(m.score_b>m.score_a?m.team_b:null)):null;
-  if(winner===m.team_a)a.classList.add('p12-winner');
-  if(winner===m.team_b)b.classList.add('p12-winner');
+  const winner=m.state==='bye'?(m.team_a||m.team_b):
+    (scoreSet&&m.state==='completed'?(m.score_a>m.score_b?m.team_a:(m.score_b>m.score_a?m.team_b:null)):null);
+  if(winner&&winner===m.team_a)a.classList.add('p12-winner');
+  if(winner&&winner===m.team_b)b.classList.add('p12-winner');
   const cap=wrap('small','p12-match-caption');
-  cap.textContent=`R${m.round_no} · #${m.slot} · ${label(m.group_name||m.bracket)} · ${m.state.toUpperCase()} · ${formattedDate(m.starts_at)}`;
-  n.append(a,b,cap);return n;
+  const status=m.state==='bye'?'BYE · AUTO ADVANCED':
+    m.state==='waiting'?'WAITING FOR PREVIOUS WINNERS':m.state.toUpperCase();
+  cap.textContent=`${status} · ${formattedDate(m.starts_at)}`;
+  n.append(a,b,cap);
+
+  if(admin&&app.owner&&['scheduled','live'].includes(m.state)){
+    const controls=wrap('form','p12-score-entry');
+    const aLabel=wrap('label');aLabel.append(text('span','TEAM A SCORE'));
+    const aInput=document.createElement('input');aInput.type='number';aInput.min='0';aInput.max='99';aInput.step='1';aInput.required=true;aInput.setAttribute('aria-label','Team A score');
+    aLabel.append(aInput);
+    const bLabel=wrap('label');bLabel.append(text('span','TEAM B SCORE'));
+    const bInput=document.createElement('input');bInput.type='number';bInput.min='0';bInput.max='99';bInput.step='1';bInput.required=true;bInput.setAttribute('aria-label','Team B score');
+    bLabel.append(bInput);
+    const save=text('button','SAVE SCORE & ADVANCE');save.type='submit';
+    controls.append(aLabel,bLabel,save);
+    controls.addEventListener('submit',async e=>{
+      e.preventDefault();
+      const scoreA=Number(aInput.value),scoreB=Number(bInput.value);
+      if(!Number.isInteger(scoreA)||!Number.isInteger(scoreB)||scoreA<0||scoreB<0||scoreA>99||scoreB>99){
+        setNotice('vxsk-p12-staff-notice','Enter both scores from 0 to 99.',true);return;
+      }
+      if(scoreA===scoreB){
+        setNotice('vxsk-p12-staff-notice','Single-elimination matches need a winner. Scores cannot be tied.',true);return;
+      }
+      if(!confirm(`Save ${teamName(d,m.team_a)} ${scoreA} - ${scoreB} ${teamName(d,m.team_b)}? The winner advances and this result is locked.`))return;
+      save.disabled=true;
+      try{
+        await rpc('vxsk_p12_owner_record_score',{p_match:m.id,p_score_a:scoreA,p_score_b:scoreB});
+        await loadStaff();await loadPublic();
+        setNotice('vxsk-p12-staff-notice','Score saved. Winner advanced to the next round.');
+      }catch(err){setNotice('vxsk-p12-staff-notice',err.message||'Could not save score.',true);save.disabled=false;}
+    });
+    n.append(controls);
+  }
+  return n;
  }
- function stageView(stage,d){
+ function stageView(stage,d,admin=false){
   const out=wrap('section','p12-stage');
   const header=wrap('div','p12-stage-title');header.append(text('h4',stage.name),text('span',fmt[stage.format]||stage.format));out.append(header);
   const matches=ofTournament('matches',stage.tournament_id,d).filter(x=>x.stage_id===stage.id);
@@ -82,8 +123,8 @@
    const rounds=wrap('div','p12-round-scroll');
    for(const round of roundNos){
     const col=wrap('div','p12-round');
-    col.append(text('h6','ROUND '+round));
-    list.filter(x=>x.round_no===round).sort((a,b)=>a.slot-b.slot).forEach(x=>col.append(matchCard(x,d)));
+    col.append(text('h6',roundTitle(round,roundNos.length)));
+    list.filter(x=>x.round_no===round).sort((a,b)=>a.slot-b.slot).forEach(x=>col.append(matchCard(x,d,admin)));
     rounds.append(col);
    }
    out.append(rounds);
@@ -135,82 +176,71 @@
       setNotice('vxsk-p12-staff-notice','Tournament Control ready. Scores require referee report + Owner approval.');
    }catch(e){setNotice('vxsk-p12-staff-notice','Tournament Control backend unavailable: '+e.message,true);}
  }
+ function renderAdminBracket(){
+  const node=$('p12-admin-bracket'),select=$('p12-bracket-event');
+  if(!node||!select)return;
+  node.replaceChildren();
+  const d=app.private,t=d?.tournaments.find(x=>x.id===select.value);
+  if(!t){node.append(text('p','Select a tournament to view its bracket.','p12-muted'));return;}
+  const stages=ofTournament('stages',t.id,d).filter(s=>s.format==='single').sort((a,b)=>a.stage_order-b.stage_order);
+  if(!stages.length){node.append(text('p','No bracket yet. Add the teams and generate the bracket in the Create tab.','p12-muted'));return;}
+  stages.forEach(s=>node.append(stageView(s,d,true)));
+ }
  function renderStaff(){
   const d=app.private;if(!d)return;
-  const teamSelect=$('p12-team-event'),stageEvent=$('p12-stage-event'),matchStage=$('p12-match-stage');
-  const allT=d.tournaments.sort((a,b)=>a.title.localeCompare(b.title));
-  for(const id of ['p12-team-event','p12-stage-event','p12-announcement-event','p12-report-event','p12-publish-event']){
-   freshSelect($(id),allT,x=>x.id,x=>x.title+' · '+x.game,'SELECT TOURNAMENT');
-  }
-  freshSelect(matchStage,d.stages,x=>x.id,x=>`${d.tournaments.find(t=>t.id===x.tournament_id)?.title||'Event'} — ${x.name} (${fmt[x.format]})`,'SELECT STAGE');
-  const stage=d.stages.find(x=>x.id===matchStage.value);
-  const lane=$('p12-bracket-lane');
-  if(lane && stage){
-    const valid=stage.format==='double'?['winners','losers','grand_final']:['main'];
-    for(const opt of lane.options){opt.disabled=!valid.includes(opt.value);opt.hidden=opt.disabled;}
-    if(!valid.includes(lane.value))lane.value=valid[0];
-  }
-  const teams=stage?ofTournament('teams',stage.tournament_id,d):[];
-  for(const id of ['p12-match-a','p12-match-b']){
-   freshSelect($(id),teams,x=>x.id,x=>x.name,'SELECT TEAM');
+  const allT=d.tournaments.slice().sort((a,b)=>a.title.localeCompare(b.title));
+  const buildSelect=$('p12-bracket-build-event'),bracketSelect=$('p12-bracket-event');
+  freshSelect(buildSelect,allT,x=>x.id,x=>x.title+' · '+x.game,'SELECT TOURNAMENT');
+  freshSelect(bracketSelect,allT,x=>x.id,x=>x.title+' · '+x.game,'SELECT TOURNAMENT');
+  if(app.focusTournamentId&&allT.some(t=>t.id===app.focusTournamentId)){
+    if(buildSelect)buildSelect.value=app.focusTournamentId;
+    if(bracketSelect)bracketSelect.value=app.focusTournamentId;
   }
   const currentEvent=$('p12-report-event')?.value;
-  const matches=ofTournament('matches',currentEvent,d);
-  freshSelect($('p12-report-match'),matches,x=>x.id,x=>teamName(d,x.team_a)+' vs '+teamName(d,x.team_b)+' · R'+x.round_no,'SELECT MATCH (FOR SCORE)');
-  freshSelect($('p12-live-match'),d.matches.filter(m=>['scheduled','live'].includes(m.state)),
-    x=>x.id,x=>teamName(d,x.team_a)+' vs '+teamName(d,x.team_b)+' · '+x.state.toUpperCase(),'SELECT MATCH');
-  const reports=$('p12-reports');if(!reports)return;
-  reports.replaceChildren();
-  const pending=d.reports.filter(x=>x.state==='pending');
-  for(const r of pending){
-   const row=wrap('article','p12-report');
-   const tournament=d.tournaments.find(t=>t.id===r.tournament_id);
-   row.append(text('strong',`${r.kind.toUpperCase()} · ${tournament?.title||'Event'}`),
-     text('small',r.match_id?`Match: ${teamName(d,d.matches.find(m=>m.id===r.match_id)?.team_a)} vs ${teamName(d,d.matches.find(m=>m.id===r.match_id)?.team_b)}`:'General event report'));
-   if(r.kind==='score')row.append(text('p',`PROPOSED SCORE: ${r.score_a} : ${r.score_b}`));
-   row.append(text('p',r.notes));
-   if(app.owner){
-    const actions=wrap('div','p12-report-actions');
-    for(const [label,approve] of [['APPROVE',true],['REJECT',false]]){
-     const b=text('button',label);b.type='button';b.disabled=r.submitted_by===(app.staffUser||'');
-     b.title=b.disabled?'Owner cannot approve their own report':'Owner moderation';
-     b.addEventListener('click',async()=>{
-      if(!confirm(`${approve?'Approve':'Reject'} this report? ${approve?'Approved scores become public.':''}`))return;
-      b.disabled=true;
-      try{await rpc('vxsk_p12_decide_report',{p_report:r.id,p_approve:approve});await loadStaff();await loadPublic();}
-      catch(e){setNotice('vxsk-p12-staff-notice',e.message,true);b.disabled=false;}
-     });actions.append(b);
+  freshSelect($('p12-report-event'),allT,x=>x.id,x=>x.title+' · '+x.game,'SELECT TOURNAMENT');
+  const selectedReportEvent=$('p12-report-event')?.value||currentEvent;
+  const matches=ofTournament('matches',selectedReportEvent,d)
+    .filter(m=>['scheduled','live'].includes(m.state)&&m.team_a&&m.team_b);
+  freshSelect($('p12-report-match'),matches,x=>x.id,
+    x=>teamName(d,x.team_a)+' vs '+teamName(d,x.team_b)+' · '+roundTitle(x.round_no,
+      Math.max(1,...ofTournament('matches',x.tournament_id,d).map(m=>m.round_no))),
+    'SELECT READY MATCH');
+  const reports=$('p12-reports');
+  if(reports){
+    reports.replaceChildren();
+    const pending=d.reports.filter(x=>x.state==='pending');
+    for(const r of pending){
+      const row=wrap('article','p12-report');
+      const tournament=d.tournaments.find(t=>t.id===r.tournament_id);
+      const match=d.matches.find(m=>m.id===r.match_id);
+      row.append(text('strong',`${r.kind.toUpperCase()} · ${tournament?.title||'Event'}`),
+        text('small',match?`Match: ${teamName(d,match.team_a)} vs ${teamName(d,match.team_b)}`:'General event report'));
+      if(r.kind==='score')row.append(text('p',`PROPOSED SCORE: ${r.score_a} : ${r.score_b}`));
+      row.append(text('p',r.notes));
+      if(app.owner){
+        const actions=wrap('div','p12-report-actions');
+        for(const [actionLabel,approve] of [['APPROVE',true],['REJECT',false]]){
+          const button=text('button',actionLabel);button.type='button';
+          button.disabled=r.submitted_by===(app.staffUser||'');
+          button.title=button.disabled?'The report author cannot decide their own report':'Owner moderation';
+          button.addEventListener('click',async()=>{
+            if(!confirm(`${approve?'Approve':'Reject'} this report?${approve?' The winner will advance to the next round.':''}`))return;
+            button.disabled=true;
+            try{
+              await rpc('vxsk_p12_decide_report',{p_report:r.id,p_approve:approve});
+              await loadStaff();await loadPublic();
+              setNotice('vxsk-p12-staff-notice',approve?'Report approved. Winner advanced.':'Report rejected.');
+            }catch(e){setNotice('vxsk-p12-staff-notice',e.message,true);button.disabled=false;}
+          });
+          actions.append(button);
+        }
+        row.append(actions);
+      }
+      reports.append(row);
     }
-    row.append(actions);
-   }
-   reports.append(row);
+    if(!pending.length)reports.append(text('p','No pending reports.','p12-muted'));
   }
-  if(!pending.length)reports.append(text('p','No pending referee reports.','p12-muted'));
-  const activity=$('p12-staff-updates');
-  if(activity){
-    activity.replaceChildren();
-    for(const update of (d.updates||[]).slice().sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).slice(0,35)){
-      const tournament=d.tournaments.find(t=>t.id===update.tournament_id);
-      const line=wrap('article','p12-control-item');
-      line.append(text('strong',`${update.kind.toUpperCase()} · ${update.title}`),
-        text('small',`${tournament?.title||'Tournament'} · ${formattedDate(update.created_at)}`));
-      if(update.body)line.append(text('p',update.body));
-      activity.append(line);
-    }
-    if(!activity.children.length)activity.append(text('p','No announcements or live updates yet.','p12-muted'));
-  }
-  const listing=$('p12-staff-events');if(listing){
-    listing.replaceChildren();
-    for(const t of d.tournaments){
-      const line=wrap('div','p12-control-item');
-      line.append(text('strong',t.title),text('small',`${t.game} · ${t.status} · ${t.published?'PUBLIC':'DRAFT'} · ${ofTournament('teams',t.id,d).length} entrants`));
-      listing.append(line);
-    }
-    if(!d.tournaments.length)listing.append(text('p','No tournaments yet.','p12-muted'));
-  }
-  if(!app.owner){
-   document.querySelectorAll('[data-p12-owner]').forEach(n=>n.hidden=true);
-  }
+  renderAdminBracket();
  }
  function form(id,handler){
   const node=$(id);if(!node)return;
@@ -234,39 +264,38 @@
  }
  function bindStaff(){
    document.querySelectorAll('[data-p12-tab]').forEach(b=>b.addEventListener('click',()=>showControlTab(b.dataset.p12Tab)));
-   form('p12-create',async f=>{await rpc('vxsk_p12_create_tournament',{
-     p_title:value(f,'title'),p_game:value(f,'game'),p_mode:value(f,'mode'),p_start:localDate(value(f,'start')),
-     p_publish:value(f,'publish')==='on'});});
-   form('p12-team-create',async f=>{await rpc('vxsk_p12_add_team',{p_tournament:value(f,'event'),p_name:value(f,'name')});});
-   form('p12-stage-create',async f=>{await rpc('vxsk_p12_add_stage',{
-     p_tournament:value(f,'event'),p_name:value(f,'name'),p_format:value(f,'format'),p_order:Number(value(f,'order'))});});
-   form('p12-match-create',async f=>{await rpc('vxsk_p12_add_match',{
-     p_stage:value(f,'stage'),p_a:value(f,'a'),p_b:value(f,'b'),p_round:Number(value(f,'round')),
-     p_slot:Number(value(f,'slot')),p_bracket:value(f,'bracket'),p_group:value(f,'group'),p_start:localDate(value(f,'start'))});});
-   form('p12-announce',async f=>{await rpc('vxsk_p12_announce',{
-     p_tournament:value(f,'event'),p_kind:value(f,'kind'),p_title:value(f,'title'),
-     p_message:value(f,'message'),p_status:value(f,'status')});});
-   form('p12-publish',async f=>{await rpc('vxsk_p12_publish',{p_tournament:value(f,'event'),p_publish:value(f,'publish')==='yes'});});
-   form('p12-mark-live',async f=>{await rpc('vxsk_p12_mark_match_live',{
-     p_match:value(f,'match'),p_live:value(f,'live')==='yes'});});
+   form('p12-create',async f=>{
+     const id=await rpc('vxsk_p12_create_tournament',{
+       p_title:value(f,'title'),p_game:value(f,'game'),p_mode:value(f,'mode'),
+       p_start:localDate(value(f,'start')),p_publish:false
+     });
+     app.focusTournamentId=id;
+     setNotice('vxsk-p12-staff-notice','Tournament created. Add the team names below to generate its bracket.');
+   });
+   form('p12-build-bracket',async f=>{
+     const tournament=value(f,'event');
+     const names=value(f,'teams').split(/\\r?\\n/).map(n=>n.trim()).filter(Boolean);
+     if(names.length<2||names.length>64)throw Error('Add between 2 and 64 teams, one team per line.');
+     await rpc('vxsk_p12_generate_single_bracket',{
+       p_tournament:tournament,
+       p_team_names:names,
+       p_shuffle:value(f,'shuffle')==='on',
+       p_publish:value(f,'publish')==='on'
+     });
+     app.focusTournamentId=tournament;
+     setNotice('vxsk-p12-staff-notice','Bracket generated successfully. You can now enter scores in Bracket & Scores.');
+   });
    form('p12-report',async f=>{
-    const kind=value(f,'kind');await rpc('vxsk_p12_submit_report',{
-     p_tournament:value(f,'event'),p_match:value(f,'match')||null,p_kind:kind,
-     p_a:kind==='score'?Number(value(f,'score_a')):null,p_b:kind==='score'?Number(value(f,'score_b')):null,
-     p_notes:value(f,'notes')
-    });
+     const scoreA=Number(value(f,'score_a')),scoreB=Number(value(f,'score_b'));
+     if(scoreA===scoreB)throw Error('Single-elimination scores cannot be tied.');
+     await rpc('vxsk_p12_submit_report',{
+       p_tournament:value(f,'event'),p_match:value(f,'match'),
+       p_kind:'score',p_a:scoreA,p_b:scoreB,p_notes:value(f,'notes')
+     });
    });
    $('p12-refresh')?.addEventListener('click',loadStaff);
-   $('p12-match-stage')?.addEventListener('change',renderStaff);
+   $('p12-bracket-event')?.addEventListener('change',renderAdminBracket);
    $('p12-report-event')?.addEventListener('change',renderStaff);
-   $('p12-report-kind')?.addEventListener('change',()=>{
-     const score=$('p12-report-score-fields'),isScore=$('p12-report-kind').value==='score';
-     if(score)score.hidden=!isScore;
-     for(const id of ['p12-report-match','p12-report-a','p12-report-b']){
-      const input=$(id);if(input)input.required=isScore;
-     }
-   });
-   $('p12-report-kind')?.dispatchEvent(new Event('change'));
  }
  function startPublic(){
   if(!$('vxsk-p12-public'))return;
