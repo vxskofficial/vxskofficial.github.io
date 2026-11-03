@@ -229,6 +229,12 @@ This audit now includes a **user-supplied read-only Supabase schema export** (20
 - Next safe check: query pg_namespace/pg_class for the `supabase_migrations` schema and its relations, check whether current role can SELECT the history table, and if present read only migration `version` and `name` metadata. Do not inspect auth/realtime/storage migration rows for P12 application history. If no CLI history table exists, rely on the repository's migration files / deployment records and schema object inventory; do not infer migration history from subsystem tables.
 - No database changes have been made.
 
+### Post-ROLLBACK object absence check (user-supplied on 2026-11-03)
+- User subsequently ran the expected-object verification query after the successful rollback dry-run.
+- All 7 expected P12 tables returned `exists=false`: `vxsk_p12_tournaments`, `vxsk_p12_teams`, `vxsk_p12_stages`, `vxsk_p12_matches`, `vxsk_p12_updates`, `vxsk_p12_reports`, `vxsk_p12_audit`.
+- All 13 expected P12 RPCs returned `exists=false`: `vxsk_p12_public_snapshot`, `vxsk_p12_staff_snapshot`, `vxsk_p12_owner_ok`, `vxsk_p12_referee_ok`, `vxsk_p12_create_tournament`, `vxsk_p12_add_team`, `vxsk_p12_add_stage`, `vxsk_p12_add_match`, `vxsk_p12_announce`, `vxsk_p12_publish`, `vxsk_p12_mark_match_live`, `vxsk_p12_submit_report`, `vxsk_p12_decide_report`.
+- This is the expected post-rollback state and confirms the draft objects were not persisted. Do not rerun with `COMMIT` until the SQL has passed final review and the user explicitly authorizes a real staging deployment.
+
 ### P12 rollback dry-run result (user-confirmed on 2026-11-03)
 - User copied the complete draft migration into the Supabase SQL Editor, replaced the final `COMMIT;` with `ROLLBACK;`, and executed it. Supabase reported success with no result rows and no error.
 - This is consistent with the DDL and function definitions executing successfully inside the transaction and then being rolled back. It is a useful syntax/DDL acceptance check, not a runtime authorization test and not proof that objects remain installed.
