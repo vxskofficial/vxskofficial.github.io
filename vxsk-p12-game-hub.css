@@ -121,7 +121,8 @@
   border:1px solid #655c91;
   border-radius:12px;
   padding:10px 11px;
-  font:14px inherit;
+  font-family:inherit;
+  font-size:14px;
 }
 .p12-score-entry{
   display:grid;
@@ -148,7 +149,9 @@
   border-radius:9px;
   background:#151633;
   color:#fff;
-  font:700 16px inherit;
+  font-family:inherit;
+  font-size:16px;
+  font-weight:700;
   font-variant-numeric:tabular-nums;
 }
 .p12-score-entry button{
