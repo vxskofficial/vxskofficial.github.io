@@ -219,6 +219,16 @@ This audit now includes a **user-supplied read-only Supabase schema export** (20
 - Combined legacy Game Hub audit now covers table columns/constraints/RLS/effective privileges, indexes, RPC bodies/ACLs, and the single trigger. Candidate performance indexes remain uncreated pending workload/query-plan review.
 - Next pre-migration check: inspect `supabase_migrations.schema_migrations` presence and version/name history to establish whether any P12 migration file/version previously ran. Then design an isolated P12 schema and RPC contract, review the complete SQL in version control, and apply to staging only after confirmation. No DB migration has been written or applied.
 
+### Migration metadata inventory result (user-supplied on 2026-11-03)
+- User queried non-system information_schema columns with names matching `%migration%`. Returned:
+  - `auth.schema_migrations(version)`
+  - `realtime.schema_migrations(version, inserted_at)`
+  - `storage.migrations(id, name, hash, executed_at)`
+- These are subsystem-managed migration records for Supabase Auth, Realtime, and Storage; they are not by themselves the application's Supabase CLI migration history and do not establish whether P12 SQL was applied.
+- No `supabase_migrations.schema_migrations` appeared in the user's result. This may mean the CLI migration-history schema/table is absent, or is not visible through the current metadata query/permissions. Do not treat absence from this metadata query as conclusive proof that migrations never ran.
+- Next safe check: query pg_namespace/pg_class for the `supabase_migrations` schema and its relations, check whether current role can SELECT the history table, and if present read only migration `version` and `name` metadata. Do not inspect auth/realtime/storage migration rows for P12 application history. If no CLI history table exists, rely on the repository's migration files / deployment records and schema object inventory; do not infer migration history from subsystem tables.
+- No database changes have been made.
+
 ## Recommended implementation order
 ### Phase 0 — database truth (must happen before DDL)
 - Obtain a **schema-only** export from the staging Supabase project: tables/columns/constraints, views, functions/RPC signatures, triggers, RLS policies, grants, storage buckets/policies and enabled extensions. Do not export user records, passwords, auth tokens, payment data or secrets.
