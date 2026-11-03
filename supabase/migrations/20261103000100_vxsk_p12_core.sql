@@ -1,5 +1,5 @@
 -- VXSK P12 Core Migration
--- DRAFT FOR REVIEW ONLY — DO NOT APPLY TO SUPABASE YET.
+-- APPROVED BY USER FOR SUPABASE STAGING ONLY — DO NOT APPLY TO PRODUCTION.
 -- Date: 2026-11-03
 --
 -- This adds an isolated P12 tournament schema. It does not alter legacy
