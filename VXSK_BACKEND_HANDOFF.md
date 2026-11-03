@@ -78,6 +78,13 @@ This audit now includes a **user-supplied read-only Supabase schema export** (20
 - The two anon-executable functions are not proven exploitable from the supplied bodies alone because both delegate/return helper checks. Treat them as least-privilege hardening items pending helper review, not as confirmed vulnerabilities.
 - Next helper review: fetch definitions and ACLs for `public.can_edit_match_center()`, `public.vxsk_p13_owner_ok()`, and `vxsk_market_private.is_owner()`, `vxsk_market_private.is_staff()`, and `vxsk_market_private.nickname(uuid)`. Also include `public.vxsk_p12_owner_ok()` if it protects tournament-management RPCs.
 
+### Anonymous EXECUTE hardening applied (user-confirmed on 2026-11-03)
+- User ran both REVOKE statements successfully:
+  - `REVOKE EXECUTE ON FUNCTION public.vxsk_p13_owner_ok() FROM anon;`
+  - `REVOKE EXECUTE ON FUNCTION public.vxsk_hub_editor() FROM anon;`
+- These revoke only the explicit anon grants; authenticated access was not targeted. Still verify effective privileges with `has_function_privilege('anon', ...)` and `has_function_privilege('authenticated', ...)`, since effective permissions can also come through PUBLIC or role membership.
+- No other database permissions or data were changed by these two statements.
+
 ### Helper-function review (user-supplied on 2026-11-03)
 - `public.can_edit_match_center()` is SECURITY DEFINER, owned by postgres, empty search_path, and executable by authenticated only (not anon). It returns true only when `auth.uid()` exists, JWT AAL is `aal2`, and the user is an Owner or has a row in `match_center_editors`. This supports the `vxsk_hub_editor` wrapper; anon invocation returns false through the helper.
 - `public.vxsk_p13_owner_ok()` is SECURITY DEFINER, postgres-owned, `search_path=pg_catalog`, and executable by anon and authenticated. It returns true only for a signed-in AAL2 Owner, delegated through `public.vxsk_hub_owner()`. The body gives no indication that anon can obtain an administrative true result (anon has no auth.uid()). Still revoke anon EXECUTE as least-privilege hardening if no anonymous frontend use is required; preserve authenticated EXECUTE if the owner UI calls it directly.
