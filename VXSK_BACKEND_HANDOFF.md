@@ -235,6 +235,14 @@ This audit now includes a **user-supplied read-only Supabase schema export** (20
 - All 13 expected P12 RPCs returned `exists=false`: `vxsk_p12_public_snapshot`, `vxsk_p12_staff_snapshot`, `vxsk_p12_owner_ok`, `vxsk_p12_referee_ok`, `vxsk_p12_create_tournament`, `vxsk_p12_add_team`, `vxsk_p12_add_stage`, `vxsk_p12_add_match`, `vxsk_p12_announce`, `vxsk_p12_publish`, `vxsk_p12_mark_match_live`, `vxsk_p12_submit_report`, `vxsk_p12_decide_report`.
 - This is the expected post-rollback state and confirms the draft objects were not persisted. Do not rerun with `COMMIT` until the SQL has passed final review and the user explicitly authorizes a real staging deployment.
 
+### P12 draft final-pass review — pending queue and tournament closure (2026-11-03; requires fresh dry-run)
+- Further tightened the draft `supabase/migrations/20261103000100_vxsk_p12_core.sql`:
+  - Owner staff snapshot now returns only pending reports, ordered oldest first (up to 500), matching the actual Owner Review Queue UI and avoiding approved/rejected history crowding the pending queue.
+  - `vxsk_p12_announce()` now locks the tournament row before changing its status. When setting a tournament to `completed` or `cancelled`, it refuses to close the tournament while score reports remain pending.
+  - This tournament-row lock serializes closure against `vxsk_p12_submit_report()`, which locks the published tournament row with FOR SHARE before accepting score reports.
+- These changes were made after the user's last successful ROLLBACK dry-run. A fresh dry-run is required against the latest file SHA before any live application.
+- The earlier fresh dry-run success applies to the immediately preceding revision only. No SQL from this migration has been committed to the Supabase database.
+
 ### P12 draft third-pass review — publication/status and report concurrency (2026-11-03)
 - Updated `supabase/migrations/20261103000100_vxsk_p12_core.sql` after second-pass review:
   - Staff snapshot restricts unpublished drafts and all related child collections to Owner; Referee/Reviewer sees only published tournaments and their entrants, stages, matches and updates.
