@@ -156,6 +156,30 @@ This audit now includes a **user-supplied read-only Supabase schema export** (20
 - The `vxsk_hub_guard_result_write` trigger (from previous schema export) guards score/state publication and requires Owner for publishing/changing results. Preserve this control when designing any P12 compatibility layer; referee report submission should not bypass Owner approval.
 - Next required evidence is the separate function inventory query output for every `public.vxsk_hub_*` and `public.vxsk_p12_*` routine, including bodies and effective EXECUTE grants. Do not create new tables/functions or alter current policies until that inventory and the existing client call sites have been mapped.
 
+### Existing `vxsk_hub_*` RPC security review and frontend mapping (user-supplied definitions + source inspection, 2026-11-03)
+- User supplied definitions for all 16 ordinary `vxsk_hub_*` RPCs plus the result-write trigger; all are postgres-owned SECURITY DEFINER with empty search_path. Ordinary functions in the supplied set have authenticated EXECUTE but not anon, except `vxsk_hub_team_roster(uuid)`, which also has anon EXECUTE. The trigger function has no anon/authenticated EXECUTE.
+- Authorization patterns:
+  - `vxsk_hub_owner()`: signed-in AAL2 user with `staff_roles.role='owner'`.
+  - `vxsk_hub_referee()`: signed-in AAL2 user with role owner or reviewer.
+  - `vxsk_hub_editor()`: delegates to `can_edit_match_center()`, which requires AAL2 and Owner or membership in `match_center_editors`.
+  - `vxsk_hub_owner_decide_report`, `vxsk_hub_award_badge`, and `vxsk_hub_owner_assign_player` require the Owner helper before privileged writes.
+  - `vxsk_hub_referee_report` requires Referee helper, published match, score bounds 0-99, notes <=700 and a per-referee 10/hour cap; it inserts a pending report.
+  - `vxsk_hub_owner_decide_report` locks a pending report row, sets approved/rejected, and on approval updates match score/state; the result-write trigger independently requires Owner for score/completed-state changes.
+  - Team RPCs require authentication and enforce captain/team ownership; join is rate-limited and team-size capped; team decision is captain-only; ready check-in only updates the signed-in assigned player on a published scheduled match.
+  - Other functions validate categories/emoji/status and apply per-user limits where shown.
+- Public roster nuance: `vxsk_hub_team_roster(uuid)` is the only ordinary RPC in the supplied set with anon EXECUTE. It returns a roster only for a published team and includes only accepted members; visible nickname is returned only when the social profile is `discoverable`, otherwise it returns `Private player`. This appears intentionally public-facing. Keep anon EXECUTE only if the public team roster UI is intended; otherwise revoke it.
+- Minor hardening/quality observations, not confirmed critical vulnerabilities:
+  - `vxsk_hub_award_badge` emits a notification even when the badge insert hits `ON CONFLICT DO NOTHING`; repeated award calls can create duplicate notifications. Consider checking whether INSERT inserted a row before creating the notification.
+  - `vxsk_hub_owner_assign_player` similarly sends a notification even when the assignment row was already present due to `ON CONFLICT DO NOTHING`.
+  - `vxsk_hub_create_team` caps a user's teams at 3 with a COUNT before INSERT; concurrent calls can race past the cap unless serialized or backed by a suitable constraint/lock.
+  - `vxsk_hub_team_roster` public access is controlled by its published-team gate and discoverability, but confirm product intent before changing grants.
+  - `vxsk_hub_notifications` direct UPDATE is row-limited to the recipient; client currently updates only `seen=true`. Consider column-level UPDATE grant limited to `seen` after verifying no other client use.
+- Source mapping checked on staging:
+  - `arena-hub.js` uses existing `vxsk_hub_*` RPCs: join_team, team_roster, team_decide, leave_team, ready, create_team, set_status, report; it reads events/matches/teams and personal rows directly under RLS. It marks own notifications read with a direct UPDATE of `seen`.
+  - `vxsk-p12-game-hub.js` is a separate, newer tournament control frontend and exclusively calls the missing `vxsk_p12_*` RPC family listed above.
+  - The older `vxsk_hub_*` backend is therefore not equivalent to the P12 backend; it covers teams, event/match display, player check-in, referee score reports and Owner approval, but lacks the P12 stages/brackets/group/Swiss/match-team-ID data model.
+- Recommended architectural choice before implementation: decide explicitly whether to (A) extend the existing Game Hub schema with stages and team-linked matches while preserving its working arena/team/community functionality, or (B) add a separately versioned P12 tournament schema and compatibility RPCs. Avoid creating 13 wrappers that pretend the old tables have P12 fields. Any new writes must preserve Owner-only result publication and the existing AAL2 Referee/Owner checks.
+
 ## Recommended implementation order
 ### Phase 0 — database truth (must happen before DDL)
 - Obtain a **schema-only** export from the staging Supabase project: tables/columns/constraints, views, functions/RPC signatures, triggers, RLS policies, grants, storage buckets/policies and enabled extensions. Do not export user records, passwords, auth tokens, payment data or secrets.
