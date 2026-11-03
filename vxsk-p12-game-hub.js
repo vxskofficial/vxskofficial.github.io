@@ -332,7 +332,7 @@
     app.referee=!referee.error&&referee.data===true;
     app.staffUser=user.data?.user?.id||'';
     if(!app.referee)return setNotice('vxsk-p12-staff-notice','No referee permission on this account.',true);
-    document.querySelectorAll('[data-p12-referee]').forEach(n=>n.hidden=false);
+    document.querySelectorAll('[data-p12-referee]').forEach(n=>n.hidden=app.owner);
     document.querySelectorAll('[data-p12-owner]').forEach(n=>n.hidden=!app.owner);
     showControlTab(app.owner?'setup':'referee');
     await loadStaff();
