@@ -191,6 +191,24 @@ This audit now includes a **user-supplied read-only Supabase schema export** (20
   - `vxsk_hub_notifications` frontend only updates `seen=true`; current row policy confines updates to the user's own rows but broad table UPDATE allows changing other columns on one's own notification. Consider column-level UPDATE permission for `seen` only.
 - Next read-only audit before writing any migration: inventory indexes on all 11 `vxsk_hub_*` tables, non-internal triggers and trigger function bodies, and migration history. Then design a P12 migration under version control and apply only to staging after explicit review. Do not touch production `main` or legacy Hub schema until backward-compatibility testing is complete.
 
+### Legacy Game Hub index inventory review (user-supplied on 2026-11-03)
+- Existing useful indexes confirmed:
+  - Event feed: `vxsk_hub_events(published, starts_at)`.
+  - Public match board: `vxsk_hub_matches(published, game, starts_at)`.
+  - Public team directory: `vxsk_hub_teams(published, game)`.
+  - Notifications inbox: `vxsk_hub_notifications(user_id, created_at DESC)`.
+  - Referee report queue: `vxsk_hub_match_reports(state, created_at DESC)`.
+  - Abuse/report history: `vxsk_hub_reports(reporter_id, created_at DESC)`.
+  - PK/unique indexes cover primary identifiers and team/player membership uniqueness.
+- Candidate missing indexes based on known query patterns (not yet approved or created):
+  - `vxsk_hub_match_players(user_id, match_id)`: Arena Hub loads match-player assignments by `user_id`; current PK begins with `match_id` and does not efficiently support reverse lookup by user.
+  - `vxsk_hub_match_reports(referee_id, created_at DESC)`: `vxsk_hub_referee_report` rate-limits by referee and recent created_at; current state/created index does not cover referee_id.
+  - `vxsk_hub_team_members(user_id, requested_at DESC)`: join-team rate limit counts a user's requests in the last hour; current PK begins with team_id.
+  - `vxsk_hub_teams(captain_id)`: create-team cap counts teams by captain_id; no captain index is in the supplied inventory.
+  - Consider `vxsk_hub_matches(event_id)` only if measured queries filter by event_id; do not add without confirming workload/query plan.
+- These are performance candidates, not security issues. Before adding, inspect approximate table sizes and EXPLAIN plans; use `CREATE INDEX CONCURRENTLY` where appropriate outside a transaction, after confirming operational impact. Do not add redundant indexes or make live schema changes before migration review.
+- Trigger inventory output has not yet been received. Need inspect all non-internal triggers and bodies before finalizing P12 or proposing changes to existing match-result controls.
+
 ## Recommended implementation order
 ### Phase 0 — database truth (must happen before DDL)
 - Obtain a **schema-only** export from the staging Supabase project: tables/columns/constraints, views, functions/RPC signatures, triggers, RLS policies, grants, storage buckets/policies and enabled extensions. Do not export user records, passwords, auth tokens, payment data or secrets.
