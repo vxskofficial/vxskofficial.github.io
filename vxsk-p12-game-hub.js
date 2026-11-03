@@ -184,6 +184,12 @@
   if(!node||!select)return;
   node.replaceChildren();
   const d=app.private,t=d?.tournaments.find(x=>x.id===select.value);
+  const publishButton=$('p12-publish-toggle');
+  if(publishButton){
+    publishButton.disabled=!t;
+    publishButton.textContent=t?(t.published?'UNPUBLISH TOURNAMENT':'PUBLISH TOURNAMENT'):'PUBLISH TOURNAMENT';
+    publishButton.dataset.publishNext=t?(t.published?'false':'true'):'';
+  }
   if(!t){node.append(text('p','Select a tournament to view its bracket.','p12-muted'));return;}
   const stages=ofTournament('stages',t.id,d).filter(s=>s.format==='single').sort((a,b)=>a.stage_order-b.stage_order);
   if(!stages.length){node.append(text('p','No bracket yet. Add the teams and generate the bracket in the Create tab.','p12-muted'));return;}
@@ -299,6 +305,22 @@
    });
    $('p12-refresh')?.addEventListener('click',loadStaff);
    $('p12-bracket-event')?.addEventListener('change',renderAdminBracket);
+   $('p12-publish-toggle')?.addEventListener('click',async()=>{
+     const select=$('p12-bracket-event'),button=$('p12-publish-toggle');
+     const tournament=app.private?.tournaments.find(t=>t.id===select?.value);
+     if(!tournament||!button.dataset.publishNext)return;
+     const publish=button.dataset.publishNext==='true';
+     if(!confirm(`${publish?'Publish':'Unpublish'} ${tournament.title}? ${publish?'The event and bracket become visible on the public Arena.':'The event and bracket become hidden from public view.'}`))return;
+     button.disabled=true;
+     try{
+       await rpc('vxsk_p12_publish',{p_tournament:tournament.id,p_publish:publish});
+       await loadStaff();await loadPublic();
+       setNotice('vxsk-p12-staff-notice',publish?'Tournament published on the public Arena.':'Tournament is now private.');
+     }catch(err){
+       setNotice('vxsk-p12-staff-notice',err.message||'Could not update tournament visibility.',true);
+       button.disabled=false;
+     }
+   });
    $('p12-report-event')?.addEventListener('change',renderStaff);
  }
  function startPublic(){
