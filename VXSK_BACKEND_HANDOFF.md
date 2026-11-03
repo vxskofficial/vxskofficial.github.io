@@ -13,11 +13,11 @@
 
 ## Current P12 deployment status — 2026-11-03
 
-- Current migration file: `supabase/migrations/20261103000100_vxsk_p12_core.sql` on `staging/vxsk-cloudflare-preview`; verified blob SHA: `c5ea720220d985b5c9a6536661bf58419f9df472`.
-- The user confirmed that this exact revision was executed in the Supabase SQL Editor with the final `COMMIT;` replaced by `ROLLBACK;`; result: `Success. No rows returned`.
-- This validates transaction-level DDL/function-definition acceptance. It is not an end-to-end authorization or runtime RPC test.
-- The post-rollback inventory reported all seven P12 tables and all thirteen P12 RPCs absent. No P12 migration objects were persisted.
-- The migration remains a review-only draft and has **not** been applied. Before any live deployment, obtain explicit staging-only authorization, verify the editor is connected to Supabase project ref `opzqnmahfgehaewgciwg`, and have the user execute the complete reviewed SQL with its final `COMMIT;` intact.
+- Current migration file: `supabase/migrations/20261103000100_vxsk_p12_core.sql` on `staging/vxsk-cloudflare-preview`; latest verified blob SHA: `9c29676037097ec3be8bf1b071dd7240035db63f`.
+- The immediately preceding revision (blob SHA `c5ea720220d985b5c9a6536661bf58419f9df472`) was executed by the user in the Supabase SQL Editor with final `COMMIT;` replaced by `ROLLBACK;`; Supabase returned `Success. No rows returned`, and the post-rollback inventory showed all 7 P12 tables and 13 P12 RPCs absent.
+- A final static-review hardening change was then made to the migration: all direct Owner/Referee helper negations now use `COALESCE(helper(), false)`, including the Owner snapshot flag, so a NULL helper result fails closed. This changes the SQL and therefore **requires a fresh full-copy ROLLBACK dry-run** before any live application.
+- The current migration remains a review-only draft and has **not** been applied. Before any live deployment, obtain explicit staging-only authorization, verify the SQL Editor is connected to Supabase project ref `opzqnmahfgehaewgciwg`, and have the user execute the complete reviewed SQL with its final `COMMIT;` intact.
+- The dry-run validates transaction-level DDL/function-definition acceptance only; it is not an end-to-end authorization or runtime RPC test.
 - This does not authorize changes to production, GitHub `main`, or the Cloudflare Worker.
 
 ## Recent frontend changes already committed on staging
