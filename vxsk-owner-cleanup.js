@@ -12,9 +12,11 @@
     fixtures: {table:'vxsk_hub_matches',columns:'id,game,side_a,side_b,created_at',label:r=>[r.game,r.side_a,'vs',r.side_b].filter(Boolean).join(' ')},
     reports: {table:'vxsk_hub_match_reports',columns:'id,match_id,state,created_at',label:r=>'Referee report · '+(r.state||'unknown')},
     challenges: {rpc:'vxsk_showmatch_staff_queue',label:r=>'Showmatch challenge · '+(r.title||r.status||'')},
-    boosters: {table:'vxsk_booster_applications',columns:'id,created_at',label:()=> 'Booster application'},
-    orders: {table:'vxsk_marketplace_requests',columns:'id,created_at',label:()=> 'Marketplace request'},
-    feedback: {table:'vxsk_server_feedback',columns:'id,created_at',label:()=> 'Server feedback'}
+    // Use existing role-checked RPCs; these are the real public-schema sources
+    // and their tables are not exposed through direct authenticated SELECT policies.
+    boosters: {rpc:'vxsk_market_review_list',label:()=> 'Booster application'},
+    orders: {rpc:'vxsk_market_owner_requests',label:()=> 'Marketplace request'},
+    feedback: {rpc:'vxsk_server_feedback_staff_list',label:()=> 'Server feedback'}
   };
   let api=null, ownerVerified=false;
   const el=(tag,text='',className='')=>{const n=document.createElement(tag);n.textContent=text;if(className)n.className=className;return n;};
