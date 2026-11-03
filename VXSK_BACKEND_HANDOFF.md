@@ -139,6 +139,23 @@ This audit now includes a **user-supplied read-only Supabase schema export** (20
 - Existing earlier export reported `vxsk_hub_owner()`, `vxsk_hub_referee()`, `vxsk_hub_editor()` and trigger `vxsk_hub_guard_result_write()`; at least some helper/trigger logic is separate from the missing P12 API.
 - Next safe audit: inspect columns, types, primary/foreign/unique/check constraints, indexes, RLS policies and effective table grants for the 11 `vxsk_hub_*` tables; separately inventory function names/signatures beginning `vxsk_hub_`. Do not create P12 replacements until the existing table model and any existing Hub RPCs are understood.
 
+### Existing Game Hub table/RLS inventory review (user-supplied on 2026-11-03)
+- User supplied a full table/column/constraint/policy/effective-privilege inventory for the 11 `public.vxsk_hub_*` base tables. All reported tables have RLS enabled and FORCE=false.
+- Current schema is not directly compatible with the P12 frontend data model:
+  - Existing events table is `vxsk_hub_events` with `title`, `game`, `starts_at`, `details`, `published`, `prize`, `cover_path`; it has no P12 fields such as `mode` or a tournament `status` in the supplied column list.
+  - Existing matches table is `vxsk_hub_matches`, with text `side_a` and `side_b`, plus `round_name`, `bracket_slot`, scores and event_id. P12 frontend expects `team_a` and `team_b` IDs, `stage_id`, `round_no`, `slot`, `bracket`, `group_name`, and state/score fields.
+  - Existing tables contain no stage table in the 11-table inventory. P12 frontend expects a `stages` collection with format/order and stage IDs.
+  - Existing `vxsk_hub_match_reports` has `referee_id`, `proposed_score_a/b`, `notes`, and `state`; P12 frontend expects report fields like `submitted_by`, `kind`, `score_a/b`, and a P12-specific decision RPC.
+  This is a data-model/API mismatch, not merely missing EXECUTE grants.
+- Existing data access posture, from supplied effective privileges and policies:
+  - Published events, published matches, and published teams are publicly readable through RLS; editors/captains can read their unpublished rows according to the policies.
+  - Most other Game Hub tables shown are read-only through direct client table access (effective authenticated SELECT true, INSERT/UPDATE/DELETE false). Their management likely depends on RPCs, to be verified from the separate `vxsk_hub_*` function inventory.
+  - `vxsk_hub_notifications` is directly updatable by authenticated users, but its RLS policy limits updates to rows where `user_id=auth.uid()`. If users only need to mark `seen`, consider narrowing column-level UPDATE grants to `seen` after checking all frontend uses; current row policy alone allows changes to other columns on one's own notification row.
+  - Event and match RLS policies allow editor INSERT/UPDATE, but effective direct table privileges reported for authenticated users are false. This is consistent with RPC-mediated writes and should not be “fixed” by broad table grants without inspecting existing RPCs.
+  - `vxsk_hub_match_reports` is referee-readable under RLS; direct INSERT/UPDATE/DELETE are not granted in the reported effective privileges. Review existing RPCs for report submission and approval.
+- The `vxsk_hub_guard_result_write` trigger (from previous schema export) guards score/state publication and requires Owner for publishing/changing results. Preserve this control when designing any P12 compatibility layer; referee report submission should not bypass Owner approval.
+- Next required evidence is the separate function inventory query output for every `public.vxsk_hub_*` and `public.vxsk_p12_*` routine, including bodies and effective EXECUTE grants. Do not create new tables/functions or alter current policies until that inventory and the existing client call sites have been mapped.
+
 ## Recommended implementation order
 ### Phase 0 — database truth (must happen before DDL)
 - Obtain a **schema-only** export from the staging Supabase project: tables/columns/constraints, views, functions/RPC signatures, triggers, RLS policies, grants, storage buckets/policies and enabled extensions. Do not export user records, passwords, auth tokens, payment data or secrets.
