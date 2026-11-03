@@ -125,6 +125,12 @@ This audit now includes a **user-supplied read-only Supabase schema export** (20
 - Treat P12 backend as unavailable in the database just queried until project identity is confirmed and the inventory is repeated. Do not create replacement functions or migrations until reconciling project identity and reviewing the actual table schema, policies, constraints, and migration history.
 - Next safe step: user should compare the Project Ref shown in the Supabase Dashboard's project settings / project URL with `opzqnmahfgehaewgciwg` from staging config. If they match, run an inventory for similarly named routines (for example `p12`, `tournament`) and inspect migration history before considering applying the missing migration. No database changes have been made for P12.
 
+### Supabase project identity confirmed (user-confirmed on 2026-11-03)
+- User confirmed the Dashboard Project Reference ID is exactly `opzqnmahfgehaewgciwg`, matching the Supabase URL configured in staging.
+- Therefore the absence of all 13 `vxsk_p12_*` RPCs is not explained by accidentally querying a different project. The older schema summary reporting P12 RPCs conflicts with the latest live inventory.
+- Working hypotheses: P12 migration was not applied to this project, P12 routines were renamed/dropped, or the earlier schema export was taken before a schema change. Search current routines/tables and inspect migration history before deciding.
+- Do not create replacement RPCs yet; first establish the actual current tournament tables and available similarly named routines. No P12 database changes have been made.
+
 ## Recommended implementation order
 ### Phase 0 — database truth (must happen before DDL)
 - Obtain a **schema-only** export from the staging Supabase project: tables/columns/constraints, views, functions/RPC signatures, triggers, RLS policies, grants, storage buckets/policies and enabled extensions. Do not export user records, passwords, auth tokens, payment data or secrets.
