@@ -156,16 +156,24 @@ BEGIN
       USING ERRCODE = '22023';
   END IF;
 
-  SELECT m.*, s.format
-  INTO v_match, v_format
-  FROM public.vxsk_p12_matches m
-  JOIN public.vxsk_p12_stages s
-    ON s.id = m.stage_id AND s.tournament_id = m.tournament_id
-  WHERE m.id = p_match
-  FOR UPDATE OF m;
+  SELECT *
+  INTO v_match
+  FROM public.vxsk_p12_matches
+  WHERE id = p_match
+  FOR UPDATE;
 
   IF NOT FOUND THEN
     RAISE EXCEPTION 'Match not found' USING ERRCODE = '22023';
+  END IF;
+
+  SELECT format
+  INTO v_format
+  FROM public.vxsk_p12_stages
+  WHERE id = v_match.stage_id
+    AND tournament_id = v_match.tournament_id;
+
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'Match stage not found' USING ERRCODE = '22023';
   END IF;
 
   IF v_match.state NOT IN ('scheduled', 'live')
