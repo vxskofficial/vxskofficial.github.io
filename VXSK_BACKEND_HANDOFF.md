@@ -20,7 +20,7 @@
 6. All of the above is staging-branch work only. Last verified `main` homepage SHA before this work was `4321c69bd23feb3af7d49a6be263678e51dc94b9`; verify again before any future promotion.
 
 ## What the current source tells us
-This is a source-code audit, **not** a live Supabase database audit. The repository root has no checked-in `supabase/` migrations/functions folder or SQL schema files. There is no connected Supabase database tool in this working session, so table existence, deployed function definitions, grants, RLS policies, triggers, and live data have not been independently verified.
+This audit now includes a **user-supplied read-only Supabase schema export** (2026-11-03), in addition to source inspection. The repository root has no checked-in `supabase/` migrations/functions folder or SQL schema files. The export confirms the listed public tables, columns, RLS flags, policies, public RPC names/signatures, SECURITY DEFINER flags and triggers at export time. It does **not** include function bodies, EXECUTE grants, FK/unique/index/constraint definitions, storage policies/buckets, Edge Function deployments, auth settings or live records. Those still need verification.
 
 ### Authentication and roles
 - Browser config contains a Supabase publishable key only. Keep the service-role key server-side.
@@ -53,6 +53,17 @@ This is a source-code audit, **not** a live Supabase database audit. The reposit
 8. Header/category icons: current homepage nav includes custom inline SVGs (not PNG logo assets). Replace only after preparing a consistent, properly licensed local icon pack; keep accessible alt/labels and optimize file sizes.
 9. App promo: currently a static VXSK logo/wordmark and “PLAY. CONNECT. COMPETE.” copy; redesign/animate as a coherent motion treatment rather than an unrelated floating logo.
 10. Contact: homepage/merch/privacy mail links now use `vxskevents@gmail.com`. The existing phone contact is unchanged; WhatsApp linking awaits confirmation that it is a dedicated public business line.
+
+### Supabase schema evidence received on 2026-11-03
+- Confirmed public tables include the main application, roles, registrations, notes, match-center posts, opponent requests, AI pilot (vxsk_ai_*), directory teams (vxsk_directory_teams), Game Hub, marketplace/coaching (vxsk_market_*), crew (vxsk_p13_crew), social/chat/calls, and audit tables.
+- RLS is enabled on every table reported by the user. All showed FORCE ROW LEVEL SECURITY=false. This does not by itself prove a vulnerability: SECURITY DEFINER RPCs may intentionally be the only API for tables with no direct SELECT policy. Do not add broad table policies without reviewing RPC bodies and grants.
+- The export listed no direct table policies for several market tables (for example vxsk_market_requests, vxsk_market_feedback, vxsk_market_booster_apps); the frontend should use their role-checked RPCs rather than direct table reads.
+- Confirmed mock AI RPCs exist: vxsk_ai_mock_message, vxsk_ai_owner_snapshot, and vxsk_ai_owner_control; usage/membership/settings/audit tables also exist. The existence of these objects does not make the AI provider-backed.
+- Confirmed tournament RPC family includes vxsk_p12_public_snapshot, vxsk_p12_staff_snapshot, create/add/publish/report/decide RPCs and owner/referee check functions. Tournament standings exist; a global player/team/staff ranking is still not evidenced.
+- No points ledger table or RPC appears in the supplied export. No payment transaction/checkout/webhook tables or functions appear in the supplied export.
+- Actual marketplace table names reported are vxsk_market_booster_apps, vxsk_market_requests, and vxsk_market_feedback, not the earlier names the Records UI attempted.
+- Staging code correction applied: vxsk-owner-cleanup.js now reads booster applications via vxsk_market_review_list, marketplace requests via vxsk_market_owner_requests, and feedback via vxsk_server_feedback_staff_list; the Records dropdown no longer labels these as backend pending. This remains read-only; Delete controls stay disabled until destructive RPCs are audited and installed.
+- Next DB audit must inspect SECURITY DEFINER function bodies and EXECUTE grants for role checks, AI mock, tournament score approvals, marketplace request/status, crew management, and Records sources. Also inspect table constraints/FKs/indexes and Storage policies before migrations.
 
 ## Recommended implementation order
 ### Phase 0 — database truth (must happen before DDL)
@@ -90,4 +101,4 @@ This is a source-code audit, **not** a live Supabase database audit. The reposit
 - Confirm the official public WhatsApp contact line before adding a WhatsApp deep link.
 
 ## Next-session starter
-Start by asking for the **schema-only staging Supabase export** (not user data or secrets). Then map every existing RPC/table above against the actual database before creating SQL. Keep all work on `staging/vxsk-cloudflare-preview`, create a new handoff after each substantial chat, and never touch `main` without explicit approval.
+Start by inspecting the function bodies and EXECUTE grants for the critical RPCs using the schema export already supplied. Then inspect constraints, indexes, Storage policies and Edge Function list. Only after that create versioned SQL migrations on `staging/vxsk-cloudflare-preview`, apply and test on the staging Supabase project, and update this handoff after each substantial chat. Never touch `main` without explicit approval.
