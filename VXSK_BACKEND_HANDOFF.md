@@ -11,6 +11,16 @@
 - Do not merge staging or feature branches to `main` without the owner's explicit approval.
 - Never put Supabase service-role keys, AI provider keys, payment secrets, email API keys, D17 PINs, OTPs, or other credentials in HTML/JS or this handoff.
 
+## P12 staging deployment authorization — 2026-11-03
+
+- The user explicitly approved applying P12 to Supabase Staging only.
+- The migration header is marked approved for staging only. Its SQL body is the latest dry-run-tested revision apart from this comment-only banner change; latest role-check hardening uses `COALESCE(helper(), false)`.
+- The latest tested SQL revision (before the comment-only banner update) passed a full-copy transaction dry-run with final `COMMIT;` replaced by `ROLLBACK;`; Supabase returned `Success. No rows returned`.
+- **Execution status: NOT YET APPLIED.** The assistant cannot execute SQL against Supabase directly in this workflow. The user must open the SQL Editor for staging project ref `opzqnmahfgehaewgciwg`, verify that exact ref, copy the complete migration from the link in the repository, leave the final `COMMIT;` intact, and execute it.
+- If the editor's project ref is not exactly `opzqnmahfgehaewgciwg`, stop. Do not execute against any other project.
+- After successful execution, verify all 7 P12 tables, all 13 RPCs, RLS, zero direct anon/authenticated table grants, the result-guard trigger, and the intended function EXECUTE grants before testing workflows.
+- This approval is limited to this Supabase staging project. It does not authorize changes to the production Supabase project, GitHub `main`, the official website, or the Cloudflare Worker.
+
 ## Current P12 deployment status — 2026-11-03
 
 - Current migration file: `supabase/migrations/20261103000100_vxsk_p12_core.sql` on `staging/vxsk-cloudflare-preview`; latest verified blob SHA: `9c29676037097ec3be8bf1b071dd7240035db63f`.
