@@ -94,3 +94,88 @@
 #season-detail .season-phase-cta:focus-visible{outline:3px solid #b08af5;outline-offset:3px}
 @media(max-width:530px){#season-detail .season-phase-art{height:auto;aspect-ratio:2/3}#season-detail .season-phase-body{padding:17px;min-height:0}#season-detail .season-phase-meta{margin-bottom:13px}#season-detail .season-phase-body h4{font-size:26px}}
 @media(prefers-reduced-motion:reduce){#season-detail .season-phase-card,#season-detail .season-phase-art img{transition:none}#season-detail .season-phase-card:hover,#season-detail .season-phase-card:hover .season-phase-art img{transform:none}}
+
+
+/* VXSK P12.10 — simplified bracket builder and score entry. */
+.p12-form textarea{
+  min-height:140px;
+  line-height:1.55;
+  resize:vertical;
+}
+.p12-select-label{
+  display:grid;
+  gap:6px;
+  color:#d9d5f7;
+  font-size:11px;
+  letter-spacing:.04em;
+  font-weight:800;
+  margin:8px 0 13px;
+}
+.p12-select-label select{
+  appearance:auto;
+  box-sizing:border-box;
+  width:100%;
+  min-width:0;
+  background:#101330;
+  color:#f5f4ff;
+  border:1px solid #655c91;
+  border-radius:12px;
+  padding:10px 11px;
+  font:14px inherit;
+}
+.p12-score-entry{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px solid rgba(174,157,255,.18);
+}
+.p12-score-entry label{
+  display:grid;
+  gap:5px;
+  color:#bcb8dd;
+  font-size:9px;
+  letter-spacing:.08em;
+  font-weight:900;
+}
+.p12-score-entry input{
+  box-sizing:border-box;
+  width:100%;
+  min-width:0;
+  padding:9px;
+  border:1px solid #655c91;
+  border-radius:9px;
+  background:#151633;
+  color:#fff;
+  font:700 16px inherit;
+  font-variant-numeric:tabular-nums;
+}
+.p12-score-entry button{
+  grid-column:1/-1;
+  width:100%;
+  padding:10px;
+  font-size:10px;
+}
+.p12-legacy-details{
+  margin:18px 0 25px;
+  border:1px solid rgba(174,157,255,.2);
+  border-radius:16px;
+  background:rgba(12,13,34,.7);
+  padding:12px 15px;
+}
+.p12-legacy-details>summary{
+  cursor:pointer;
+  color:#bdb6e8;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.1em;
+  list-style-position:inside;
+}
+.p12-legacy-details[open]>summary{margin-bottom:12px;color:#d9d0ff}
+.p12-legacy-details>.p12-muted{max-width:800px}
+.p12-admin-bracket{margin-top:12px}
+@media(max-width:520px){
+  .p12-score-entry{gap:6px}
+  .p12-score-entry button{min-height:42px}
+}
