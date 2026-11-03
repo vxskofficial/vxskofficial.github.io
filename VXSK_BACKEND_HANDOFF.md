@@ -46,6 +46,14 @@
 - Only `vxsk_p12_public_snapshot()` reports `anon_execute=true`; all 12 other RPCs report `anon_execute=false`.
 - This exactly matches the intended least-privilege EXECUTE grants. Next checks: verify the match result guard trigger and then exercise controlled anonymous, ordinary authenticated, Referee AAL2 and Owner AAL2 cases.
 
+### P12 result-guard trigger verification — 2026-11-03
+
+- User supplied the read-only trigger catalog query result for `public.vxsk_p12_matches`.
+- Trigger `vxsk_p12_match_result_guard` exists and is enabled.
+- It fires `BEFORE INSERT OR UPDATE) on `public.vxsk_p12_matches` and calls `public.vxsk_p12_guard_result_write()`.
+- The trigger function reports `SECURITY DEFINER=true`.
+- The result matches the intended protection. Next step is front-end/role workflow testing: public snapshot, ordinary authenticated non-staff denial from staff snapshot, Referee AAL2 access/report submission, and Owner AAL2 administrative/decision access. Avoid creating real tournament data or reports until the UI checks and intended test data are agreed.
+
 ## Recent frontend changes already committed on staging
 1. Mobile header: logo remains left, toolbar controls right in one row; SQUADS sits immediately before Friends. Latest CSS cache-buster is `vxsk-mobile-polish.css?v=1.2.1-mobile-toolbar`; service-worker cache is `vxsk-public-v12.8.39-owner-spotlight`. The user visually tested the preceding toolbar fix and confirmed it looked good.
 2. Crew/leadership section: Voxzan owner spotlight was moved before “Meet the Crew”; the leadership card desktop width is capped (220–280px) instead of stretching. CSS cache-buster: `vxsk-p13-crew.css?v=13.0.2-owner-first`. Mobile card grid rules were retained.
