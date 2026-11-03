@@ -94,6 +94,30 @@ This audit now includes a **user-supplied read-only Supabase schema export** (20
 - Current helper review does not show a confirmed authorization bypass. Recommended hardening: `REVOKE EXECUTE ON FUNCTION public.vxsk_p13_owner_ok() FROM anon;` and `REVOKE EXECUTE ON FUNCTION public.vxsk_hub_editor() FROM anon;` after confirming there is no deliberate anonymous client call. Authenticated permissions remain unchanged by these statements.
 - Next review should inspect all P12 mutation/decision/publish RPC definitions and the actual owner/referee helper(s), including function ACLs, then inspect table constraints/FKs/indexes and Storage bucket policies. No database changes have been made as part of this review.
 
+### Follow-up ACL verification and P12 source reconciliation (user-supplied / source-checked 2026-11-03)
+- User re-ran the effective EXECUTE check after hardening. Confirmed:
+  - `public.vxsk_hub_editor()`: anon=false, authenticated=true.
+  - `public.vxsk_p13_owner_ok()`: anon=false, authenticated=true.
+  These results verify the intended ACL state for the two functions.
+- Inspected staging frontend `vxsk-p12-game-hub.js`. Its RPC calls are:
+  - `vxsk_p12_public_snapshot`
+  - `vxsk_p12_staff_snapshot`
+  - `vxsk_p12_owner_ok`
+  - `vxsk_p12_referee_ok`
+  - `vxsk_p12_decide_report`
+  - `vxsk_p12_create_tournament`
+  - `vxsk_p12_add_team`
+  - `vxsk_p12_add_stage`
+  - `vxsk_p12_add_match`
+  - `vxsk_p12_announce`
+  - `vxsk_p12_publish`
+  - `vxsk_p12_mark_match_live`
+  - `vxsk_p12_submit_report`
+- The user's latest query output contained only the two ACL-verified helper functions and no P12 RPCs. This is a discrepancy to resolve before assessing tournament security. Possibilities include a different Supabase project, a schema other than `public`, absent P12 functions/migration, or an incomplete result excerpt.
+- The staging browser config references Supabase project ref `opzqnmahfgehaewgciwg` (URL host `opzqnmahfgehaewgciwg.supabase.co`). Confirm the SQL Editor is connected to that exact project before running the next inventory. Do not share the publishable key or any secret.
+- Next query should LEFT JOIN an explicit expected-name list against `pg_proc` across all schemas, returning one row per expected RPC even when absent, plus signature, owner, SECURITY DEFINER, search_path, effective anon/authenticated EXECUTE, and function definition for existing matches. Then inspect all P12 mutation and report-decision bodies before changes.
+- No P12 database changes have been made.
+
 ## Recommended implementation order
 ### Phase 0 — database truth (must happen before DDL)
 - Obtain a **schema-only** export from the staging Supabase project: tables/columns/constraints, views, functions/RPC signatures, triggers, RLS policies, grants, storage buckets/policies and enabled extensions. Do not export user records, passwords, auth tokens, payment data or secrets.
