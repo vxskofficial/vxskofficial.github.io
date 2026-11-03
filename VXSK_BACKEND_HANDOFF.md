@@ -11,6 +11,15 @@
 - Do not merge staging or feature branches to `main` without the owner's explicit approval.
 - Never put Supabase service-role keys, AI provider keys, payment secrets, email API keys, D17 PINs, OTPs, or other credentials in HTML/JS or this handoff.
 
+## Current P12 deployment status — 2026-11-03
+
+- Current migration file: `supabase/migrations/20261103000100_vxsk_p12_core.sql` on `staging/vxsk-cloudflare-preview`; verified blob SHA: `c5ea720220d985b5c9a6536661bf58419f9df472`.
+- The user confirmed that this exact revision was executed in the Supabase SQL Editor with the final `COMMIT;` replaced by `ROLLBACK;`; result: `Success. No rows returned`.
+- This validates transaction-level DDL/function-definition acceptance. It is not an end-to-end authorization or runtime RPC test.
+- The post-rollback inventory reported all seven P12 tables and all thirteen P12 RPCs absent. No P12 migration objects were persisted.
+- The migration remains a review-only draft and has **not** been applied. Before any live deployment, obtain explicit staging-only authorization, verify the editor is connected to Supabase project ref `opzqnmahfgehaewgciwg`, and have the user execute the complete reviewed SQL with its final `COMMIT;` intact.
+- This does not authorize changes to production, GitHub `main`, or the Cloudflare Worker.
+
 ## Recent frontend changes already committed on staging
 1. Mobile header: logo remains left, toolbar controls right in one row; SQUADS sits immediately before Friends. Latest CSS cache-buster is `vxsk-mobile-polish.css?v=1.2.1-mobile-toolbar`; service-worker cache is `vxsk-public-v12.8.39-owner-spotlight`. The user visually tested the preceding toolbar fix and confirmed it looked good.
 2. Crew/leadership section: Voxzan owner spotlight was moved before “Meet the Crew”; the leadership card desktop width is capped (220–280px) instead of stretching. CSS cache-buster: `vxsk-p13-crew.css?v=13.0.2-owner-first`. Mobile card grid rules were retained.
