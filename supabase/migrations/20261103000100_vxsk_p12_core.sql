@@ -368,11 +368,14 @@ DECLARE
   v_stages jsonb;
   v_matches jsonb;
   v_updates jsonb;
-  v_reports jsonb;
+  v_reports jsonb := '[]'::jsonb;
+  v_is_owner boolean := false;
 BEGIN
   IF NOT public.vxsk_hub_referee() THEN
     RAISE EXCEPTION 'Referee access with 2FA required' USING ERRCODE = '42501';
   END IF;
+
+  v_is_owner := public.vxsk_hub_owner();
 
   SELECT COALESCE(jsonb_agg(to_jsonb(q) ORDER BY q.created_at DESC), '[]'::jsonb)
   INTO v_tournaments
@@ -421,15 +424,18 @@ BEGIN
     LIMIT 1000
   ) q;
 
-  SELECT COALESCE(jsonb_agg(to_jsonb(q) ORDER BY q.created_at DESC), '[]'::jsonb)
-  INTO v_reports
-  FROM (
-    SELECT id, tournament_id, match_id, kind, score_a, score_b,
-           notes, state, submitted_by, decided_by, created_at, decided_at
-    FROM public.vxsk_p12_reports
-    ORDER BY created_at DESC
-    LIMIT 500
-  ) q;
+  -- Incident details, evidence notes and the Owner decision queue are Owner-only.
+  IF v_is_owner THEN
+    SELECT COALESCE(jsonb_agg(to_jsonb(q) ORDER BY q.created_at DESC), '[]'::jsonb)
+    INTO v_reports
+    FROM (
+      SELECT id, tournament_id, match_id, kind, score_a, score_b,
+             notes, state, submitted_by, decided_by, created_at, decided_at
+      FROM public.vxsk_p12_reports
+      ORDER BY created_at DESC
+      LIMIT 500
+    ) q;
+  END IF;
 
   RETURN jsonb_build_object(
     'tournaments', COALESCE(v_tournaments, '[]'::jsonb),
