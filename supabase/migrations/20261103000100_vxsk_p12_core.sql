@@ -441,7 +441,8 @@ BEGIN
       SELECT id, tournament_id, match_id, kind, score_a, score_b,
              notes, state, submitted_by, decided_by, created_at, decided_at
       FROM public.vxsk_p12_reports
-      ORDER BY created_at DESC
+      WHERE state = 'pending'
+      ORDER BY created_at ASC
       LIMIT 500
     ) q;
   END IF;
@@ -669,13 +670,30 @@ BEGIN
     RAISE EXCEPTION 'Invalid tournament update' USING ERRCODE = '22023';
   END IF;
 
-  UPDATE public.vxsk_p12_tournaments
-  SET status = p_status, updated_at = now()
-  WHERE id = p_tournament;
+  -- Lock the tournament row to serialize closure against score-report submission.
+  PERFORM 1
+  FROM public.vxsk_p12_tournaments
+  WHERE id = p_tournament
+  FOR UPDATE;
 
   IF NOT FOUND THEN
     RAISE EXCEPTION 'Tournament not found' USING ERRCODE = '22023';
   END IF;
+
+  IF p_status IN ('completed', 'cancelled')
+     AND EXISTS (
+       SELECT 1
+       FROM public.vxsk_p12_reports
+       WHERE tournament_id = p_tournament
+         AND kind = 'score'
+         AND state = 'pending'
+     ) THEN
+    RAISE EXCEPTION 'Resolve pending score reports before closing this tournament';
+  END IF;
+
+  UPDATE public.vxsk_p12_tournaments
+  SET status = p_status, updated_at = now()
+  WHERE id = p_tournament;
 
   INSERT INTO public.vxsk_p12_updates
     (tournament_id, kind, title, body, status_after, created_by)
