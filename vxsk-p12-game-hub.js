@@ -274,7 +274,7 @@
    });
    form('p12-build-bracket',async f=>{
      const tournament=value(f,'event');
-     const names=value(f,'teams').split(/\\r?\\n/).map(n=>n.trim()).filter(Boolean);
+     const names=value(f,'teams').split(/\r?\n/).map(n=>n.trim()).filter(Boolean);
      if(names.length<2||names.length>64)throw Error('Add between 2 and 64 teams, one team per line.');
      await rpc('vxsk_p12_generate_single_bracket',{
        p_tournament:tournament,
