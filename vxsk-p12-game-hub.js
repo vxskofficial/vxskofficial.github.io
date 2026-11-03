@@ -80,6 +80,9 @@
     controls.append(aLabel,bLabel,save);
     controls.addEventListener('submit',async e=>{
       e.preventDefault();
+      if(aInput.value===''||bInput.value===''){
+        setNotice('vxsk-p12-staff-notice','Enter both team scores.',true);return;
+      }
       const scoreA=Number(aInput.value),scoreB=Number(bInput.value);
       if(!Number.isInteger(scoreA)||!Number.isInteger(scoreB)||scoreA<0||scoreB<0||scoreA>99||scoreB>99){
         setNotice('vxsk-p12-staff-notice','Enter both scores from 0 to 99.',true);return;
