@@ -229,6 +229,12 @@ This audit now includes a **user-supplied read-only Supabase schema export** (20
 - Next safe check: query pg_namespace/pg_class for the `supabase_migrations` schema and its relations, check whether current role can SELECT the history table, and if present read only migration `version` and `name` metadata. Do not inspect auth/realtime/storage migration rows for P12 application history. If no CLI history table exists, rely on the repository's migration files / deployment records and schema object inventory; do not infer migration history from subsystem tables.
 - No database changes have been made.
 
+### P12 rollback dry-run result (user-confirmed on 2026-11-03)
+- User copied the complete draft migration into the Supabase SQL Editor, replaced the final `COMMIT;` with `ROLLBACK;`, and executed it. Supabase reported success with no result rows and no error.
+- This is consistent with the DDL and function definitions executing successfully inside the transaction and then being rolled back. It is a useful syntax/DDL acceptance check, not a runtime authorization test and not proof that objects remain installed.
+- Next check before any real application: verify all seven `public.vxsk_p12_*` tables and all 13 expected P12 RPCs are absent after rollback. Then perform final SQL review; only after review should the user explicitly authorize applying the unchanged (or reviewed amended) migration to staging.
+- Do not instruct the user to run the migration with COMMIT until they explicitly approve the real staging deployment. The production `main` branch and Cloudflare Worker remain unchanged.
+
 ### P12 draft review — Owner-only report queue hardening (2026-11-03)
 - Cross-checked the draft RPC contracts against the actual P12 frontend forms in `staff.html` and `vxsk-p12-game-hub.js`; function names, argument names and expected snapshot collection keys align.
 - Found that the first draft returned all report notes (including incident reports) to every Referee/Reviewer through `vxsk_p12_staff_snapshot()`, even though the HTML section is titled “OWNER REVIEW QUEUE”. This exceeded the intended least-privilege audience.
