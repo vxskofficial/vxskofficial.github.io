@@ -228,7 +228,7 @@ AS $function$
 BEGIN
   IF TG_OP = 'INSERT' THEN
     IF (NEW.state = 'completed' OR NEW.score_a IS NOT NULL OR NEW.score_b IS NOT NULL)
-       AND NOT public.vxsk_hub_owner() THEN
+       AND NOT COALESCE(public.vxsk_hub_owner(), false) THEN
       RAISE EXCEPTION 'Owner verification required to publish a P12 result'
         USING ERRCODE = '42501';
     END IF;
@@ -237,7 +237,7 @@ BEGIN
       NEW.score_a IS DISTINCT FROM OLD.score_a
       OR NEW.score_b IS DISTINCT FROM OLD.score_b
       OR (NEW.state = 'completed' AND OLD.state IS DISTINCT FROM 'completed')
-    ) AND NOT public.vxsk_hub_owner() THEN
+    ) AND NOT COALESCE(public.vxsk_hub_owner(), false) THEN
       RAISE EXCEPTION 'Only the Owner may publish P12 match results'
         USING ERRCODE = '42501';
     END IF;
@@ -371,11 +371,11 @@ DECLARE
   v_reports jsonb := '[]'::jsonb;
   v_is_owner boolean := false;
 BEGIN
-  IF NOT public.vxsk_hub_referee() THEN
+  IF NOT COALESCE(public.vxsk_hub_referee(), false) THEN
     RAISE EXCEPTION 'Referee access with 2FA required' USING ERRCODE = '42501';
   END IF;
 
-  v_is_owner := public.vxsk_hub_owner();
+  v_is_owner := COALESCE(public.vxsk_hub_owner(), false);
 
   SELECT COALESCE(jsonb_agg(to_jsonb(q) ORDER BY q.created_at DESC), '[]'::jsonb)
   INTO v_tournaments
@@ -478,7 +478,7 @@ DECLARE
   v_id uuid;
   v_published boolean := COALESCE(p_publish, false);
 BEGIN
-  IF NOT public.vxsk_hub_owner() THEN
+  IF NOT COALESCE(public.vxsk_hub_owner(), false) THEN
     RAISE EXCEPTION 'Owner and 2FA required' USING ERRCODE = '42501';
   END IF;
   IF p_title IS NULL OR char_length(btrim(p_title)) NOT BETWEEN 3 AND 100
@@ -511,7 +511,7 @@ AS $function$
 DECLARE
   v_id uuid;
 BEGIN
-  IF NOT public.vxsk_hub_owner() THEN
+  IF NOT COALESCE(public.vxsk_hub_owner(), false) THEN
     RAISE EXCEPTION 'Owner and 2FA required' USING ERRCODE = '42501';
   END IF;
   IF p_tournament IS NULL OR p_name IS NULL
@@ -545,7 +545,7 @@ AS $function$
 DECLARE
   v_id uuid;
 BEGIN
-  IF NOT public.vxsk_hub_owner() THEN
+  IF NOT COALESCE(public.vxsk_hub_owner(), false) THEN
     RAISE EXCEPTION 'Owner and 2FA required' USING ERRCODE = '42501';
   END IF;
   IF p_tournament IS NULL OR p_name IS NULL
@@ -589,7 +589,7 @@ DECLARE
   v_format text;
   v_group text := COALESCE(btrim(p_group), '');
 BEGIN
-  IF NOT public.vxsk_hub_owner() THEN
+  IF NOT COALESCE(public.vxsk_hub_owner(), false) THEN
     RAISE EXCEPTION 'Owner and 2FA required' USING ERRCODE = '42501';
   END IF;
   IF p_stage IS NULL OR p_a IS NULL OR p_b IS NULL OR p_a = p_b
@@ -659,7 +659,7 @@ AS $function$
 DECLARE
   v_id uuid;
 BEGIN
-  IF NOT public.vxsk_hub_owner() THEN
+  IF NOT COALESCE(public.vxsk_hub_owner(), false) THEN
     RAISE EXCEPTION 'Owner and 2FA required' USING ERRCODE = '42501';
   END IF;
   IF p_tournament IS NULL
@@ -715,7 +715,7 @@ SECURITY DEFINER
 SET search_path TO ''
 AS $function$
 BEGIN
-  IF NOT public.vxsk_hub_owner() THEN
+  IF NOT COALESCE(public.vxsk_hub_owner(), false) THEN
     RAISE EXCEPTION 'Owner and 2FA required' USING ERRCODE = '42501';
   END IF;
   IF p_tournament IS NULL OR p_publish IS NULL THEN
@@ -746,7 +746,7 @@ AS $function$
 DECLARE
   v_tournament uuid;
 BEGIN
-  IF NOT public.vxsk_hub_owner() THEN
+  IF NOT COALESCE(public.vxsk_hub_owner(), false) THEN
     RAISE EXCEPTION 'Owner and 2FA required' USING ERRCODE = '42501';
   END IF;
   IF p_match IS NULL OR p_live IS NULL THEN
@@ -797,7 +797,7 @@ DECLARE
   v_match_state text;
   v_tournament_status text;
 BEGIN
-  IF NOT public.vxsk_hub_referee() THEN
+  IF NOT COALESCE(public.vxsk_hub_referee(), false) THEN
     RAISE EXCEPTION 'Referee role and 2FA required' USING ERRCODE = '42501';
   END IF;
   IF p_tournament IS NULL OR p_kind IS NULL
@@ -892,7 +892,7 @@ DECLARE
   v_match_state text;
   v_tournament_status text;
 BEGIN
-  IF NOT public.vxsk_hub_owner() THEN
+  IF NOT COALESCE(public.vxsk_hub_owner(), false) THEN
     RAISE EXCEPTION 'Owner and 2FA required' USING ERRCODE = '42501';
   END IF;
   IF p_report IS NULL OR p_approve IS NULL THEN
