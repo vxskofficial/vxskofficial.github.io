@@ -1,0 +1,92 @@
+# VXSK Backend & Product Handoff
+**Last updated:** 2026-11-03  
+**Repository:** `vxskofficial/vxskofficial.github.io`  
+**Working branch:** `staging/vxsk-cloudflare-preview`  
+**Production branch:** `main` — do not modify or merge without explicit approval.
+
+## Deployment model
+- Work is committed to the staging branch only.
+- The Cloudflare Worker at `aged-king-409c.gamerotp2.workers.dev` is a separate manual preview deployment. GitHub commits do not update it automatically.
+- After a staging change, download the branch ZIP, extract it, and manually deploy its static assets to the Worker.
+- Do not merge staging or feature branches to `main` without the owner's explicit approval.
+- Never put Supabase service-role keys, AI provider keys, payment secrets, email API keys, D17 PINs, OTPs, or other credentials in HTML/JS or this handoff.
+
+## Recent frontend changes already committed on staging
+1. Mobile header: logo remains left, toolbar controls right in one row; SQUADS sits immediately before Friends. Latest CSS cache-buster is `vxsk-mobile-polish.css?v=1.2.1-mobile-toolbar`; service-worker cache is `vxsk-public-v12.8.39-owner-spotlight`. The user visually tested the preceding toolbar fix and confirmed it looked good.
+2. Crew/leadership section: Voxzan owner spotlight was moved before “Meet the Crew”; the leadership card desktop width is capped (220–280px) instead of stretching. CSS cache-buster: `vxsk-p13-crew.css?v=13.0.2-owner-first`. Mobile card grid rules were retained.
+3. Public contact email: the homepage, Merch footer and Privacy Notice were updated to `vxskevents@gmail.com`. These are ordinary `mailto:` links; they open the visitor's email app and do **not** send automated server notifications.
+4. The current telephone contact display was not converted into a WhatsApp link. Do not publish a personal number as a WhatsApp business contact unless it is confirmed as a dedicated public VXSK line managed with appropriate adult/business oversight.
+5. All of the above is staging-branch work only. Last verified `main` homepage SHA before this work was `4321c69bd23feb3af7d49a6be263678e51dc94b9`; verify again before any future promotion.
+
+## What the current source tells us
+This is a source-code audit, **not** a live Supabase database audit. The repository root has no checked-in `supabase/` migrations/functions folder or SQL schema files. There is no connected Supabase database tool in this working session, so table existence, deployed function definitions, grants, RLS policies, triggers, and live data have not been independently verified.
+
+### Authentication and roles
+- Browser config contains a Supabase publishable key only. Keep the service-role key server-side.
+- Staff access is based on `staff_roles` and role checks (owner/reviewer/staff), with MFA/AAL2 checks in the staff workflows.
+- Owner authority is enforced by Supabase RPCs such as `vxsk_hub_owner`, not by frontend-only hiding.
+- Staging guard code is present; keep staging pointed at its separate staging Supabase project.
+
+### Implemented or partially implemented backend areas found in source
+- **Applications:** `registrations`, `review_notes`; `review_registration` and `owner_delete_registration` RPCs. Staff UI caps the list at 200 and reports that older Netlify Forms do not auto-sync.
+- **Tournament/Game Hub:** tables referenced include `vxsk_hub_events`, `vxsk_hub_matches`, `vxsk_hub_teams`, `vxsk_hub_match_players`, `vxsk_hub_team_members`, `vxsk_hub_notifications`, `vxsk_hub_badges`, `vxsk_hub_status`, and `match_center_posts`. The P12 staff UI uses `vxsk_p12_*` RPCs for public/staff snapshots, tournament creation, teams, stages, matches, announcements, publishing, reports and owner/referee checks. Group/Swiss standings are calculated from approved match scores in frontend code. This is not yet a cross-season global ranking system.
+- **Arena Hub teams:** `arena-hub.js` calls `vxsk_hub_create_team`, `vxsk_hub_join_team`, `vxsk_hub_team_roster`, `vxsk_hub_team_decide`, `vxsk_hub_leave_team`, `vxsk_hub_ready`, `vxsk_hub_set_status`, and `vxsk_hub_report`.
+- **Community/social:** uses RPC families including `vxsk_social_*`, `vxsk_showmatch_*`, `vxsk_group_*`, and `vxsk_hub_react`; some media is stored in the `vxsk-avatars` bucket. These features have staging-only/privacy limitations described in `privacy.html`.
+- **Staff/crew profiles:** public crew uses `vxsk_p13_public_crew`; owner/staff management references `vxsk_p13_owner_ok`, `vxsk_p13_owner_crew`, `vxsk_p13_save_crew`, `vxsk_p13_set_crew_visibility`, and the `vxsk-crew-photos` bucket.
+- **Teams directory / Featured Teams:** manager reads and writes `vxsk_directory_teams`; team logos use `vxsk-team-logos`. Public Featured Teams and the Teams directory both use the shared Teams Hub reader, so the duplication appears to be two frontend presentations of one source, not necessarily two databases. Recommended product direction: one canonical Teams directory with a three-team featured strip on the homepage, and a single “Teams” navigation destination.
+- **Marketplace / boosters / coaches:** requests use `vxsk_market_*` and `vxsk_coaching_*` RPCs. Reviews and staff panels use RPCs such as `vxsk_market_review_list`, `vxsk_market_review`, `vxsk_market_owner_requests`, `vxsk_market_owner_request_status`, `vxsk_coaching_owner_applications`, `vxsk_coaching_owner_review`, `vxsk_coaching_owner_bookings`, `vxsk_coaching_owner_booking_status`, `vxsk_market_staff_reviews`, `vxsk_market_moderate_review`, and `vxsk_server_feedback_staff_list`. Booster photos use `vxsk-booster-photos`.
+- **Merch/payments:** `merch.html` explicitly says “Requests only — no online payment is collected.” Marketplace requests explicitly report “No payment was made.” No payment checkout, verified payment webhook, payment reconciliation, or automated payment email function was found in the reviewed source.
+- **Server feedback:** `vxsk_server_feedback_submit` / `vxsk_server_feedback_staff_list` are referenced. The frontend explicitly does not claim email delivery.
+- **VXSK AI:** `vxsk-ai-pilot.js` labels the feature a private mock pilot and calls `vxsk_ai_mock_message`; the UI says “Supabase mock replies · No OpenAI billing.” The owner UI calls `vxsk_ai_owner_snapshot`, `vxsk_owner_staff_search`, and `vxsk_ai_owner_control`. No provider-backed AI Edge Function or server-side model integration was found. It is not production AI yet.
+- **Owner Records/Delete Center:** the Records panel is deliberately read-only. `vxsk-owner-cleanup.js` has no delete/update operation; the rendered Delete controls are disabled as “BACKEND PENDING.” Existing separate delete flows exist in a few areas (for example, owner deletion of a registration, a content-editor post delete protected by RLS, and a group creator deleting a group). There is no single audited owner-wide delete backend in the reviewed source.
+- **Team Manager navigation:** `team-manager.html` remains a separate owner+MFA page and is linked from the Teams pages. Homepage navigation also has a Team Manager link. The owner wants this entry moved inside Staff Command and removed from the public category/header navigation.
+
+### Important missing or unverified areas
+1. Global player, team and staff rankings: no dedicated global leaderboard/season ranking backend was identified in the reviewed source. Tournament group/Swiss standings exist, and booster rank fields are self-reported; neither is a verified cross-site player/team/staff ranking.
+2. VXSK Points: no points ledger, balance view, award rules, or redemption ledger was found. Required sources requested by the owner: verified merch purchases, applications, showmatch/tournament participation, coaching and booster activity. Design this as an auditable ledger, not a balance a browser can edit.
+3. Payments: no real online payment is connected. D17 should not be implemented as a public personal-number transfer form. D17 consumer terms describe a personal wallet/app and require the user to keep the PIN confidential. For e-commerce, obtain the official merchant/e-commerce arrangement from La Poste Tunisienne or an authorized payment provider first; only then integrate server-created checkout sessions and verified signed webhooks. Never collect a D17 PIN, OTP, card details, or wallet credentials in VXSK forms.
+4. Payment notifications: automated email after a verified payment requires a server-side webhook/Edge Function and an email delivery provider configured via server secrets. A `mailto:` link is only a visitor contact shortcut.
+5. Owner delete center: define per-record deletion/archive rules, dependencies, backup/restore plan, audit log, MFA+Owner checks, and explicit confirmation. Prefer archive/soft-delete for teams, tournament history, and financial records; hard-delete only where legally/operationally appropriate.
+6. Database schema: existing code references many tables/RPCs but those names and policies must be checked against the live staging project before writing migrations. A typo/mismatch in the current cleanup panel table names is also possible.
+7. VXSK AI: add a server-side AI function only after the provider, budget cap, per-user quotas, rate limits, allowed use cases, moderation, logging and privacy notice are specified. Provider key must live in Supabase secrets, never in client JS.
+8. Header/category icons: current homepage nav includes custom inline SVGs (not PNG logo assets). Replace only after preparing a consistent, properly licensed local icon pack; keep accessible alt/labels and optimize file sizes.
+9. App promo: currently a static VXSK logo/wordmark and “PLAY. CONNECT. COMPETE.” copy; redesign/animate as a coherent motion treatment rather than an unrelated floating logo.
+10. Contact: homepage/merch/privacy mail links now use `vxskevents@gmail.com`. The existing phone contact is unchanged; WhatsApp linking awaits confirmation that it is a dedicated public business line.
+
+## Recommended implementation order
+### Phase 0 — database truth (must happen before DDL)
+- Obtain a **schema-only** export from the staging Supabase project: tables/columns/constraints, views, functions/RPC signatures, triggers, RLS policies, grants, storage buckets/policies and enabled extensions. Do not export user records, passwords, auth tokens, payment data or secrets.
+- Confirm the staging project identifier matches `supabase-config.js` without publishing its keys.
+- Compare all referenced frontend RPC/table names against that export; identify missing/duplicate/outdated objects.
+- Add a versioned `supabase/migrations/` directory to this repo, with each migration reviewed and applied to staging first.
+
+### Phase 1 — verified identity, results and ranking
+- Define canonical player/team/staff profile entities and their public/private fields.
+- Define approved match result and tournament participation sources.
+- Create verified player/team leaderboards from approved results; staff contribution board should use audited work/recognition criteria, not arbitrary popularity.
+- Add ranking snapshots or views with tie-break rules, season filters and transparent rules.
+
+### Phase 2 — VXSK Points ledger
+- Design `vxsk_points_ledger` with immutable entries, source type/id, unique idempotency key, user/team recipient, amount, status, actor, timestamp and reversal link.
+- Awards must be triggered server-side only after a verified event: paid order webhook, accepted/approved application (not every duplicate submission), completed/approved showmatch or tournament, or completed/approved coaching/booster service.
+- Add point caps, duplicate prevention, refunds/reversals, abuse review and an owner audit history.
+- Keep VXSK Points separate from cash and never imply they are withdrawable money unless a properly reviewed rewards programme says so.
+
+### Phase 3 — payments and notifications
+- Adult/legal business operator obtains merchant onboarding and credentials.
+- Implement server-created hosted checkout, webhook signature verification, transaction idempotency, payment status transitions, refunds/reconciliation and owner reports.
+- Send payment confirmation to buyer and an owner notification to `vxskevents@gmail.com` from a server-side email provider. Do not send notifications from browser-only code.
+
+### Phase 4 — owner command center
+- Move Team Manager entry into the owner-only Staff Command area; remove the public Team Manager header/menu links.
+- Build an audited Records centre with per-section list, archive/delete, retention and dependency-aware confirmations. Do not enable a generic delete until each section's backend function is implemented and tested.
+- Add owner-only reports for applications, orders, points ledger, rankings, matches, feedback, crew and team changes.
+
+### Phase 5 — AI and presentation
+- Replace mock AI RPC with provider-backed server function, quotas and owner-configurable pilot controls.
+- Consolidate homepage Featured Teams + Teams directory around the one canonical team source.
+- Replace decorative header SVGs with licensed/local PNG or SVG brand icons; revise the app promo animation and test desktop/mobile performance.
+- Confirm the official public WhatsApp contact line before adding a WhatsApp deep link.
+
+## Next-session starter
+Start by asking for the **schema-only staging Supabase export** (not user data or secrets). Then map every existing RPC/table above against the actual database before creating SQL. Keep all work on `staging/vxsk-cloudflare-preview`, create a new handoff after each substantial chat, and never touch `main` without explicit approval.
