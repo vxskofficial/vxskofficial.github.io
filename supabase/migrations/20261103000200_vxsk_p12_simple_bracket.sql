@@ -59,7 +59,8 @@ ALTER TABLE public.vxsk_p12_matches
   ADD CONSTRAINT vxsk_p12_matches_next_slot_check
   CHECK (
     (next_match_id IS NULL AND next_team_slot IS NULL)
-    OR (next_match_id IS NOT NULL AND next_team_slot IN ('A', 'B'))
+    OR (next_match_id IS NOT NULL AND next_team_slot IS NOT NULL
+        AND next_team_slot IN ('A', 'B'))
   );
 
 ALTER TABLE public.vxsk_p12_matches
@@ -141,8 +142,9 @@ AS $function$
 DECLARE
   v_match public.vxsk_p12_matches%ROWTYPE;
   v_next public.vxsk_p12_matches%ROWTYPE;
-  v_format text;
+  v_tournament_id uuid;
   v_tournament_status text;
+  v_format text;
   v_winner uuid;
 BEGIN
   IF NOT COALESCE(public.vxsk_hub_owner(), false) THEN
@@ -156,14 +158,36 @@ BEGIN
       USING ERRCODE = '22023';
   END IF;
 
+  -- Lock order is tournament -> match, matching referee submission.
+  SELECT tournament_id
+  INTO v_tournament_id
+  FROM public.vxsk_p12_matches
+  WHERE id = p_match;
+
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'Match not found' USING ERRCODE = '22023';
+  END IF;
+
+  SELECT status
+  INTO v_tournament_status
+  FROM public.vxsk_p12_tournaments
+  WHERE id = v_tournament_id
+  FOR UPDATE;
+
+  IF NOT FOUND OR v_tournament_status IN ('completed', 'cancelled') THEN
+    RAISE EXCEPTION 'This tournament is closed and cannot accept results'
+      USING ERRCODE = '22023';
+  END IF;
+
   SELECT *
   INTO v_match
   FROM public.vxsk_p12_matches
   WHERE id = p_match
+    AND tournament_id = v_tournament_id
   FOR UPDATE;
 
   IF NOT FOUND THEN
-    RAISE EXCEPTION 'Match not found' USING ERRCODE = '22023';
+    RAISE EXCEPTION 'Match not found in this tournament' USING ERRCODE = '22023';
   END IF;
 
   SELECT format
@@ -184,17 +208,6 @@ BEGIN
 
   IF p_score_a = p_score_b AND v_format = 'single' THEN
     RAISE EXCEPTION 'Knockout matches cannot end in a draw; enter the confirmed winner score'
-      USING ERRCODE = '22023';
-  END IF;
-
-  SELECT status
-  INTO v_tournament_status
-  FROM public.vxsk_p12_tournaments
-  WHERE id = v_match.tournament_id
-  FOR SHARE;
-
-  IF NOT FOUND OR v_tournament_status IN ('completed', 'cancelled') THEN
-    RAISE EXCEPTION 'This tournament is closed and cannot accept results'
       USING ERRCODE = '22023';
   END IF;
 
@@ -247,6 +260,13 @@ BEGIN
     ELSE
       RAISE EXCEPTION 'Bracket advancement mapping is invalid';
     END IF;
+  END IF;
+
+  -- A completed final closes the tournament and locks out further reporting.
+  IF v_winner IS NOT NULL AND v_match.next_match_id IS NULL THEN
+    UPDATE public.vxsk_p12_tournaments
+    SET status = 'completed', updated_at = now()
+    WHERE id = v_tournament_id;
   END IF;
 
   INSERT INTO public.vxsk_p12_audit(actor_id, action, entity_type, entity_id, details)
@@ -551,7 +571,6 @@ SET search_path TO ''
 AS $function$
 DECLARE
   v_report public.vxsk_p12_reports%ROWTYPE;
-  v_tournament_status text;
 BEGIN
   IF NOT COALESCE(public.vxsk_hub_owner(), false) THEN
     RAISE EXCEPTION 'Owner and 2FA required' USING ERRCODE = '42501';
@@ -576,16 +595,8 @@ BEGIN
   END IF;
 
   IF p_approve AND v_report.kind = 'score' THEN
-    SELECT status
-    INTO v_tournament_status
-    FROM public.vxsk_p12_tournaments
-    WHERE id = v_report.tournament_id
-    FOR SHARE;
-
-    IF NOT FOUND OR v_tournament_status NOT IN ('announced', 'upcoming', 'live') THEN
-      RAISE EXCEPTION 'This tournament is no longer eligible for score approval';
-    END IF;
-
+    -- The shared result helper verifies tournament state and uses the same
+    -- tournament -> match row-lock order as referee report submission.
     PERFORM public.vxsk_p12_apply_match_result(
       v_report.match_id,
       v_report.score_a,
