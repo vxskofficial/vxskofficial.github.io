@@ -198,6 +198,7 @@
   if(app.focusTournamentId&&allT.some(t=>t.id===app.focusTournamentId)){
     if(buildSelect)buildSelect.value=app.focusTournamentId;
     if(bracketSelect)bracketSelect.value=app.focusTournamentId;
+    app.focusTournamentId=null;
   }
   const currentEvent=$('p12-report-event')?.value;
   freshSelect($('p12-report-event'),allT,x=>x.id,x=>x.title+' · '+x.game,'SELECT TOURNAMENT');
