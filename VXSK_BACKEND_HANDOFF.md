@@ -11,48 +11,38 @@
 - Do not merge staging or feature branches to `main` without the owner's explicit approval.
 - Never put Supabase service-role keys, AI provider keys, payment secrets, email API keys, D17 PINs, OTPs, or other credentials in HTML/JS or this handoff.
 
-## P12 staging deployment authorization — 2026-11-03
+## Current P12 status — 2026-11-03
 
-- The user explicitly approved applying P12 to Supabase Staging only.
-- Migration file: `supabase/migrations/20261103000100_vxsk_p12_core.sql` on `staging/vxsk-cloudflare-preview`; latest verified blob SHA: `650d3df6c07df40c526e2d2e3b511a11e2ca1767`.
-- Latest executable SQL body passed a full-copy transaction dry-run using final `ROLLBACK;`; the only subsequent migration-file change was a comment-only staging-approval banner.
-- **Execution update:** the user reports that Supabase SQL Editor returned `Success` after running the approved migration with final `COMMIT;`. This is a user-reported execution result. Exact target project ref and post-apply object/privilege inventory still need read-only verification before marking P12 fully validated.
-- The required target is Supabase Staging project ref `opzqnmahfgehaewgciwg`. If the user's SQL Editor was connected to a different ref, stop and do not treat Production as updated.
-- Next: confirm the dashboard project ref; verify all 7 tables, 13 RPCs, RLS, zero direct anon/authenticated table grants, result-guard trigger, and intended function EXECUTE grants. Then run controlled Public, non-staff, Referee AAL2 and Owner AAL2 workflow tests.
-- This authorization does not permit changes to production Supabase, GitHub `main`, the official website, or the Cloudflare Worker.
+### Core P12 installation — user-reported and read-only verified
 
-## Current P12 deployment status — 2026-11-03
+- User reported that Supabase SQL Editor returned `Success` after applying `supabase/migrations/20261103000100_vxsk_p12_core.sql` with `COMMIT;`.
+- Staging project ref recorded from the repository and previous user confirmation: `opzqnmahfgehaewgciwg`. Confirm the active Dashboard project before running any later SQL.
+- User-provided read-only table verification: all 7 P12 tables exist, all have RLS enabled, and direct `anon` and `authenticated` table privileges are absent.
+- User-provided read-only RPC verification: all 13 expected RPC signatures exist; all are SECURITY DEFINER; all grant EXECUTE to `authenticated`; only `vxsk_p12_public_snapshot()` grants EXECUTE to `anon`.
+- User-provided read-only trigger verification: `vxsk_p12_match_result_guard` is enabled on `public.vxsk_p12_matches`, fires BEFORE INSERT OR UPDATE, and calls SECURITY DEFINER function `vxsk_p12_guard_result_write()`.
+- These checks confirm the core schema's reported object inventory and the intended direct-access / EXECUTE ACLs. Full authenticated end-to-end workflow testing is still pending.
 
-- Current migration file: `supabase/migrations/20261103000100_vxsk_p12_core.sql` on `staging/vxsk-cloudflare-preview`; latest verified blob SHA: `650d3df6c07df40c526e2d2e3b511a11e2ca1767`.
-- The SQL body (before the latest comment-only approval-banner update) passed the user's latest full-copy dry-run using final `ROLLBACK;`; Supabase returned `Success. No rows returned`. The change from the tested revision to the current file is only the header comment marking staging-only approval; executable SQL is unchanged.
-- Static-review hardening uses `COALESCE(public.vxsk_hub_owner(), false)` and `COALESCE(public.vxsk_hub_referee(), false)` for fail-closed checks.
-- User has explicitly approved deployment to Supabase Staging project ref `opzqnmahfgehaewgciwg` only.
-- **Execution status: NOT YET APPLIED.** The SQL Editor must be connected to exactly project ref `opzqnmahfgehaewgciwg`; if it differs, stop. The user must execute the complete migration with final `COMMIT;` intact.
-- After execution, verify all 7 tables, 13 RPCs, RLS, no direct anon/authenticated table grants, result-guard trigger, and function EXECUTE grants; then run role/workflow tests.
-- This authorization does not permit changes to production Supabase, GitHub `main`, the official website, or the Cloudflare Worker.
+### Simple P12 bracket workflow — frontend committed, database extension still draft
 
-### P12 post-apply verification — 2026-11-03
+- The user asked for a simple Challonge-style flow: add participants, generate bracket automatically, then enter scores and advance winners.
+- Current staging frontend removes manual Round / Slot / Bracket Lane entry from the main P12 manager. Staff no longer choose bracket slots.
+- P12 V1 scope: Single Elimination only, 2–64 entrants, one name per line. Input order is the seed order; optional shuffle is available. Bracket size, seed pairing, round cards, BYEs and future-round slots are generated server-side.
+- Owner workflow: Create private tournament -> paste teams -> Generate Single-Elimination Bracket -> review Bracket & Scores -> enter final match scores -> winner advances automatically -> final result closes the tournament and displays champion -> publish/unpublish the tournament from the bracket view.
+- Referee workflow remains separate: submit a proposed score with a note; Owner AAL2 reviews it; approval advances the winner. Owner can also enter a confirmed score directly.
+- Legacy `vxsk_hub_*` Tournament Operations are preserved and collapsed under “LEGACY TOURNAMENT TOOLS — OLD GAME HUB”; no legacy records or tables were removed.
+- Frontend files on `staging/vxsk-cloudflare-preview`:
+  - `staff.html` — P12 simple manager UI, Legacy tools collapsed; SHA `c504a8bb239f9593006f3005dceff1bcd159ef85`.
+  - `vxsk-p12-game-hub.js` — simple generator flow, Owner score input, automatic display / champion; SHA `922e98a0ee1c5bec278571392be090b70a2f0325`.
+  - `vxsk-p12-game-hub.css` — manager, scoreboard, champion and legacy details styling; SHA `1dd9576ce8c9cc6b65ff5ae31a0b15e48c394f9d`.
+  - `arena.html` — public P12 assets use cache-buster `12.10.0-simple-bracket`; SHA `da773afb40ab802d48b08f7bf5741aec6bb4160f`.
+- New additive SQL extension draft: `supabase/migrations/20261103000200_vxsk_p12_simple_bracket.sql`; current SHA `4ab73968c2fe9fa056276a768eaf0b3d7fac4df9`. It adds bracket progression fields/states, automatic generator, BYE handling, Owner score RPC, automatic winner advancement and final tournament completion.
+- **The bracket extension has NOT been applied.** The new SQL is explicitly marked draft. It needs a complete-copy SQL Editor dry-run in the verified Staging project with final `COMMIT;` replaced by `ROLLBACK;`. If that succeeds, obtain a separate explicit approval before applying this second migration with `COMMIT;`.
+- Cloudflare Preview has NOT been redeployed for these latest frontend changes. Do not deploy until the extension migration has passed dry-run and the user has explicitly approved its application, then verify the DB before publishing the updated frontend.
+- Production Supabase, GitHub `main`, the official website and production deployment remain out of scope and untouched.
 
-- User supplied the first read-only post-apply inventory query output for all 7 expected tables.
-- All 7 exist: `vxsk_p12_tournaments`, `vxsk_p12_teams`, `vxsk_p12_stages`, `vxsk_p12_matches`, `vxsk_p12_updates`, `vxsk_p12_reports`, `vxsk_p12_audit`.
-- All 7 report `rls_enabled=true`, `anon_no_direct_access=true`, and `authenticated_no_direct_access=true`.
-- This confirms table creation, RLS enablement, and absence of direct anon/authenticated table privileges as checked by the supplied query. RPC existence/EXECUTE grants/SECURITY DEFINER, trigger, role tests and end-to-end workflows remain to be verified.
+### Historical audit notes below
 
-### P12 RPC post-apply verification — 2026-11-03
-
-- User supplied the read-only verification query output for all 13 expected P12 RPCs.
-- All 13 signatures exist.
-- All 13 report `authenticated_execute=true` and `security_definer=true`.
-- Only `vxsk_p12_public_snapshot()` reports `anon_execute=true`; all 12 other RPCs report `anon_execute=false`.
-- This exactly matches the intended least-privilege EXECUTE grants. Next checks: verify the match result guard trigger and then exercise controlled anonymous, ordinary authenticated, Referee AAL2 and Owner AAL2 cases.
-
-### P12 result-guard trigger verification — 2026-11-03
-
-- User supplied the read-only trigger catalog query result for `public.vxsk_p12_matches`.
-- Trigger `vxsk_p12_match_result_guard` exists and is enabled.
-- It fires `BEFORE INSERT OR UPDATE) on `public.vxsk_p12_matches` and calls `public.vxsk_p12_guard_result_write()`.
-- The trigger function reports `SECURITY DEFINER=true`.
-- The result matches the intended protection. Next step is front-end/role workflow testing: public snapshot, ordinary authenticated non-staff denial from staff snapshot, Referee AAL2 access/report submission, and Owner AAL2 administrative/decision access. Avoid creating real tournament data or reports until the UI checks and intended test data are agreed.
+The dated P12 inventory and design notes later in this file record what was true during the pre-migration investigation. Where those older notes say P12 objects were absent or no P12 SQL had been applied, treat them as historical snapshots superseded by the current status above.
 
 ## Recent frontend changes already committed on staging
 1. Mobile header: logo remains left, toolbar controls right in one row; SQUADS sits immediately before Friends. Latest CSS cache-buster is `vxsk-mobile-polish.css?v=1.2.1-mobile-toolbar`; service-worker cache is `vxsk-public-v12.8.39-owner-spotlight`. The user visually tested the preceding toolbar fix and confirmed it looked good.
@@ -73,7 +63,7 @@ This audit now includes a **user-supplied read-only Supabase schema export** (20
 
 ### Implemented or partially implemented backend areas found in source
 - **Applications:** `registrations`, `review_notes`; `review_registration` and `owner_delete_registration` RPCs. Staff UI caps the list at 200 and reports that older Netlify Forms do not auto-sync.
-- **Tournament/Game Hub:** tables referenced include `vxsk_hub_events`, `vxsk_hub_matches`, `vxsk_hub_teams`, `vxsk_hub_match_players`, `vxsk_hub_team_members`, `vxsk_hub_notifications`, `vxsk_hub_badges`, `vxsk_hub_status`, and `match_center_posts`. The P12 staff UI uses `vxsk_p12_*` RPCs for public/staff snapshots, tournament creation, teams, stages, matches, announcements, publishing, reports and owner/referee checks. Group/Swiss standings are calculated from approved match scores in frontend code. This is not yet a cross-season global ranking system.
+- **Tournament/Game Hub:** Legacy Arena functionality remains on `vxsk_hub_*` (teams, check-ins, notifications, historical events and reports). The newer P12 core schema is installed on the reported Staging project and has passed user-provided table/RLS, RPC ACL and result-trigger inventory checks. The simplified P12 V1 UI is a separate Single-Elimination manager; its bracket auto-generation / BYE / score-advancement SQL extension is still a draft and must pass a fresh dry-run and separate approval before installation. This is not yet a cross-season global ranking system.
 - **Arena Hub teams:** `arena-hub.js` calls `vxsk_hub_create_team`, `vxsk_hub_join_team`, `vxsk_hub_team_roster`, `vxsk_hub_team_decide`, `vxsk_hub_leave_team`, `vxsk_hub_ready`, `vxsk_hub_set_status`, and `vxsk_hub_report`.
 - **Community/social:** uses RPC families including `vxsk_social_*`, `vxsk_showmatch_*`, `vxsk_group_*`, and `vxsk_hub_react`; some media is stored in the `vxsk-avatars` bucket. These features have staging-only/privacy limitations described in `privacy.html`.
 - **Staff/crew profiles:** public crew uses `vxsk_p13_public_crew`; owner/staff management references `vxsk_p13_owner_ok`, `vxsk_p13_owner_crew`, `vxsk_p13_save_crew`, `vxsk_p13_set_crew_visibility`, and the `vxsk-crew-photos` bucket.
@@ -373,4 +363,9 @@ This audit now includes a **user-supplied read-only Supabase schema export** (20
 - Confirm the official public WhatsApp contact line before adding a WhatsApp deep link.
 
 ## Next-session starter
-Start by inspecting the function bodies and EXECUTE grants for the critical RPCs using the schema export already supplied. Then inspect constraints, indexes, Storage policies and Edge Function list. Only after that create versioned SQL migrations on `staging/vxsk-cloudflare-preview`, apply and test on the staging Supabase project, and update this handoff after each substantial chat. Never touch `main` without explicit approval.
+
+1. Review the latest draft `supabase/migrations/20261103000200_vxsk_p12_simple_bracket.sql` on `staging/vxsk-cloudflare-preview` (SHA `4ab73968c2fe9fa056276a768eaf0b3d7fac4df9`).
+2. Run the complete extension SQL in Supabase SQL Editor only after confirming project ref `opzqnmahfgehaewgciwg`, but replace final `COMMIT;` with `ROLLBACK;` for the dry-run.
+3. Review the result and any errors. The extension is not installed yet; obtain separate explicit approval before a real `COMMIT;`.
+4. After installation, verify new columns/states, function ACLs, internal helper restrictions, and test a draft bracket (including non-power-of-two entrants / BYEs) and score advancement. Do not create disposable test data that cannot be removed unless the user agrees to keep it.
+5. Only after the backend extension is installed and verified, manually deploy the latest staging ZIP to the Cloudflare Preview Worker. Never touch `main` or Production without separate explicit approval.
