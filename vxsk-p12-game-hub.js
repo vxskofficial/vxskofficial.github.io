@@ -132,6 +132,16 @@
    }
    out.append(rounds);
   }
+  if(stage.format==='single'&&matches.length){
+    const finalRound=Math.max(...matches.map(m=>m.round_no));
+    const finalMatch=matches.find(m=>m.round_no===finalRound&&m.state==='completed');
+    if(finalMatch&&finalMatch.score_a!=null&&finalMatch.score_b!=null&&finalMatch.score_a!==finalMatch.score_b){
+      const championId=finalMatch.score_a>finalMatch.score_b?finalMatch.team_a:finalMatch.team_b;
+      const champion=wrap('div','p12-champion');
+      champion.append(text('span','TOURNAMENT CHAMPION'),text('strong',teamName(d,championId)));
+      out.append(champion);
+    }
+  }
   return out;
  }
  function renderPublic(){
