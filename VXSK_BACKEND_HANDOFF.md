@@ -235,6 +235,13 @@ This audit now includes a **user-supplied read-only Supabase schema export** (20
 - All 13 expected P12 RPCs returned `exists=false`: `vxsk_p12_public_snapshot`, `vxsk_p12_staff_snapshot`, `vxsk_p12_owner_ok`, `vxsk_p12_referee_ok`, `vxsk_p12_create_tournament`, `vxsk_p12_add_team`, `vxsk_p12_add_stage`, `vxsk_p12_add_match`, `vxsk_p12_announce`, `vxsk_p12_publish`, `vxsk_p12_mark_match_live`, `vxsk_p12_submit_report`, `vxsk_p12_decide_report`.
 - This is the expected post-rollback state and confirms the draft objects were not persisted. Do not rerun with `COMMIT` until the SQL has passed final review and the user explicitly authorizes a real staging deployment.
 
+### Latest P12 draft rollback dry-run confirmed (user-supplied on 2026-11-03)
+- User executed the latest migration revision `supabase/migrations/20261103000100_vxsk_p12_core.sql` with the final transaction command changed from `COMMIT;` to `ROLLBACK;`.
+- Supabase SQL Editor returned `Success. No rows returned`, with no error reported. This validates DDL/function-definition acceptance for this exact revision inside the transaction; it does not validate live RPC authorization or end-to-end behavior.
+- The preceding object-absence check had all seven P12 tables and thirteen P12 RPCs set to `exists=false`; the latest successful rollback should preserve that no-object state.
+- Next stage is explicit approval for a real staging-only application. If approved, first remove/replace the draft-only header comment, confirm the final SQL file SHA and project ref, then user applies the complete SQL with its final `COMMIT;` to staging. Afterward perform object/RLS/grant verification and controlled role tests. No production/main or Cloudflare deployment is authorized by this approval.
+- No P12 SQL has been committed to the database yet.
+
 ### P12 draft final-pass review — pending queue and tournament closure (2026-11-03; requires fresh dry-run)
 - Further tightened the draft `supabase/migrations/20261103000100_vxsk_p12_core.sql`:
   - Owner staff snapshot now returns only pending reports, ordered oldest first (up to 500), matching the actual Owner Review Queue UI and avoiding approved/rejected history crowding the pending queue.
