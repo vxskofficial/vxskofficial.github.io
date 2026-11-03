@@ -182,3 +182,23 @@
   .p12-score-entry{gap:6px}
   .p12-score-entry button{min-height:42px}
 }
+
+.p12-champion{
+  display:grid;
+  gap:4px;
+  margin-top:14px;
+  padding:14px 16px;
+  border:1px solid rgba(84,200,255,.38);
+  border-radius:13px;
+  background:linear-gradient(110deg,rgba(75,54,150,.35),rgba(20,75,104,.32));
+}
+.p12-champion span{
+  color:#8edcff;
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.16em;
+}
+.p12-champion strong{
+  color:#fff;
+  font-size:19px;
+}
