@@ -209,6 +209,16 @@ This audit now includes a **user-supplied read-only Supabase schema export** (20
 - These are performance candidates, not security issues. Before adding, inspect approximate table sizes and EXPLAIN plans; use `CREATE INDEX CONCURRENTLY` where appropriate outside a transaction, after confirming operational impact. Do not add redundant indexes or make live schema changes before migration review.
 - Trigger inventory output has not yet been received. Need inspect all non-internal triggers and bodies before finalizing P12 or proposing changes to existing match-result controls.
 
+### Legacy Game Hub trigger inventory review (user-supplied on 2026-11-03)
+- User supplied the complete non-internal trigger inventory for `public.vxsk_hub_%` tables. Exactly one trigger was returned: `vxsk_hub_result_guard`, BEFORE INSERT OR UPDATE on `public.vxsk_hub_matches`, calling `public.vxsk_hub_guard_result_write()`.
+- Guard behavior confirmed:
+  - On INSERT, rejects a non-Owner inserting a match already marked `completed` or with either score non-NULL.
+  - On UPDATE, rejects a non-Owner changing either score or transitioning state into `completed`.
+  - The Owner check delegates to `public.vxsk_hub_owner()`, which requires signed-in Owner and JWT AAL2.
+- Important scope limitation: the trigger is specifically a score/result-publication guard, not a complete state-transition or publication guard. As written, it does not reject non-Owner changes such as `completed -> cancelled` when scores stay the same, nor does it guard changes to `published`. Current effective direct table privileges for authenticated users showed INSERT/UPDATE false, and the supplied existing RPCs do not expose these arbitrary match updates, so this is not a confirmed exploitable path in the current access model. New P12 RPCs must validate every permitted state transition server-side and retain Owner+AAL2 result approval.
+- Combined legacy Game Hub audit now covers table columns/constraints/RLS/effective privileges, indexes, RPC bodies/ACLs, and the single trigger. Candidate performance indexes remain uncreated pending workload/query-plan review.
+- Next pre-migration check: inspect `supabase_migrations.schema_migrations` presence and version/name history to establish whether any P12 migration file/version previously ran. Then design an isolated P12 schema and RPC contract, review the complete SQL in version control, and apply to staging only after confirmation. No DB migration has been written or applied.
+
 ## Recommended implementation order
 ### Phase 0 — database truth (must happen before DDL)
 - Obtain a **schema-only** export from the staging Supabase project: tables/columns/constraints, views, functions/RPC signatures, triggers, RLS policies, grants, storage buckets/policies and enabled extensions. Do not export user records, passwords, auth tokens, payment data or secrets.
