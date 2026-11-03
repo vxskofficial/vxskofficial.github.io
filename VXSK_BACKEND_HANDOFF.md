@@ -31,6 +31,13 @@
 - After execution, verify all 7 tables, 13 RPCs, RLS, no direct anon/authenticated table grants, result-guard trigger, and function EXECUTE grants; then run role/workflow tests.
 - This authorization does not permit changes to production Supabase, GitHub `main`, the official website, or the Cloudflare Worker.
 
+### P12 post-apply verification — 2026-11-03
+
+- User supplied the first read-only post-apply inventory query output for all 7 expected tables.
+- All 7 exist: `vxsk_p12_tournaments`, `vxsk_p12_teams`, `vxsk_p12_stages`, `vxsk_p12_matches`, `vxsk_p12_updates`, `vxsk_p12_reports`, `vxsk_p12_audit`.
+- All 7 report `rls_enabled=true`, `anon_no_direct_access=true`, and `authenticated_no_direct_access=true`.
+- This confirms table creation, RLS enablement, and absence of direct anon/authenticated table privileges as checked by the supplied query. RPC existence/EXECUTE grants/SECURITY DEFINER, trigger, role tests and end-to-end workflows remain to be verified.
+
 ## Recent frontend changes already committed on staging
 1. Mobile header: logo remains left, toolbar controls right in one row; SQUADS sits immediately before Friends. Latest CSS cache-buster is `vxsk-mobile-polish.css?v=1.2.1-mobile-toolbar`; service-worker cache is `vxsk-public-v12.8.39-owner-spotlight`. The user visually tested the preceding toolbar fix and confirmed it looked good.
 2. Crew/leadership section: Voxzan owner spotlight was moved before “Meet the Crew”; the leadership card desktop width is capped (220–280px) instead of stretching. CSS cache-buster: `vxsk-p13-crew.css?v=13.0.2-owner-first`. Mobile card grid rules were retained.
