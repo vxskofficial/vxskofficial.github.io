@@ -178,6 +178,10 @@ CREATE TABLE public.vxsk_p12_reports (
 CREATE INDEX vxsk_p12_reports_queue
   ON public.vxsk_p12_reports (state, created_at DESC);
 
+CREATE INDEX vxsk_p12_reports_pending_score_match
+  ON public.vxsk_p12_reports (match_id)
+  WHERE kind = 'score' AND state = 'pending';
+
 CREATE TABLE public.vxsk_p12_audit (
   id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   actor_id uuid REFERENCES auth.users(id) ON DELETE SET NULL,
@@ -773,6 +777,7 @@ DECLARE
   v_id uuid;
   v_notes text := btrim(COALESCE(p_notes, ''));
   v_match_state text;
+  v_tournament_status text;
 BEGIN
   IF NOT public.vxsk_hub_referee() THEN
     RAISE EXCEPTION 'Referee role and 2FA required' USING ERRCODE = '42501';
@@ -783,15 +788,20 @@ BEGIN
     RAISE EXCEPTION 'Invalid referee report' USING ERRCODE = '22023';
   END IF;
 
-  IF NOT EXISTS (
-    SELECT 1 FROM public.vxsk_p12_tournaments
-    WHERE id = p_tournament AND published = true
-  ) THEN
+  SELECT status INTO v_tournament_status
+  FROM public.vxsk_p12_tournaments
+  WHERE id = p_tournament AND published = true
+  FOR SHARE;
+
+  IF NOT FOUND THEN
     RAISE EXCEPTION 'Reports may only be submitted for published tournaments'
       USING ERRCODE = '42501';
   END IF;
 
   IF p_kind = 'score' THEN
+    IF v_tournament_status NOT IN ('announced', 'upcoming', 'live') THEN
+      RAISE EXCEPTION 'This tournament is not accepting score reports';
+    END IF;
     IF p_match IS NULL OR p_a IS NULL OR p_b IS NULL
        OR p_a NOT BETWEEN 0 AND 99 OR p_b NOT BETWEEN 0 AND 99 THEN
       RAISE EXCEPTION 'A score report requires a match and two scores from 0 to 99'
@@ -862,6 +872,7 @@ AS $function$
 DECLARE
   v_report public.vxsk_p12_reports%ROWTYPE;
   v_match_state text;
+  v_tournament_status text;
 BEGIN
   IF NOT public.vxsk_hub_owner() THEN
     RAISE EXCEPTION 'Owner and 2FA required' USING ERRCODE = '42501';
@@ -884,6 +895,15 @@ BEGIN
   END IF;
 
   IF p_approve AND v_report.kind = 'score' THEN
+    SELECT t.status INTO v_tournament_status
+    FROM public.vxsk_p12_tournaments t
+    WHERE t.id = v_report.tournament_id
+    FOR SHARE;
+
+    IF NOT FOUND OR v_tournament_status NOT IN ('announced', 'upcoming', 'live') THEN
+      RAISE EXCEPTION 'This tournament is no longer eligible for score approval';
+    END IF;
+
     SELECT state INTO v_match_state
     FROM public.vxsk_p12_matches
     WHERE id = v_report.match_id AND tournament_id = v_report.tournament_id
