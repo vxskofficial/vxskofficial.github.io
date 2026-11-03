@@ -10,7 +10,7 @@
 <link href="staff.css?v=12.8.34" rel="stylesheet"/>
 <script defer="" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1"></script>
 <script defer="" src="supabase-config.js?v=12.8.34"></script><script defer="" src="staging-guard.js"></script><script defer="" src="staff.js?v=12.8.34"></script><script defer="" src="opponent-staff.js?v=12.8.34"></script><script defer="" src="vxsk-cover-utils.js?v=12.8.34"></script><script defer="" src="content-editor.js?v=12.8.34"></script>
-<link href="staff-command.css?v=12.8.34" rel="stylesheet"/><script defer="" src="staff-command.js?v=12.8.34"></script><script defer="" src="staff-arena.js?v=12.8.34"></script><link href="vxsk-p12-game-hub.css?v=12.9.12" rel="stylesheet"/><script defer="" src="vxsk-p12-game-hub.js?v=12.9.12"></script><script defer="" src="staff-showmatches.js?v=12.8.34"></script><script defer="" src="owner-staff-manager.js?v=12.8.34"></script><link href="vxsk-cover.css?v=12.8.34" rel="stylesheet"/> <link href="vxsk-master-staff.css?v=12.9.4-candidate" rel="stylesheet"/>
+<link href="staff-command.css?v=12.8.34" rel="stylesheet"/><script defer="" src="staff-command.js?v=12.8.34"></script><script defer="" src="staff-arena.js?v=12.8.34"></script><link href="vxsk-p12-game-hub.css?v=12.10.0-simple-bracket" rel="stylesheet"/><script defer="" src="vxsk-p12-game-hub.js?v=12.10.0-simple-bracket"></script><script defer="" src="staff-showmatches.js?v=12.8.34"></script><script defer="" src="owner-staff-manager.js?v=12.8.34"></script><link href="vxsk-cover.css?v=12.8.34" rel="stylesheet"/> <link href="vxsk-master-staff.css?v=12.9.4-candidate" rel="stylesheet"/>
 <script defer="" src="vxsk-master-staff.js?v=12.9.4-candidate"></script>
 <link href="vxsk-marketplace.css?v=12.9.4-boost-review1" rel="stylesheet"/>
 <script defer="" src="vxsk-boost-review.js?v=12.9.4-p11"></script>
@@ -102,73 +102,69 @@
 <div class="p12-wrap p12-staff" id="vxsk-p12-staff">
 <div class="p12-title"><div><span class="p12-eyebrow">TOURNAMENT CONTROL / P12</span><h2>GAME HUB <em>OPERATIONS</em></h2><p>Publish events, build stages, manage scores and referee reports.</p></div><button id="p12-refresh" type="button">↻ REFRESH</button></div>
 <p class="p12-notice" id="vxsk-p12-staff-notice" role="status">Checking referee permissions…</p>
-<nav aria-label="Tournament control sections" class="p12-control-nav"><button aria-pressed="false" data-p12-owner="" data-p12-tab="setup" hidden="" type="button">🏆 SETUP</button><button aria-pressed="false" data-p12-owner="" data-p12-tab="broadcast" hidden="" type="button">📢 LIVE &amp; STATUS</button><button aria-pressed="false" data-p12-tab="referee" type="button">📝 REFEREE</button><button aria-pressed="false" data-p12-tab="activity" type="button">📋 ACTIVITY</button></nav><div class="p12-staff-grid" data-p12-view="activity" hidden=""><section class="p12-panel" data-p12-referee="" hidden=""><h3>📡 ANNOUNCEMENTS / LIVE FEED</h3><div id="p12-staff-updates"><p>Loading…</p></div></section><section class="p12-panel" data-p12-referee="" hidden=""><h3>📋 TOURNAMENT LIST</h3><div id="p12-staff-events"><p>Loading…</p></div></section></div><div class="p12-staff-grid" data-p12-view="referee" hidden=""><section class="p12-panel" data-p12-referee="" hidden=""><h3>📝 REFEREE REPORT</h3>
-<form class="p12-form" id="p12-report">
-<label>TOURNAMENT <select id="p12-report-event" name="event" required=""></select></label>
-<label>REPORT TYPE <select id="p12-report-kind" name="kind"><option value="score">Match score</option><option value="update">General update</option><option value="incident">Incident</option></select></label>
-<label>MATCH <select id="p12-report-match" name="match" required=""></select></label>
-<div class="p12-two" id="p12-report-score-fields"><label>SCORE A <input id="p12-report-a" max="99" min="0" name="score_a" required="" type="number"/></label><label>SCORE B <input id="p12-report-b" max="99" min="0" name="score_b" required="" type="number"/></label></div>
-<label>REPORT / EVIDENCE NOTES <textarea maxlength="800" minlength="3" name="notes" placeholder="Match result or referee observations" required="" rows="3"></textarea></label>
-<button type="submit">SEND REPORT FOR REVIEW</button>
-</form>
-</section><section class="p12-panel" data-p12-owner="" hidden=""><h3>🛡 OWNER REVIEW QUEUE</h3><div id="p12-reports"><p>No pending reports.</p></div></section></div><div class="p12-staff-grid" data-p12-view="broadcast" hidden=""><section class="p12-panel" data-p12-owner="" hidden=""><h3>📢 ANNOUNCE / GO LIVE</h3>
-<form class="p12-form" id="p12-announce">
-<label>TOURNAMENT <select id="p12-announcement-event" name="event" required=""></select></label>
-<label>UPDATE TYPE <select name="kind"><option value="announcement">Announcement</option><option value="live">LIVE update</option><option value="status">Schedule/status</option></select></label>
-<label>EVENT STATUS <select name="status"><option value="announced">Announced</option><option value="upcoming">Upcoming</option><option value="live">LIVE</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select></label>
-<label>HEADLINE <input maxlength="100" minlength="3" name="title" placeholder="Round 1 is live" required=""/></label>
-<label>DETAILS <textarea maxlength="700" name="message" placeholder="Short public update" rows="2"></textarea></label>
-<button type="submit">PUBLISH UPDATE</button>
-</form>
-</section><section class="p12-panel" data-p12-owner="" hidden=""><h3>🔴 MATCH LIVE STATUS</h3>
-<form class="p12-form" id="p12-mark-live">
-<label>FIXTURE <select id="p12-live-match" name="match" required=""></select></label>
-<label>STATUS <select name="live"><option value="yes">Set LIVE</option><option value="no">Return to scheduled</option></select></label>
-<button type="submit">UPDATE MATCH STATUS</button>
-</form>
-</section><section class="p12-panel" data-p12-owner="" hidden=""><h3>🌐 VISIBILITY</h3>
-<form class="p12-form" id="p12-publish">
-<label>TOURNAMENT <select id="p12-publish-event" name="event" required=""></select></label>
-<label>PUBLICATION <select name="publish"><option value="yes">Publish</option><option value="no">Keep private / unpublish</option></select></label>
-<button type="submit">SAVE VISIBILITY</button>
-</form>
-</section></div><div class="p12-staff-grid" data-p12-view="setup" hidden=""><section class="p12-panel" data-p12-owner="" hidden=""><h3>🏆 CREATE TOURNAMENT</h3>
+<nav aria-label="Tournament control sections" class="p12-control-nav">
+<button aria-pressed="true" data-p12-owner="" data-p12-tab="setup" hidden="" type="button">1. CREATE &amp; BRACKET</button>
+<button aria-pressed="false" data-p12-owner="" data-p12-tab="bracket" hidden="" type="button">2. BRACKET &amp; SCORES</button>
+<button aria-pressed="false" data-p12-tab="referee" type="button">3. REFEREE &amp; APPROVALS</button>
+</nav>
+<div class="p12-staff-grid" data-p12-view="setup" hidden="">
+<section class="p12-panel" data-p12-owner="" hidden="">
+<h3>1. CREATE TOURNAMENT</h3>
 <form class="p12-form" id="p12-create">
-<label>EVENT NAME <input maxlength="100" minlength="3" name="title" placeholder="VXSK Rocket League Cup" required=""/></label>
+<label>TOURNAMENT NAME <input maxlength="100" minlength="3" name="title" placeholder="VXSK Rocket League Cup" required=""/></label>
 <label>GAME <select name="game"><option>Rocket League</option><option>VALORANT</option><option>League of Legends</option></select></label>
 <label>MODE <input maxlength="50" name="mode" placeholder="1v1, 2v2, 3v3, 5v5" required=""/></label>
-<label>START DATE <input name="start" type="datetime-local"/></label>
-<label class="p12-inline"><input name="publish" type="checkbox"/> Publish publicly</label>
+<label>START DATE (TUNIS TIME) <input name="start" type="datetime-local"/></label>
 <button type="submit">CREATE TOURNAMENT</button>
 </form>
-</section><section class="p12-panel" data-p12-owner="" hidden=""><h3>👥 ADD TEAM / PLAYER</h3>
-<form class="p12-form" id="p12-team-create">
-<label>TOURNAMENT <select id="p12-team-event" name="event" required=""></select></label>
-<label>TEAM / PLAYER <input maxlength="80" minlength="2" name="name" placeholder="Team or player nickname" required=""/></label>
-<button type="submit">ADD ENTRANT</button>
+<p class="p12-muted">Create it as a private draft first. You can publish it after the bracket is ready.</p>
+</section>
+<section class="p12-panel" data-p12-owner="" hidden="">
+<h3>2. ADD TEAMS &amp; GENERATE BRACKET</h3>
+<form class="p12-form" id="p12-build-bracket">
+<label>TOURNAMENT <select id="p12-bracket-build-event" name="event" required=""></select></label>
+<label>TEAM NAMES — ONE PER LINE <textarea id="p12-team-list" maxlength="5500" minlength="5" name="teams" placeholder="VXSK Alpha&#10;VXSK Beta&#10;Team Omega&#10;Team Nova" required="" rows="7"></textarea></label>
+<p class="p12-muted">Add 2–64 teams. The order you enter is the seed order. The system creates all rounds and handles BYEs automatically.</p>
+<label class="p12-inline"><input name="shuffle" type="checkbox"/> Shuffle team seeds randomly</label>
+<label class="p12-inline"><input name="publish" type="checkbox"/> Publish the tournament after bracket generation</label>
+<button type="submit">GENERATE SINGLE-ELIMINATION BRACKET</button>
 </form>
-</section><section class="p12-panel" data-p12-owner="" hidden=""><h3>🧩 ADD STAGE</h3>
-<form class="p12-form" id="p12-stage-create">
-<label>TOURNAMENT <select id="p12-stage-event" name="event" required=""></select></label>
-<label>STAGE NAME <input maxlength="70" minlength="2" name="name" placeholder="Groups, Swiss Round, Playoffs" required=""/></label>
-<label>FORMAT <select name="format"><option value="single">Single Elimination</option><option value="double">Double Elimination</option><option value="groups">Group Stage</option><option value="swiss">Swiss Stage</option></select></label>
-<label>STAGE ORDER <input max="20" min="1" name="order" required="" type="number" value="1"/></label>
-<button type="submit">ADD STAGE</button>
-</form>
-</section><section class="p12-panel" data-p12-owner="" hidden=""><h3>⚔ ADD BRACKET FIXTURE</h3>
-<form class="p12-form" id="p12-match-create">
-<label>STAGE <select id="p12-match-stage" name="stage" required=""></select></label>
-<label>TEAM / PLAYER A <select id="p12-match-a" name="a" required=""></select></label>
-<label>TEAM / PLAYER B <select id="p12-match-b" name="b" required=""></select></label>
-<div class="p12-two"><label>ROUND <input max="60" min="1" name="round" required="" type="number" value="1"/></label><label>SLOT <input max="256" min="1" name="slot" required="" type="number" value="1"/></label></div>
-<label>BRACKET LANE <select id="p12-bracket-lane" name="bracket"><option value="main">Main / Groups / Swiss</option><option value="winners">Winners bracket</option><option value="losers">Losers bracket</option><option value="grand_final">Grand Final</option></select></label>
-<label>GROUP NAME (OPTIONAL) <input maxlength="35" name="group" placeholder="Group A"/></label>
-<label>MATCH DATE <input name="start" type="datetime-local"/></label>
-<button type="submit">ADD FIXTURE</button>
-</form>
-</section></div>
-<p class="p12-footnote">Fixtures are manually seeded in P12. Group/Swiss standings use verified scores. Referee scores become public only after Owner approval.</p>
+</section>
 </div>
+<div class="p12-staff-grid" data-p12-view="bracket" hidden="">
+<section class="p12-panel" data-p12-owner="" hidden="">
+<h3>BRACKET &amp; SCOREBOARD</h3>
+<label class="p12-select-label">TOURNAMENT <select id="p12-bracket-event"></select></label>
+<p class="p12-muted">Enter the final score for a ready match. The winner advances automatically. Saved results are locked for audit integrity.</p>
+<div id="p12-admin-bracket"><p class="p12-muted">Select a tournament to view its bracket.</p></div>
+</section>
+</div>
+<div class="p12-staff-grid" data-p12-view="referee" hidden="">
+<section class="p12-panel" data-p12-referee="" hidden="">
+<h3>REFEREE — SUBMIT A SCORE</h3>
+<p class="p12-muted">Choose a ready match and submit the proposed score. The Owner reviews it before the winner advances.</p>
+<form class="p12-form" id="p12-report">
+<label>TOURNAMENT <select id="p12-report-event" name="event" required=""></select></label>
+<label>READY MATCH <select id="p12-report-match" name="match" required=""></select></label>
+<div class="p12-two">
+<label>TEAM A SCORE <input id="p12-report-a" max="99" min="0" name="score_a" required="" type="number"/></label>
+<label>TEAM B SCORE <input id="p12-report-b" max="99" min="0" name="score_b" required="" type="number"/></label>
+</div>
+<label>REFEREE NOTE <textarea maxlength="800" minlength="3" name="notes" placeholder="Briefly describe how the result was confirmed." required="" rows="3"></textarea></label>
+<button type="submit">SEND SCORE FOR OWNER APPROVAL</button>
+</form>
+</section>
+<section class="p12-panel" data-p12-owner="" hidden="">
+<h3>OWNER REVIEW QUEUE</h3>
+<p class="p12-muted">Approve or reject proposed scores. An approved winner advances to the next round.</p>
+<div id="p12-reports"><p>No pending reports.</p></div>
+</section>
+</div>
+<p class="p12-footnote">VXSK v1 uses Single Elimination. Double Elimination, Round Robin and Swiss can be added later after the simple bracket workflow is stable.</p>
+</div>
+<details class="p12-legacy-details">
+<summary>LEGACY TOURNAMENT TOOLS — OLD GAME HUB</summary>
+<p class="p12-muted">These are the older Arena Hub records, reports and player check-ins. Keep them for historical records. Use the new P12 Tournament Manager above for all new tournaments.</p>
 <div class="command-section-title"><div><span class="eyebrow">STAFF ONLY / VERIFIED ACCESS</span><h2>TOURNAMENT <em>OPERATIONS.</em></h2><p>One place for fixtures, events, referee reports, owner assignments and awards. Public view stays in Arena Hub.</p></div><a class="back" href="arena.html" rel="noopener noreferrer" target="_blank">VIEW PLAYER ARENA ↗</a></div>
 <p aria-live="polite" class="notice" id="staff-arena-message" role="status">Checking tournament permissions…</p>
 <div class="staff-arena-links"><button id="staff-arena-refresh" type="button">↻ REFRESH TOURNAMENT DATA</button><span id="staff-arena-role-note">Checking staff permissions…</span></div>
@@ -203,6 +199,7 @@
 </form></div></div>
 </section>
 <div class="staff-arena-card" hidden="" id="staff-arena-noaccess">This account doesn't have tournament editor/referee permissions. Ask the event Owner to confirm your existing staff role; no new database permissions are assigned here.</div>
+</details>
 </section>
 <section aria-labelledby="vxsk-p13-crew-title" data-staff-view="crew" hidden="" id="staff-view-crew">
 <div class="command-section-title"><div><span class="eyebrow">OWNER ONLY / LIVE WEBSITE ROSTER</span><h2 id="vxsk-p13-crew-title">CREW <em>MANAGER.</em></h2><p>Add, edit or hide public profiles. Changes appear under Meet the Crew on the homepage.</p></div><a class="back" href="./#staff" rel="noopener noreferrer" target="_blank">VIEW PUBLIC CREW ↗</a></div>
