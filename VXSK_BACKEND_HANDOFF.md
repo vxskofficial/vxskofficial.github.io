@@ -14,12 +14,12 @@
 ## P12 staging deployment authorization — 2026-11-03
 
 - The user explicitly approved applying P12 to Supabase Staging only.
-- The migration header is marked approved for staging only. Its SQL body is the latest dry-run-tested revision apart from this comment-only banner change; latest role-check hardening uses `COALESCE(helper(), false)`.
-- The latest tested SQL revision (before the comment-only banner update) passed a full-copy transaction dry-run with final `COMMIT;` replaced by `ROLLBACK;`; Supabase returned `Success. No rows returned`.
-- **Execution status: NOT YET APPLIED.** The assistant cannot execute SQL against Supabase directly in this workflow. The user must open the SQL Editor for staging project ref `opzqnmahfgehaewgciwg`, verify that exact ref, copy the complete migration from the link in the repository, leave the final `COMMIT;` intact, and execute it.
-- If the editor's project ref is not exactly `opzqnmahfgehaewgciwg`, stop. Do not execute against any other project.
-- After successful execution, verify all 7 P12 tables, all 13 RPCs, RLS, zero direct anon/authenticated table grants, the result-guard trigger, and the intended function EXECUTE grants before testing workflows.
-- This approval is limited to this Supabase staging project. It does not authorize changes to the production Supabase project, GitHub `main`, the official website, or the Cloudflare Worker.
+- Migration file: `supabase/migrations/20261103000100_vxsk_p12_core.sql` on `staging/vxsk-cloudflare-preview`; latest verified blob SHA: `650d3df6c07df40c526e2d2e3b511a11e2ca1767`.
+- Latest executable SQL body passed a full-copy transaction dry-run using final `ROLLBACK;`; the only subsequent migration-file change was a comment-only staging-approval banner.
+- **Execution update:** the user reports that Supabase SQL Editor returned `Success` after running the approved migration with final `COMMIT;`. This is a user-reported execution result. Exact target project ref and post-apply object/privilege inventory still need read-only verification before marking P12 fully validated.
+- The required target is Supabase Staging project ref `opzqnmahfgehaewgciwg`. If the user's SQL Editor was connected to a different ref, stop and do not treat Production as updated.
+- Next: confirm the dashboard project ref; verify all 7 tables, 13 RPCs, RLS, zero direct anon/authenticated table grants, result-guard trigger, and intended function EXECUTE grants. Then run controlled Public, non-staff, Referee AAL2 and Owner AAL2 workflow tests.
+- This authorization does not permit changes to production Supabase, GitHub `main`, the official website, or the Cloudflare Worker.
 
 ## Current P12 deployment status — 2026-11-03
 
