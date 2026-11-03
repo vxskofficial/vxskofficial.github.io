@@ -131,6 +131,14 @@ This audit now includes a **user-supplied read-only Supabase schema export** (20
 - Working hypotheses: P12 migration was not applied to this project, P12 routines were renamed/dropped, or the earlier schema export was taken before a schema change. Search current routines/tables and inspect migration history before deciding.
 - Do not create replacement RPCs yet; first establish the actual current tournament tables and available similarly named routines. No P12 database changes have been made.
 
+### Current tournament object inventory (user-supplied on 2026-11-03)
+- After confirming the Dashboard Project Ref matches staging, user searched all non-system schemas for routines/tables named like `p12` or `tournament`, plus `vxsk_hub_*` tables.
+- Result contained 11 public base tables and no matching P12/tournament-named routines:
+  `vxsk_hub_badges`, `vxsk_hub_events`, `vxsk_hub_match_players`, `vxsk_hub_match_reports`, `vxsk_hub_matches`, `vxsk_hub_notifications`, `vxsk_hub_reactions`, `vxsk_hub_reports`, `vxsk_hub_status`, `vxsk_hub_team_members`, `vxsk_hub_teams`.
+- This confirms the current database has Game Hub tables but the staging P12 page's 13 exact `vxsk_p12_*` RPC calls are absent. It does not prove that every tournament-related RPC is absent: similarly named `vxsk_hub_*` functions may exist, and the previous query only found P12/tournament substrings.
+- Existing earlier export reported `vxsk_hub_owner()`, `vxsk_hub_referee()`, `vxsk_hub_editor()` and trigger `vxsk_hub_guard_result_write()`; at least some helper/trigger logic is separate from the missing P12 API.
+- Next safe audit: inspect columns, types, primary/foreign/unique/check constraints, indexes, RLS policies and effective table grants for the 11 `vxsk_hub_*` tables; separately inventory function names/signatures beginning `vxsk_hub_`. Do not create P12 replacements until the existing table model and any existing Hub RPCs are understood.
+
 ## Recommended implementation order
 ### Phase 0 — database truth (must happen before DDL)
 - Obtain a **schema-only** export from the staging Supabase project: tables/columns/constraints, views, functions/RPC signatures, triggers, RLS policies, grants, storage buckets/policies and enabled extensions. Do not export user records, passwords, auth tokens, payment data or secrets.
