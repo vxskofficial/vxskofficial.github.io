@@ -23,12 +23,13 @@
 
 ## Current P12 deployment status — 2026-11-03
 
-- Current migration file: `supabase/migrations/20261103000100_vxsk_p12_core.sql` on `staging/vxsk-cloudflare-preview`; latest verified blob SHA: `9c29676037097ec3be8bf1b071dd7240035db63f`.
-- The immediately preceding revision (blob SHA `c5ea720220d985b5c9a6536661bf58419f9df472`) was executed by the user in the Supabase SQL Editor with final `COMMIT;` replaced by `ROLLBACK;`; Supabase returned `Success. No rows returned`, and the post-rollback inventory showed all 7 P12 tables and 13 P12 RPCs absent.
-- A final static-review hardening change was then made to the migration: all direct Owner/Referee helper negations now use `COALESCE(helper(), false)`, including the Owner snapshot flag, so a NULL helper result fails closed. This changes the SQL and therefore **requires a fresh full-copy ROLLBACK dry-run** before any live application.
-- The current migration remains a review-only draft and has **not** been applied. Before any live deployment, obtain explicit staging-only authorization, verify the SQL Editor is connected to Supabase project ref `opzqnmahfgehaewgciwg`, and have the user execute the complete reviewed SQL with its final `COMMIT;` intact.
-- The dry-run validates transaction-level DDL/function-definition acceptance only; it is not an end-to-end authorization or runtime RPC test.
-- This does not authorize changes to production, GitHub `main`, or the Cloudflare Worker.
+- Current migration file: `supabase/migrations/20261103000100_vxsk_p12_core.sql` on `staging/vxsk-cloudflare-preview`; latest verified blob SHA: `650d3df6c07df40c526e2d2e3b511a11e2ca1767`.
+- The SQL body (before the latest comment-only approval-banner update) passed the user's latest full-copy dry-run using final `ROLLBACK;`; Supabase returned `Success. No rows returned`. The change from the tested revision to the current file is only the header comment marking staging-only approval; executable SQL is unchanged.
+- Static-review hardening uses `COALESCE(public.vxsk_hub_owner(), false)` and `COALESCE(public.vxsk_hub_referee(), false)` for fail-closed checks.
+- User has explicitly approved deployment to Supabase Staging project ref `opzqnmahfgehaewgciwg` only.
+- **Execution status: NOT YET APPLIED.** The SQL Editor must be connected to exactly project ref `opzqnmahfgehaewgciwg`; if it differs, stop. The user must execute the complete migration with final `COMMIT;` intact.
+- After execution, verify all 7 tables, 13 RPCs, RLS, no direct anon/authenticated table grants, result-guard trigger, and function EXECUTE grants; then run role/workflow tests.
+- This authorization does not permit changes to production Supabase, GitHub `main`, the official website, or the Cloudflare Worker.
 
 ## Recent frontend changes already committed on staging
 1. Mobile header: logo remains left, toolbar controls right in one row; SQUADS sits immediately before Friends. Latest CSS cache-buster is `vxsk-mobile-polish.css?v=1.2.1-mobile-toolbar`; service-worker cache is `vxsk-public-v12.8.39-owner-spotlight`. The user visually tested the preceding toolbar fix and confirmed it looked good.
