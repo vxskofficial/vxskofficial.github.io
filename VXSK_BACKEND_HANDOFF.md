@@ -118,6 +118,13 @@ This audit now includes a **user-supplied read-only Supabase schema export** (20
 - Next query should LEFT JOIN an explicit expected-name list against `pg_proc` across all schemas, returning one row per expected RPC even when absent, plus signature, owner, SECURITY DEFINER, search_path, effective anon/authenticated EXECUTE, and function definition for existing matches. Then inspect all P12 mutation and report-decision bodies before changes.
 - No P12 database changes have been made.
 
+### P12 RPC inventory result (user-supplied on 2026-11-03)
+- User ran a LEFT JOIN inventory for all 13 exact RPC names used by `vxsk-p12-game-hub.js`, searching all schemas. Every row returned NULL for schema, signature, security_definer, owner, settings, EXECUTE flags and definition. This means none of those exact function names exists in the database queried; this is not an EXECUTE-grant issue.
+- Expected names checked: `vxsk_p12_public_snapshot`, `vxsk_p12_staff_snapshot`, `vxsk_p12_owner_ok`, `vxsk_p12_referee_ok`, `vxsk_p12_decide_report`, `vxsk_p12_create_tournament`, `vxsk_p12_add_team`, `vxsk_p12_add_stage`, `vxsk_p12_add_match`, `vxsk_p12_announce`, `vxsk_p12_publish`, `vxsk_p12_mark_match_live`, and `vxsk_p12_submit_report`.
+- The current staging frontend config points at Supabase project ref `opzqnmahfgehaewgciwg`. The returned absence conflicts with an earlier user-supplied schema summary that reported a P12 RPC family. Likely explanations include that the previous export came from a different Supabase project, the current Dashboard SQL Editor is connected to another project, or the P12 migrations were not applied to this project.
+- Treat P12 backend as unavailable in the database just queried until project identity is confirmed and the inventory is repeated. Do not create replacement functions or migrations until reconciling project identity and reviewing the actual table schema, policies, constraints, and migration history.
+- Next safe step: user should compare the Project Ref shown in the Supabase Dashboard's project settings / project URL with `opzqnmahfgehaewgciwg` from staging config. If they match, run an inventory for similarly named routines (for example `p12`, `tournament`) and inspect migration history before considering applying the missing migration. No database changes have been made for P12.
+
 ## Recommended implementation order
 ### Phase 0 — database truth (must happen before DDL)
 - Obtain a **schema-only** export from the staging Supabase project: tables/columns/constraints, views, functions/RPC signatures, triggers, RLS policies, grants, storage buckets/policies and enabled extensions. Do not export user records, passwords, auth tokens, payment data or secrets.
