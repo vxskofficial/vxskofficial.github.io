@@ -235,6 +235,16 @@ This audit now includes a **user-supplied read-only Supabase schema export** (20
 - All 13 expected P12 RPCs returned `exists=false`: `vxsk_p12_public_snapshot`, `vxsk_p12_staff_snapshot`, `vxsk_p12_owner_ok`, `vxsk_p12_referee_ok`, `vxsk_p12_create_tournament`, `vxsk_p12_add_team`, `vxsk_p12_add_stage`, `vxsk_p12_add_match`, `vxsk_p12_announce`, `vxsk_p12_publish`, `vxsk_p12_mark_match_live`, `vxsk_p12_submit_report`, `vxsk_p12_decide_report`.
 - This is the expected post-rollback state and confirms the draft objects were not persisted. Do not rerun with `COMMIT` until the SQL has passed final review and the user explicitly authorizes a real staging deployment.
 
+### P12 draft third-pass review — publication/status and report concurrency (2026-11-03)
+- Updated `supabase/migrations/20261103000100_vxsk_p12_core.sql` after second-pass review:
+  - Staff snapshot restricts unpublished drafts and all related child collections to Owner; Referee/Reviewer sees only published tournaments and their entrants, stages, matches and updates.
+  - Report submission locks the published tournament row and rejects reports on unpublished tournaments.
+  - Score reports are accepted only while tournament status is announced/upcoming/live; completed/cancelled tournaments cannot receive new score reports.
+  - Owner score approval checks the tournament remains announced/upcoming/live before applying the score.
+  - Added a non-unique partial index on pending score reports by match; the match row lock plus explicit pending-report check serializes submissions. Removed the partial UNIQUE pending-report index to avoid an index-conflict wait interacting with Owner approval's report/match lock order.
+- These changes happened after the previous rollback dry-run. The latest draft must be re-tested with a fresh copy ending in `ROLLBACK;`; the earlier success does not validate this changed file.
+- No Supabase changes have been applied. The user supplied the expected post-rollback inventory showing all 7 tables and 13 RPCs absent; this remains the intended database state until explicit deployment approval.
+
 ### P12 draft second-pass security review (2026-11-03 — changes NOT yet dry-run)
 - The migration draft was further reviewed for confidentiality and concurrency:
   - `vxsk_p12_staff_snapshot()` now returns unpublished tournament drafts and associated entrants/stages/matches/updates only to Owner; Referees/Reviewers see published tournament data only.
