@@ -235,6 +235,16 @@ This audit now includes a **user-supplied read-only Supabase schema export** (20
 - All 13 expected P12 RPCs returned `exists=false`: `vxsk_p12_public_snapshot`, `vxsk_p12_staff_snapshot`, `vxsk_p12_owner_ok`, `vxsk_p12_referee_ok`, `vxsk_p12_create_tournament`, `vxsk_p12_add_team`, `vxsk_p12_add_stage`, `vxsk_p12_add_match`, `vxsk_p12_announce`, `vxsk_p12_publish`, `vxsk_p12_mark_match_live`, `vxsk_p12_submit_report`, `vxsk_p12_decide_report`.
 - This is the expected post-rollback state and confirms the draft objects were not persisted. Do not rerun with `COMMIT` until the SQL has passed final review and the user explicitly authorizes a real staging deployment.
 
+### P12 draft second-pass security review (2026-11-03 — changes NOT yet dry-run)
+- The migration draft was further reviewed for confidentiality and concurrency:
+  - `vxsk_p12_staff_snapshot()` now returns unpublished tournament drafts and associated entrants/stages/matches/updates only to Owner; Referees/Reviewers see published tournament data only.
+  - Sensitive report details (including incident notes) remain Owner-only in the snapshot; the “OWNER REVIEW QUEUE” UI was already switched to `data-p12-owner`.
+  - `vxsk_p12_submit_report()` now locks the published tournament row, permits reports only against published tournaments, and accepts score reports only while tournament status is announced/upcoming/live. It locks the match and rejects a second pending score report for that match.
+  - The former partial UNIQUE index on one pending score report per match was replaced with a non-unique partial lookup index. The match-row lock plus pending-report check serializes submissions without the unique-index wait interacting badly with Owner approval's report/match locking.
+  - `vxsk_p12_decide_report()` now checks the tournament is still announced/upcoming/live before approving a score; terminal tournaments cannot receive a late score approval.
+- These edits changed the migration after the user's earlier successful ROLLBACK dry-run. Therefore the latest file version has **not** yet passed a dry-run. User must repeat the full-copy SQL Editor test with final `COMMIT;` changed to `ROLLBACK;` before any application decision.
+- Verified latest source file contains Owner-only queue UI and the snapshot visibility/status guards. No Supabase SQL was applied. Production `main` and Cloudflare remain untouched.
+
 ### P12 rollback dry-run result (user-confirmed on 2026-11-03)
 - User copied the complete draft migration into the Supabase SQL Editor, replaced the final `COMMIT;` with `ROLLBACK;`, and executed it. Supabase reported success with no result rows and no error.
 - This is consistent with the DDL and function definitions executing successfully inside the transaction and then being rolled back. It is a useful syntax/DDL acceptance check, not a runtime authorization test and not proof that objects remain installed.
