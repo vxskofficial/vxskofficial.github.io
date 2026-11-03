@@ -16,7 +16,8 @@
 2. Crew/leadership section: Voxzan owner spotlight was moved before “Meet the Crew”; the leadership card desktop width is capped (220–280px) instead of stretching. CSS cache-buster: `vxsk-p13-crew.css?v=13.0.2-owner-first`. Mobile card grid rules were retained.
 3. Public contact email: the homepage, Merch footer and Privacy Notice were updated to `vxskevents@gmail.com`. These are ordinary `mailto:` links; they open the visitor's email app and do **not** send automated server notifications.
 4. The current telephone contact display was not converted into a WhatsApp link. Do not publish a personal number as a WhatsApp business contact unless it is confirmed as a dedicated public VXSK line managed with appropriate adult/business oversight.
-5. All of the above is staging-branch work only. Last verified `main` homepage SHA before this work was `4321c69bd23feb3af7d49a6be263678e51dc94b9`; verify again before any future promotion.
+5. Header navigation was simplified: the public menu now has one **Teams** destination to `teams.html`; homepage Featured Teams remains a curated preview. Team Manager was removed from the homepage/Teams/team-profile public menus and a shortcut was added in the owner-only Staff Access view inside Staff Command. `team-manager.html` still checks Owner + MFA itself.
+6. All of the above is staging-branch work only. Last verified `main` homepage SHA before this work was `4321c69bd23feb3af7d49a6be263678e51dc94b9`; verify again before any future promotion.
 
 ## What the current source tells us
 This is a source-code audit, **not** a live Supabase database audit. The repository root has no checked-in `supabase/` migrations/functions folder or SQL schema files. There is no connected Supabase database tool in this working session, so table existence, deployed function definitions, grants, RLS policies, triggers, and live data have not been independently verified.
