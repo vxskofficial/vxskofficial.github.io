@@ -1,0 +1,26 @@
+/* V18 navigation consolidation: keep ALL sections, reduce clutter. */
+.nav-links .vxsk-nav-more{position:relative;color:#eee6ff;align-self:center;font:700 11px var(--body, sans-serif)}
+.nav-links .vxsk-nav-more>summary{list-style:none;cursor:pointer;display:inline-flex;gap:7px;align-items:center;padding:8px 11px;border:1px solid rgba(163,123,247,.45);background:rgba(54,25,105,.36);border-radius:12px;user-select:none;white-space:nowrap}
+.nav-links .vxsk-nav-more>summary::-webkit-details-marker{display:none}
+.nav-links .vxsk-nav-more[open]>summary,.nav-links .vxsk-nav-more>summary:hover{background:rgba(107,54,187,.47);border-color:#a480eb}
+.nav-links .vxsk-nav-more-panel{z-index:500;position:absolute;right:0;top:calc(100% + 10px);width:min(390px,calc(100vw - 26px));display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;padding:14px;border-radius:16px;background:#0d0e27;border:1px solid #675595;box-shadow:0 16px 40px rgba(0,0,0,.55)}
+.nav-links .vxsk-nav-more-heading{grid-column:1/-1;font-size:10px;color:#ac9ad6;letter-spacing:.15em;padding:3px 7px 8px}
+.nav-links .vxsk-nav-more-panel a{display:block!important;font-size:12px!important;padding:10px 11px!important;border-radius:9px!important;width:auto!important;white-space:normal!important;line-height:1.3;text-align:left;min-height:36px}
+.nav-links .vxsk-nav-more-panel a:hover,.nav-links .vxsk-nav-more-panel a:focus-visible{background:#2b2055!important}
+.nav-links .vxsk-nav-more>summary:focus-visible{outline:2px solid #ab93ff;outline-offset:3px}
+@media(max-width:1359px){
+ .nav-links .vxsk-nav-more{align-self:stretch;width:100%;margin-top:5px}
+ .nav-links .vxsk-nav-more>summary{width:100%;justify-content:space-between;font-size:12px;box-sizing:border-box}
+ .nav-links .vxsk-nav-more-panel{position:static;width:100%;max-height:none;box-shadow:none;box-sizing:border-box;margin-top:8px}
+}
+@media(max-width:450px){.nav-links .vxsk-nav-more-panel{grid-template-columns:1fr 1fr}.nav-links .vxsk-nav-more-panel a{padding:9px 6px!important;font-size:11px!important}}
+/* Accessibility: prevent fixed/sticky header from covering destination. */
+html{scroll-padding-top:110px}
+#vxsk-p12-public .p12-v15-pane{scroll-margin-top:75px}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}}
+
+/* Restore legitimate access hidden by the old V8 nav reducer. */
+#nav-links > a[href="teams.html"]{display:inline-flex!important;align-items:center}
+#nav-staff-link:not([hidden]){display:inline-flex!important;align-items:center;justify-content:center}
+@media(max-width:1359px){#nav-links > a[href="teams.html"]{display:flex!important;width:100%;padding:9px 0}}
+@media(max-width:680px){#nav-staff-link:not([hidden]){font-size:9px!important;max-width:64px;line-height:1.2;padding:7px!important}}

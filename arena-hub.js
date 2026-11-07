@@ -29,10 +29,18 @@
     try{const url=new URL(value);return url.protocol==='https:'&&hosts.some(h=>url.hostname===h||url.hostname.endsWith('.'+h))?url:null;}catch(_){return null;}
   };
   const hubBrand=url=>/youtube\.com|youtu\.be/i.test(url)?'youtube':/kick\.com/i.test(url)?'kick':/discord\.gg|discord\.com/i.test(url)?'discord':/twitch\.tv/i.test(url)?'twitch':'generic';
+  const brandIconAsset=brand=>({youtube:'assets/social-clean/youtube.png?v=5-real',kick:'assets/social-clean/kick.png?v=5-real',discord:'assets/social-clean/discord.png?v=5-real'})[brand]||'';
+  const brandToken=(brand,fallback)=>{
+    const tokenWrap=el('span','',`vxsk-link-token brand-${brand}`);
+    const src=brandIconAsset(brand);
+    if(src){const img=document.createElement('img');img.src=src;img.alt='';img.width=16;img.height=16;img.loading='lazy';tokenWrap.append(img);}
+    else tokenWrap.textContent=fallback;
+    return tokenWrap;
+  };
   const linkChip=(href,label,brand,token)=>{
     const a=document.createElement('a');a.href=href;a.target='_blank';a.rel='noopener noreferrer';
     a.className='vxsk-match-media-link vxsk-brand-'+brand;
-    const mark=el('span',token,'vxsk-link-token brand-'+brand);
+    const mark=brandToken(brand,token);
     const copy=el('span',label,'vxsk-link-copy');
     a.append(mark,copy);return a;
   };
@@ -223,6 +231,9 @@
     if(window.VXSK_STAGING_BLOCKED||!/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(cfg.url||'')||!cfg.publishableKey){info('STAGING safety lock: check the Supabase public configuration.','error');return;}
     if(!window.supabase?.createClient){info('Supabase library could not load. Check your connection.','error');return;}
     if(!state.api){state.api=window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});}
+    // Reuse existing authenticated Arena client for the optional registration interface.
+    window.VXSK_ARENA_API=state.api;
+    window.dispatchEvent(new Event('vxsk:arena-api-ready'));
     const {data,error}=await state.api.auth.getUser();state.user=error?null:data?.user||null;
     $('arena-login').textContent=state.user?'ACCOUNT CONNECTED ✓':'SIGN IN ↗';
     if(!state.user){state.badges=[];state.notices=[];}

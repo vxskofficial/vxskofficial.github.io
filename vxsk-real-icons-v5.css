@@ -1,0 +1,8 @@
+/* VXSK V5 — use the exact user-supplied YouTube, Discord, and Kick image assets. */
+.vxsk-match-media-link .vxsk-link-token { display:inline-grid; place-items:center; overflow:hidden; width:30px; height:30px; flex:0 0 30px; border-radius:7px; padding:0; }
+.vxsk-match-media-link .vxsk-link-token.brand-youtube,
+.vxsk-match-media-link .vxsk-link-token.brand-discord,
+.vxsk-match-media-link .vxsk-link-token.brand-kick { background:transparent; }
+.vxsk-match-media-link .vxsk-link-token img { display:block; width:28px; height:28px; object-fit:contain; }
+/* Keep brand images intact: no filters, custom shapes or fake letter tokens. */
+.social-symbol .social-brand-icon { object-fit:contain; }

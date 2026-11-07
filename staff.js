@@ -24,10 +24,22 @@
       gate('Website not configured','VXSK admin: copy the configured supabase-config.js into this deploy. Never use secret/service-role keys in the browser.');return;
     }
     if(window.VXSK_STAGING_BLOCKED){gate('Staging safety lock','This preview is using production Supabase credentials. Configure a separate staging project before testing.');return;}
-    api = window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-    window.VXSK_STAFF_API = api; // Share one auth client with the content editor.
+    // Reuse the VXSK account client where available; same project + browser origin.
+    api = window.VXSKAuth?.client || window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+    window.VXSK_STAFF_API = api;
+    // Restore session before fetching user; distinguish missing session from API errors.
+    let {data:sessionData,error:sessionError} = await api.auth.getSession();
+    let currentSession = sessionData?.session;
+    if (!currentSession && !sessionError) {
+      await new Promise(resolve=>setTimeout(resolve,350));
+      const retry = await api.auth.getSession();
+      currentSession=retry.data?.session;
+      sessionError=retry.error;
+    }
+    if (sessionError) {gate('Session check failed','Cloudflare could not restore your VXSK session. Open VXSK on the same Cloudflare domain.');return;}
+    if (!currentSession) {gate('No session on this address','Sign in on THIS Cloudflare address, not VXSK OFFICIAL. The two sites do not share browser sessions.');return;}
     const {data:userData,error:userError} = await api.auth.getUser();
-    if (userError || !userData?.user) {gate('Please sign in','Open MY ACCOUNT on the VXSK website, sign in and complete 2FA before opening the staff workspace.');return;}
+    if (userError || !userData?.user) {gate('Session verification failed','A session exists, but Supabase could not validate it. Refresh once; check console/network if this persists.');return;}
     const {data:level,error:levelError} = await api.auth.mfa.getAuthenticatorAssuranceLevel();
     if (levelError || level?.currentLevel !== 'aal2') {gate('Two-factor authentication required','Your VXSK account must finish authenticator verification (6-digit code) before private staff data is accessible.');return;}
     const {data:access,error:roleError} = await api.from('staff_roles').select('role').eq('user_id',userData.user.id).maybeSingle();

@@ -1,0 +1,87 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VXSK Tournament — SAFE Demo</title>
+<style>*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 20% 10%,#301858,#0b0c23 65%);color:#fff;font:15px system-ui,-apple-system,sans-serif}a{color:#d9c6ff}.top{background:#080b21b8;padding:16px max(22px,5vw);display:flex;align-items:center;justify-content:space-between}.logo{font-size:26px;font-weight:1000;font-style:italic;letter-spacing:-.08em}.demo{background:#f7c85c;color:#281500;border-radius:20px;padding:7px 12px;font-size:11px;font-weight:900;letter-spacing:.1em}main{max-width:1240px;margin:34px auto;padding:0 16px}.box{border:1px solid #63519e;border-radius:22px;overflow:hidden;background:#10152f}.hero{height:clamp(220px,38vw,435px);position:relative;background:#090d20;display:grid;place-items:center;overflow:hidden}.hero:before{content:"";position:absolute;inset:-20px;background-image:url('assets/vxsk-rl-arab-cup-demo-poster.png');background-size:cover;background-position:center;filter:blur(20px) brightness(.28)}.hero img{position:relative;height:100%;width:100%;object-fit:contain;padding:10px 15px 25px}.hero span{position:absolute;bottom:12px;font-weight:800;letter-spacing:.25em;font-size:11px;text-shadow:0 2px 8px #000}.cols{display:grid;grid-template-columns:minmax(0,1fr) 330px}.body{padding:28px}.side{padding:25px;background:#2419447d;border-left:1px solid #564780}.kick{font-size:12px;color:#c9aaff;font-weight:800;letter-spacing:.14em}h1{font-size:clamp(26px,3.8vw,49px);margin:10px 0 12px;line-height:1.04}p{line-height:1.7;color:#cdd0e6}.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}.chip,.match{padding:14px;background:#272145;border:1px solid #51457c;border-radius:12px}.chip small{display:block;color:#bda7e7;font-size:10px;font-weight:800;margin-bottom:7px}.chip strong{font-size:13px}.status{display:inline-flex;padding:9px 13px;background:#134b3b;border-radius:30px;color:#7cfdc5;font-size:12px;font-weight:800}button{font:800 12px system-ui;cursor:pointer;background:linear-gradient(105deg,#923ceb,#475fe8);border:0;color:white;border-radius:10px;padding:14px;width:100%;margin:8px 0}.sub{background:transparent;border:1px solid #a989eb}input{width:100%;background:#0b102a;border:1px solid #655594;border-radius:9px;padding:12px;color:#fff;margin:8px 0}h3{margin-top:27px}.bracket{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.round{display:grid;align-content:start;gap:10px}.match{font-size:12px;display:grid;gap:5px}.match b{color:#c5a8ff}#msg{color:#93fad4;font-weight:700}small.note{display:block;color:#b9a8d7;padding-top:10px}details{border:1px solid #4b3a81;border-radius:12px;padding:13px 15px}summary{cursor:pointer;font-weight:800}.actions{margin-top:24px}.footer{text-align:center;padding:26px;color:#a79fce;font-size:12px}@media(max-width:800px){.cols{grid-template-columns:1fr}.side{border-left:0;border-top:1px solid #564780}.chips{grid-template-columns:repeat(2,1fr)}.bracket{grid-template-columns:1fr}.hero{height:250px}}
+/* V17: same visual language as official bracket, but strictly isolated from Supabase. */
+.hero {height:auto!important;min-height:0!important;overflow:visible!important;background:#090d20!important;display:block!important}
+.hero:before {display:none!important}
+.hero img {display:block!important;width:100%!important;height:auto!important;max-height:none!important;object-fit:contain!important;padding:0!important}
+.hero span {display:none!important}
+.bracket {display:block!important;max-width:100%;overflow:auto;padding:14px 0;scrollbar-width:thin;overscroll-behavior-x:contain}
+.demo-board {position:relative;min-width:780px;max-width:none}
+.demo-board svg {position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.demo-round-title {position:absolute;top:0;font-size:12px;letter-spacing:.06em;font-weight:800;color:#d3b9ff}
+.demo-card {position:absolute;box-sizing:border-box;width:230px;height:88px;border:1px solid #67538e;background:#1c1b34;border-radius:10px;overflow:hidden}
+.demo-card small{display:block;color:#bda8dd;font-size:10px;padding:3px 11px;background:#11162f}
+.demo-player {display:grid;grid-template-columns:25px 1fr 29px;align-items:center;gap:7px;padding:4px 9px;border-top:1px solid #3c3552;font-size:12px;min-height:32px}
+.demo-player strong{font-size:12px;font-weight:750}
+.demo-player b{text-align:center;font-variant-numeric:tabular-nums}
+.demo-player.winner{background:#27463f;color:#a8f8d4}
+.demo-player .flag{font-size:16px}
+select {width:100%;background:#0b102a;color:white;border:1px solid #655594;border-radius:9px;padding:12px;margin:8px 0}
+@media(max-width:800px){.bracket{overflow-x:auto}.demo-board{min-width:780px}}
+
+/* Mobile containment: local demo bracket can scroll, but page never overflows. */
+.cols {grid-template-columns:minmax(0,1fr) 330px;min-width:0;max-width:100%}
+.cols>.body,.cols>.side {min-width:0;max-width:100%;box-sizing:border-box}
+.bracket {width:100%;min-width:0;overflow-x:auto;overflow-y:hidden}
+.demo-board {width:930px;min-width:930px}
+.chips {grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:800px) {
+ .cols{grid-template-columns:minmax(0,1fr)}
+ .body,.side{padding:17px}
+ .chips{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .chip{min-width:0;overflow-wrap:anywhere}
+ .bracket {max-width:100%;overflow-x:auto}
+ h1,p,h3{overflow-wrap:anywhere}
+}
+</style></head><body>
+<div class="top"><span class="logo">VXSK</span><span class="demo">LOCAL SIMULATION · NO DATABASE</span></div><main><div class="box"><div class="hero"><img src="assets/vxsk-rl-arab-cup-demo-poster.png" alt="Rocket League tournament visual"><span>ONE REGION. ONE ARENA. ONE CHAMPION.</span></div><div class="cols"><section class="body"><div class="kick">🏆 ROCKET LEAGUE / 1V1 · TEST PREVIEW</div><h1>VXSK RL ARAB CUP</h1><p>The Arab region competes in one arena. This is an interactive sample of the new VXSK tournament interface, using eight fictional players — no real player accounts or matches.</p><div class="chips"><div class="chip"><small>GAME</small><strong>Rocket League</strong></div><div class="chip"><small>MODE</small><strong>1v1 Solo</strong></div><div class="chip"><small>FORMAT</small><strong>Single Elimination</strong></div><div class="chip"><small>PRIZE</small><strong>1000 DT</strong></div><div class="chip"><small>STREAM</small><strong>Kick · voxzan_05</strong></div><div class="chip"><small>BROADCAST</small><strong>Voxzan, Medo, Shark, Dragon</strong></div></div><details><summary>Rules & Eligibility</summary><p>Single Elimination · Best-of-3 test fixtures · Fair play required. All sample players and results in this page are fictional.</p></details><h3 id="bracket">Interactive bracket — sample participants</h3><div id="rounds" class="bracket" tabindex="0" aria-label="Demo tournament bracket, scroll horizontally"></div><div class="actions"><button id="advance" type="button">SIMULATE NEXT ROUND</button><button id="reset" class="sub" type="button">RESET DEMO</button></div></section><aside class="side"><span class="status">● DEMO REGISTRATION OPEN</span><h3>Test event schedule</h3><p>START: 1 May 2027, 18:00 Tunis</p><p>END: 3 May 2027, 18:00 Tunis</p><h3>Try sample JOIN</h3><label>Gaming nickname<input id="nick" placeholder="Player nickname" maxlength="40"></label><label>Country<select id="country"><option value="">Select your country</option></select></label><label>Epic / Platform ID<input id="epic" placeholder="Your Rocket League account ID" maxlength="90"></label><button id="join">JOIN TEST TOURNAMENT</button><p id="msg">Demo only — nothing is saved to Supabase.</p><small class="note">For real JOIN testing, two or more separate authenticated accounts are required; do not publish dummy entrants.</small></aside></div></div><div class="footer">VXSK — ANNUAL GAMING EVENT · SAFE DEMO, NOT AN OFFICIAL TOURNAMENT</div></main>
+<script src="vxsk-countries.js?v=17"></script>
+<script>
+/* Browser-only sample; NEVER writes to Supabase or creates real registrations. */
+const participants=[['Atlas','TN'],['Falcon','MA'],['Sahara','DZ'],['Phoenix','EG'],['Nova','SA'],['Storm','AE'],['Cobra','JO'],['Vortex','QA']];
+const pairs=[[0,1],[2,3],[4,5],[6,7]];
+let rounds=[];
+const flag=code=>code?String.fromCodePoint(...[...code].map(c=>127397+c.charCodeAt(0))):'⚔';
+const country=document.getElementById('country');
+for(const [code,name] of (window.VXSK_COUNTRIES||[])){const o=document.createElement('option');o.value=code;o.textContent=flag(code)+' '+name;country.append(o)}
+const box=document.getElementById('rounds');
+function reset(){rounds=[pairs.map(([a,b])=>({a:participants[a],b:participants[b],sa:null,sb:null}))];render()}
+function winner(m){return m.sa===null||m.sb===null?null:m.sa>m.sb?m.a:m.b}
+function scoreRound(){const current=rounds.at(-1);if(!current||!current.length||current.every(m=>winner(m)))return;
+ current.forEach((m,i)=>{if(m.sa!==null)return;m.sa=i%2?1:3;m.sb=i%2?3:1});
+ if(current.length>1){const next=[];for(let i=0;i<current.length;i+=2)next.push({a:winner(current[i]),b:winner(current[i+1]),sa:null,sb:null});rounds.push(next)}
+ render();
+}
+function render(){box.replaceChildren();const W=230,G=80,H=125,C=46,cardH=88,levels=3;
+ const board=document.createElement('div');board.className='demo-board';board.style.width=(levels*(W+G)-G+20)+'px';board.style.height=(4*H+65)+'px';
+ const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox',`0 0 ${levels*(W+G)-G+20} ${4*H+65}`);svg.setAttribute('aria-hidden','true');
+ let paths=[];
+ for(let r=0;r<levels;r++){
+  const x=r*(W+G),size=4/2**r;
+  const heading=document.createElement('strong');heading.className='demo-round-title';heading.style.left=x+'px';heading.textContent=['QUARTERFINALS','SEMIFINALS','GRAND FINAL'][r];board.append(heading);
+  for(let k=0;k<size;k++){
+   const y=C+(k+.5)*H*2**r;
+   const m=rounds[r]?.[k]||{a:null,b:null,sa:null,sb:null};
+   const card=document.createElement('div');card.className='demo-card';card.style.left=x+'px';card.style.top=(y-cardH/2)+'px';
+   const small=document.createElement('small');small.textContent='MATCH '+(k+1);card.append(small);
+   for(const [player,score] of [[m.a,m.sa],[m.b,m.sb]]){
+    const line=document.createElement('div');line.className='demo-player';if(winner(m)?.[0]===player?.[0])line.classList.add('winner');
+    const icon=document.createElement('span');icon.className='flag';icon.textContent=flag(player?.[1]);
+    const name=document.createElement('strong');name.textContent=player?.[0]||'TBD';
+    const result=document.createElement('b');result.textContent=score??'–';line.append(icon,name,result);card.append(line);
+   }board.append(card);
+  }
+  if(r<levels-1){for(let j=1;j<=size/2;j++){
+   const cy1=C+(2*j-1-.5)*H*2**r,cy2=C+(2*j-.5)*H*2**r,mid=(cy1+cy2)/2;
+   const x1=x+W,xm=x1+G/2,x2=x1+G;
+   paths.push(`M${x1},${cy1} H${xm} V${cy2} M${x1},${cy2} H${xm} M${xm},${mid} H${x2}`);
+  }}
+ }
+ const line=document.createElementNS('http://www.w3.org/2000/svg','path');line.setAttribute('d',paths.join(' '));line.setAttribute('fill','none');line.setAttribute('stroke','#9279ca');line.setAttribute('stroke-width','2');svg.append(line);board.prepend(svg);box.append(board);
+ const last=rounds.at(-1);document.getElementById('advance').disabled=last.length===1&&last[0].sa!==null;
+ const old=document.getElementById('champion');if(old)old.remove();
+ if(last.length===1&&winner(last[0])){const champion=document.createElement('h3');champion.id='champion';champion.textContent='🏆 DEMO CHAMPION: '+winner(last[0])[0];box.after(champion)}
+}
+document.getElementById('advance').onclick=scoreRound;document.getElementById('reset').onclick=reset;
+document.getElementById('join').onclick=()=>{const vals=['nick','country','epic'].map(id=>document.getElementById(id).value.trim());document.getElementById('msg').textContent=vals.every(Boolean)?'✓ Demo form validated; no personal data was saved.':'Enter nickname, country and platform ID to test the form.'};reset();
+</script></body></html>

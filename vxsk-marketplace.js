@@ -133,7 +133,8 @@
       submit.disabled=true;showStatus(message,'Submitting request…');
       try{
         const data=await rpc('vxsk_market_create_request',{p_service:kind,p_game:kind==='boost'?state.game:(gameSel?.value||null),p_booster:kind==='boost'?state.booster:null,p_quantity:kind==='boost'?state.quantity:1,p_method:state.method,p_note:((kind==='boost'?(`Requested rank path (goal only, not guaranteed): ${rankSummary()} | `):kind==='jersey'?'Loyalty discount review requested (60 DT standard; possible 54 DT only with server-verified 30+ days participation). | ':'')+extra.input.value.trim()).slice(0,400)});
-        showStatus(message,`Request ${String(data).slice(0,8)} recorded for OWNER review. No payment was made.`,true);submit.textContent='REQUEST SENT';
+        showStatus(message,`Request ${String(data).slice(0,8)} recorded. Upload private proof only after VXSK confirms service availability. No payment was made.`,true);submit.textContent='REQUEST SENT';
+        window.dispatchEvent(new CustomEvent('vxsk:v20-order-created',{detail:{requestId:data}}));
       }catch(err){showStatus(message,'Not accepted: '+errors(err));submit.disabled=false;}
     });
     contents.append(form);

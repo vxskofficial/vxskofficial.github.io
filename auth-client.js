@@ -435,6 +435,8 @@
       button.setAttribute('aria-pressed',String(selected));
     });
     if (!keepStatus) notify('');
+    // Optional Cloudflare Turnstile. Explicit rendering after the selected form is visible.
+    if (['signin','signup','forgot'].includes(name)) window.VXSKTurnstile?.showView(name);
   }
   function open(name = 'signin', trigger = null) {
     lastTrigger = trigger;
@@ -528,7 +530,12 @@
     notify('');
     try { await job(); }
     catch(error) { notify(explain(error, error?.publicMessage || 'Something went wrong. Try again or contact VXSK support.'), 'error'); }
-    finally {busy=false;button.disabled=false;button.textContent=oldLabel;}
+    finally {
+      // Turnstile tokens are single-use. Always reset after a submitted auth request.
+      const formId = button.closest('form')?.id;
+      if (['signin-form','signup-form','forgot-form'].includes(formId)) window.VXSKTurnstile?.reset(formId);
+      busy=false;button.disabled=false;button.textContent=oldLabel;
+    }
   }
   const pwValid = form => {
     if (form.elements.password.value.length < 12 || form.elements.password.value !== form.elements.confirm.value) {
@@ -637,7 +644,8 @@
     run(form.querySelector('[type="submit"]'),async()=>{
       const nickname=form.elements.nickname.value.trim();
       if(!nicknameValid(nickname))throw {publicMessage:'Choose a nickname with 3–24 letters, numbers, underscores, dots or hyphens.'};
-      assert(await api.auth.signUp({email,password,options:{emailRedirectTo:new URL('./', location.href).href,data:{vxsk_nickname:nickname}}}));
+      const captchaToken=window.VXSKTurnstile?.tokenFor('signup-form')||null;
+      assert(await api.auth.signUp({email,password,options:{emailRedirectTo:new URL('./', location.href).href,data:{vxsk_nickname:nickname},...(captchaToken?{captchaToken}:{})}}));
       form.reset(); view('signin'); $('#signin-email').value=email;
       notify('Sign-up request accepted. Check your inbox (and spam) for an email confirmation link before signing in.','success');
     });
@@ -646,7 +654,8 @@
     e.preventDefault(); const form=e.currentTarget;
     if(!form.reportValidity()) return;
     run(form.querySelector('[type="submit"]'), async()=>{
-      assert(await api.auth.signInWithPassword({email:form.elements.email.value.trim(),password:form.elements.password.value}));
+      const captchaToken=window.VXSKTurnstile?.tokenFor('signin-form')||null;
+      assert(await api.auth.signInWithPassword({email:form.elements.email.value.trim(),password:form.elements.password.value,...(captchaToken?{options:{captchaToken}}:{})}));
       form.reset(); await refresh();
       notify(mfaRequired ? 'Enter the code from your authenticator app to finish sign in.' : 'Signed in successfully. Welcome to VXSK.','success');
     });
@@ -655,7 +664,8 @@
     e.preventDefault();const form=e.currentTarget;
     if(!form.reportValidity()) return;
     run(form.querySelector('[type="submit"]'),async()=>{
-      assert(await api.auth.resetPasswordForEmail(form.elements.email.value.trim(),{redirectTo:new URL('./', location.href).href}));
+      const captchaToken=window.VXSKTurnstile?.tokenFor('forgot-form')||null;
+      assert(await api.auth.resetPasswordForEmail(form.elements.email.value.trim(),{redirectTo:new URL('./', location.href).href,...(captchaToken?{captchaToken}:{})}));
       form.reset(); notify('If this email is registered, a password reset message will arrive. Check spam too.','success');
     });
   });

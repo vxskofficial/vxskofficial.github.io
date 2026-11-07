@@ -9,8 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <link href="staff.css?v=12.8.34" rel="stylesheet"/>
 <script defer="" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1"></script>
-<script defer="" src="supabase-config.js?v=12.8.34"></script><script defer="" src="staging-guard.js"></script><script defer="" src="staff.js?v=12.8.34"></script><script defer="" src="opponent-staff.js?v=12.8.34"></script><script defer="" src="vxsk-cover-utils.js?v=12.8.34"></script><script defer="" src="content-editor.js?v=12.8.34"></script>
-<link href="staff-command.css?v=12.8.34" rel="stylesheet"/><script defer="" src="staff-command.js?v=12.8.34"></script><script defer="" src="staff-arena.js?v=12.8.34"></script><link href="vxsk-p12-game-hub.css?v=12.10.0-simple-bracket" rel="stylesheet"/><script defer="" src="vxsk-p12-game-hub.js?v=12.10.0-simple-bracket"></script><script defer="" src="staff-showmatches.js?v=12.8.34"></script><script defer="" src="owner-staff-manager.js?v=12.8.34"></script><link href="vxsk-cover.css?v=12.8.34" rel="stylesheet"/> <link href="vxsk-master-staff.css?v=12.9.4-candidate" rel="stylesheet"/>
+<script defer="" src="supabase-config.js?v=12.8.34"></script><script defer="" src="staging-guard.js"></script><script defer="" src="staff.js?v=10-session-bridge"></script><script defer="" src="opponent-staff.js?v=10-session-bridge"></script><script defer="" src="vxsk-cover-utils.js?v=12.8.34"></script><script defer="" src="content-editor.js?v=12.8.34"></script>
+<link href="staff-command.css?v=12.8.34" rel="stylesheet"/><script defer="" src="staff-command.js?v=12.8.34"></script><link href="vxsk-p12-game-hub.css?v=17-bracket" rel="stylesheet"/><script defer="" src="vxsk-countries.js?v=17"></script><script defer="" src="vxsk-p12-game-hub.js?v=17-countries-bracket"></script><script defer="" src="staff-showmatches.js?v=12.8.34"></script><script defer="" src="owner-staff-manager.js?v=12.8.34"></script><link href="vxsk-cover.css?v=12.8.34" rel="stylesheet"/> <link href="vxsk-master-staff.css?v=12.9.4-candidate" rel="stylesheet"/>
 <script defer="" src="vxsk-master-staff.js?v=12.9.4-candidate"></script>
 <link href="vxsk-marketplace.css?v=12.9.4-boost-review1" rel="stylesheet"/>
 <script defer="" src="vxsk-boost-review.js?v=12.9.4-p11"></script>
@@ -19,6 +19,23 @@
 <link href="vxsk-p13-staff.css?v=13.0.1" rel="stylesheet"/><script defer="" src="vxsk-p13-staff.js?v=13.0.1"></script><link href="vxsk-p14-control.css?v=14.0.1" rel="stylesheet"/><script defer src="vxsk-p14-control.js?v=14.0.1"></script>
 <link rel="stylesheet" href="vxsk-p15-galaxy.css?v=15.0.1">
 <script defer src="vxsk-p15-galaxy.js?v=15.0.1"></script>
+<link rel="stylesheet" href="vxsk-simple-pro.css?v=1"/>
+<link rel="stylesheet" href="vxsk-registration-ui.css?v=2"/>
+
+<script src="vxsk-simple-pro.js?v=1" defer></script>
+<link rel="stylesheet" href="vxsk-staff-command-v7.css?v=1"/>
+<script defer src="vxsk-staff-command-v7.js?v=1"></script>
+<link rel="stylesheet" href="vxsk-mvp-clean-v8.css?v=8"/>
+<link rel="stylesheet" href="vxsk-single-tournament-v11.css?v=11"/>
+<style>
+.p12-form-feedback{display:block;margin:12px 0 0;padding:12px 14px;border:1px solid #7455c5;background:#211b42;color:#d6f6e5;border-radius:8px;font-size:14px;font-weight:700;line-height:1.5}.p12-form-feedback[hidden]{display:none}.p12-form-feedback[data-error="1"]{border-color:#fd788b;background:#421d37;color:#fff2f4}
+</style>
+<link href="vxsk-format-planner-v18.css?v=18" rel="stylesheet"/>
+<script defer src="vxsk-format-planner-v18.js?v=18"></script>
+<link rel="stylesheet" href="vxsk-v19-features.css?v=19.0">
+<script defer src="vxsk-v19-features.js?v=19.0"></script>
+<script defer src="vxsk-v19-records.js?v=19.0"></script>
+<link rel="stylesheet" href="vxsk-v20-ui.css?v=20.0"><script defer src="vxsk-v20-staff.js?v=20.0"></script>
 </head>
 <body>
 <a class="skip-link" href="#workspace">Skip to workspace</a>
@@ -26,37 +43,45 @@
 <main class="wrap" id="workspace">
 <section aria-live="polite" class="gate" id="gate" role="status"><div aria-hidden="true" class="gate-icon">◆</div><h2 id="gate-title">Checking access…</h2><p id="gate-message">Please wait while we verify your VXSK login, staff role and two-factor authentication.</p><a class="back-action" href="./">RETURN TO VXSK ↗</a></section>
 <div hidden="" id="dashboard">
-<div class="welcome"><div><span class="eyebrow">SECURE OPERATIONS CENTER</span><h2>MARKETPLACE &amp; <em>STAFF CONTROL.</em></h2><p>One clear workspace for VXSK operations. Actions are protected by account permissions and 2FA.</p></div><div class="identity"><span id="my-role">STAFF</span><small id="my-user">Signed in</small></div></div><nav aria-label="Staff command sections" class="staff-command-nav vxsk-p13-nav" id="staff-command-nav">
+<div class="welcome"><div><span class="eyebrow">VXSK / PRIVATE OPERATIONS</span><h2>STAFF <em>COMMAND.</em></h2><p>Review applications, prepare tournament brackets, and confirm official results.</p></div><div class="identity"><span id="my-role">STAFF</span><small id="my-user">Signed in</small></div></div><nav aria-label="Staff command sections" class="staff-command-nav vxsk-p13-nav" id="staff-command-nav">
 <button aria-pressed="true" class="is-active" data-staff-tab="overview" type="button"><span aria-hidden="true" class="vxsk-p13-nav-icon"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><rect height="7" rx="1.5" width="7" x="3" y="3"></rect><rect height="7" rx="1.5" width="7" x="14" y="3"></rect><rect height="7" rx="1.5" width="7" x="3" y="14"></rect><rect height="7" rx="1.5" width="7" x="14" y="14"></rect></svg></span><span>OVERVIEW</span></button>
-<button aria-pressed="false" data-staff-tab="applications" type="button"><span aria-hidden="true" class="vxsk-p13-nav-icon"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="M8 3h9l4 4v14H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"></path><path d="M17 3v5h5M10 12h7M10 16h7M3 7v12"></path></svg></span><span>APPLICATIONS <b id="regular-inbox-count">—</b></span></button>
+<button aria-pressed="false" data-staff-tab="applications" type="button"><span aria-hidden="true" class="vxsk-p13-nav-icon"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="M8 3h9l4 4v14H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"></path><path d="M17 3v5h5M10 12h7M10 16h7M3 7v12"></path></svg></span><span>SHOWMATCH REQUESTS <b id="regular-inbox-count">—</b></span></button>
 <button aria-pressed="false" data-staff-tab="tournaments" type="button"><span aria-hidden="true" class="vxsk-p13-nav-icon"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="M8 21h8M12 17v4M7 4h10v6a5 5 0 0 1-10 0V4Z"></path><path d="M7 6H3v3a4 4 0 0 0 4 4M17 6h4v3a4 4 0 0 1-4 4"></path></svg></span><span>TOURNAMENTS</span></button>
 <button aria-pressed="false" data-staff-tab="bulletin" type="button"><span aria-hidden="true" class="vxsk-p13-nav-icon"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="m3 11 18-8-8 18-2-8-8-2Z"></path><path d="m11 13 4-4"></path></svg></span><span>CONTENT</span></button>
 <button aria-pressed="false" data-staff-tab="boosters" type="button"><span aria-hidden="true" class="vxsk-p13-nav-icon"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="M7 7h10l4 5-4 5H7l-4-5 4-5Z"></path><path d="M8 12h4M10 10v4M16 11h.01M18 13h.01"></path></svg></span><span>MARKETPLACE</span></button>
 <button aria-pressed="false" data-staff-tab="crew" hidden="" id="vxsk-p13-crew-tab" type="button"><span aria-hidden="true" class="vxsk-p13-nav-icon"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="9" r="3"></circle><circle cx="17" cy="9" r="3"></circle><path d="M2 21v-2a6 6 0 0 1 12 0v2M14 14a5 5 0 0 1 8 5v2"></path></svg></span><span>CREW MANAGER</span></button>
 <button aria-pressed="false" data-staff-tab="team" hidden="" id="staff-owner-team-tab" type="button"><span aria-hidden="true" class="vxsk-p13-nav-icon"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="m12 2 8 4v6c0 5-3.3 8.3-8 10-4.7-1.7-8-5-8-10V6l8-4Z"></path><path d="m8.8 12 2.3 2.3L16 9.6"></path></svg></span><span>STAFF ACCESS</span></button>
-<button aria-pressed="false" data-staff-tab="cleanup" hidden="" id="vxsk-owner-cleanup-tab" type="button"><span aria-hidden="true" class="vxsk-p13-nav-icon"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><rect height="16" rx="2" width="16" x="4" y="5"></rect><path d="M3 5h18M9 3h6M10 10v7M14 10v7"></path></svg></span><span>RECORDS</span></button>
+<button aria-pressed="false" data-staff-tab="cleanup" hidden="" id="vxsk-owner-cleanup-tab" type="button"><span aria-hidden="true" class="vxsk-p13-nav-icon"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><rect height="16" rx="2" width="16" x="4" y="5"></rect><path d="M3 5h18M9 3h6M10 10v7M14 10v7"></path></svg></span><span>RECORD MANAGEMENT</span></button>
 </nav>
 <section aria-labelledby="vxsk-p13-overview-title" data-staff-view="overview" id="staff-view-overview">
-<div class="vxsk-p13-overview-head"><div><span class="eyebrow">VXSK / COMMAND CENTER</span><h2 id="vxsk-p13-overview-title">CHOOSE YOUR <em>WORKSPACE.</em></h2><p>Manage your event, community and services from one place.</p></div></div>
+<div class="vxsk-p13-overview-head v7-head"><div><span class="eyebrow">YOUR WORKSPACE / 2026—2027</span><h2 id="vxsk-p13-overview-title">RUN THE <em>ARENA.</em></h2><p>Start with applications or tournaments. Other workspaces remain in More Tools.</p></div><div class="v7-access-status"><span class="v7-verified" aria-label="Account security verified">2FA VERIFIED</span><strong id="v7-role-label">VERIFIED STAFF</strong></div></div>
+<p class="v7-role-context" id="v7-role-context" role="status" aria-live="polite">Your available actions depend on your verified VXSK staff role.</p>
+<div class="v7-workflow" aria-label="VXSK event workflow"><span><b>01</b> REVIEW SHOWMATCHES</span><span aria-hidden="true">→</span><span><b>02</b> CREATE &amp; MANAGE BRACKETS</span><span aria-hidden="true">→</span><span><b>03</b> REPORT &amp; CONFIRM SCORES</span></div>
+
+<h3 class="v7-group-heading">PRIMARY OPERATIONS</h3>
+<div class="vxsk-p13-launch-grid" id="vxsk-p13-launch-grid">
+<button data-p13-go="applications" type="button"><span class="vxsk-p13-launch-icon violet"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="M8 3h9l4 4v14H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"></path><path d="M17 3v5h5M10 12h7M10 16h7M3 7v12"></path></svg></span><strong>SHOWMATCH REQUESTS</strong><small>Review player showmatch sign-ups</small><span class="vxsk-p13-launch-arrow">↗</span></button>
+<button data-p13-go="tournaments" type="button"><span class="vxsk-p13-launch-icon blue"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="M8 21h8M12 17v4M7 4h10v6a5 5 0 0 1-10 0V4Z"></path><path d="M7 6H3v3a4 4 0 0 0 4 4M17 6h4v3a4 4 0 0 1-4 4"></path></svg></span><strong>TOURNAMENTS</strong><small>Brackets, scores &amp; referees</small><span class="vxsk-p13-launch-arrow">↗</span></button>
+<button data-p13-go="bulletin" type="button"><span class="vxsk-p13-launch-icon pink"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="m3 11 18-8-8 18-2-8-8-2Z"></path><path d="m11 13 4-4"></path></svg></span><strong>CONTENT</strong><small>Updates &amp; showmatches</small><span class="vxsk-p13-launch-arrow">↗</span></button>
+<button data-p13-go="boosters" type="button"><span class="vxsk-p13-launch-icon green"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="M7 7h10l4 5-4 5H7l-4-5 4-5Z"></path><path d="M8 12h4M10 10v4M16 11h.01M18 13h.01"></path></svg></span><strong>MARKETPLACE</strong><small>Boosters, coaching &amp; bookings</small><span class="vxsk-p13-launch-arrow">↗</span></button>
+<button data-p13-go="crew" data-p13-owner="" hidden="" type="button"><span class="vxsk-p13-launch-icon pink"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="9" r="3"></circle><circle cx="17" cy="9" r="3"></circle><path d="M2 21v-2a6 6 0 0 1 12 0v2M14 14a5 5 0 0 1 8 5v2"></path></svg></span><strong>CREW MANAGER</strong><small>Photos, roles &amp; public profiles</small><span class="vxsk-p13-launch-arrow">↗</span></button>
+<button data-p13-go="team" data-p13-owner="" hidden="" type="button"><span class="vxsk-p13-launch-icon blue"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="m12 2 8 4v6c0 5-3.3 8.3-8 10-4.7-1.7-8-5-8-10V6l8-4Z"></path><path d="m8.8 12 2.3 2.3L16 9.6"></path></svg></span><strong>STAFF ACCESS</strong><small>Assign private reviewer permissions</small><span class="vxsk-p13-launch-arrow">↗</span></button>
+<button data-p13-go="cleanup" data-p13-owner="" hidden="" type="button"><span class="vxsk-p13-launch-icon violet"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><rect height="16" rx="2" width="16" x="4" y="5"></rect><path d="M3 5h18M9 3h6M10 10v7M14 10v7"></path></svg></span><strong>RECORD MANAGEMENT</strong><small>Owner-only archive &amp; audit</small><span class="vxsk-p13-launch-arrow">↗</span></button>
+</div>
+<details class="v7-secondary-activity"><summary><span>MARKETPLACE ACTIVITY</span><small>COACHES · BOOKINGS · REVIEWS</small></summary>
 <section class="vxsk-p14-metrics" aria-label="Live staff counters">
 <div class="vxsk-p14-metric violet"><span class="vxsk-p14-metric-icon" aria-hidden="true">✧</span><div><small>PENDING REGISTRATIONS</small><strong id="vxsk-p14-pending">—</strong></div></div>
 <div class="vxsk-p14-metric blue"><span class="vxsk-p14-metric-icon" aria-hidden="true">♢</span><div><small>COACH APPLICATIONS</small><strong id="vxsk-p14-coaches">—</strong></div></div>
 <div class="vxsk-p14-metric pink"><span class="vxsk-p14-metric-icon" aria-hidden="true">☆</span><div><small>PENDING REVIEWS</small><strong id="vxsk-p14-reviews">—</strong></div></div>
 <div class="vxsk-p14-metric cyan"><span class="vxsk-p14-metric-icon" aria-hidden="true">▣</span><div><small>COACH BOOKINGS</small><strong id="vxsk-p14-bookings">—</strong></div></div>
 </section>
-<div class="vxsk-p13-launch-grid" id="vxsk-p13-launch-grid">
-<button data-p13-go="applications" type="button"><span class="vxsk-p13-launch-icon violet"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="M8 3h9l4 4v14H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"></path><path d="M17 3v5h5M10 12h7M10 16h7M3 7v12"></path></svg></span><strong>APPLICATIONS</strong><small>Review player registrations</small><span class="vxsk-p13-launch-arrow">↗</span></button>
-<button data-p13-go="tournaments" type="button"><span class="vxsk-p13-launch-icon blue"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="M8 21h8M12 17v4M7 4h10v6a5 5 0 0 1-10 0V4Z"></path><path d="M7 6H3v3a4 4 0 0 0 4 4M17 6h4v3a4 4 0 0 1-4 4"></path></svg></span><strong>TOURNAMENTS</strong><small>Brackets, scores &amp; referees</small><span class="vxsk-p13-launch-arrow">↗</span></button>
-<button data-p13-go="bulletin" type="button"><span class="vxsk-p13-launch-icon pink"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="m3 11 18-8-8 18-2-8-8-2Z"></path><path d="m11 13 4-4"></path></svg></span><strong>CONTENT</strong><small>Updates &amp; showmatches</small><span class="vxsk-p13-launch-arrow">↗</span></button>
-<button data-p13-go="boosters" type="button"><span class="vxsk-p13-launch-icon green"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="M7 7h10l4 5-4 5H7l-4-5 4-5Z"></path><path d="M8 12h4M10 10v4M16 11h.01M18 13h.01"></path></svg></span><strong>MARKETPLACE</strong><small>Boosters, coaching &amp; bookings</small><span class="vxsk-p13-launch-arrow">↗</span></button>
-<button data-p13-go="crew" data-p13-owner="" hidden="" type="button"><span class="vxsk-p13-launch-icon pink"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="9" r="3"></circle><circle cx="17" cy="9" r="3"></circle><path d="M2 21v-2a6 6 0 0 1 12 0v2M14 14a5 5 0 0 1 8 5v2"></path></svg></span><strong>CREW MANAGER</strong><small>Photos, roles &amp; public profiles</small><span class="vxsk-p13-launch-arrow">↗</span></button>
-<button data-p13-go="team" data-p13-owner="" hidden="" type="button"><span class="vxsk-p13-launch-icon blue"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="m12 2 8 4v6c0 5-3.3 8.3-8 10-4.7-1.7-8-5-8-10V6l8-4Z"></path><path d="m8.8 12 2.3 2.3L16 9.6"></path></svg></span><strong>STAFF ACCESS</strong><small>Assign private reviewer permissions</small><span class="vxsk-p13-launch-arrow">↗</span></button>
-<button data-p13-go="cleanup" data-p13-owner="" hidden="" type="button"><span class="vxsk-p13-launch-icon violet"><svg aria-hidden="true" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><rect height="16" rx="2" width="16" x="4" y="5"></rect><path d="M3 5h18M9 3h6M10 10v7M14 10v7"></path></svg></span><strong>RECORDS</strong><small>Archive &amp; pending cleanup tools</small><span class="vxsk-p13-launch-arrow">↗</span></button>
-</div>
+</details>
 </section>
-<section data-staff-view="applications" id="staff-view-applications"><section aria-label="Application statistics" class="stats"><div class="stat"><span>PENDING</span><strong id="count-pending">—</strong></div><div class="stat"><span>APPROVED</span><strong id="count-approved">—</strong></div><div class="stat"><span>REJECTED</span><strong id="count-rejected">—</strong></div><div class="stat"><span>ALL VISIBLE</span><strong id="count-total">—</strong></div></section><div id="regular-inbox"><div class="toolbar"><div><label for="filter-status">STATUS</label><select id="filter-status"><option value="all">All applications</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></div><div><label for="filter-search">SEARCH PLAYERS</label><input id="filter-search" maxlength="80" placeholder="Username / game / mode" type="search"/></div><button id="refresh" type="button">↻ REFRESH</button></div>
+<section data-staff-view="applications" hidden="" id="staff-view-applications">
+<div class="command-section-title v7-applications-heading"><div><span class="eyebrow">REVIEWER + OWNER / PRIVATE INBOX</span><h2>SHOWMATCH <em>REQUESTS.</em></h2><p>Review submissions, keep private notes, and approve or reject only when your role permits.</p></div></div>
+<section aria-label="Application statistics" class="stats"><div class="stat"><span>PENDING</span><strong id="count-pending">—</strong></div><div class="stat"><span>APPROVED</span><strong id="count-approved">—</strong></div><div class="stat"><span>REJECTED</span><strong id="count-rejected">—</strong></div><div class="stat"><span>ALL VISIBLE</span><strong id="count-total">—</strong></div></section><div id="regular-inbox"><div class="toolbar"><div><label for="filter-status">STATUS</label><select id="filter-status"><option value="all">All applications</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></div><div><label for="filter-search">SEARCH PLAYERS</label><input id="filter-search" maxlength="80" placeholder="Username / game / mode" type="search"/></div><button id="refresh" type="button">↻ REFRESH</button></div>
 <p aria-live="polite" class="notice" id="notice" role="status"></p>
-<div class="work-grid"><section class="board"><div class="panel-title">INCOMING APPLICATIONS <span id="list-total">0</span></div><div aria-live="polite" class="application-list" id="application-list"><p class="muted">Loading applications…</p></div></section>
+<div class="work-grid"><section class="board"><div class="panel-title">INCOMING SHOWMATCH REQUESTS <span id="list-total">0</span></div><div aria-live="polite" class="application-list" id="application-list"><p class="muted">Loading applications…</p></div></section>
 <section class="details"><div class="panel-title">REVIEW DESK</div><div class="detail-placeholder" id="detail-placeholder">Select an application to view its information and review notes.</div><div hidden="" id="detail-content"><div class="detail-heading" id="detail-heading"></div><dl class="data-fields" id="detail-data"></dl><div class="actions" hidden="" id="review-actions"><button class="approve" id="approve" type="button">✓ APPROVE</button><button class="reject" id="reject" type="button">× REJECT</button></div><div class="owner-delete-wrap" hidden="" id="owner-delete-wrap"><button class="owner-delete" id="owner-delete-registration" type="button">DELETE THIS APPLICATION</button><p class="small-muted">Owner only · Permanently deletes the registration and its private notes after two confirmations. Cannot be undone.</p></div><section class="notes"><h3>INTERNAL STAFF NOTES</h3><div id="notes-list"></div><form id="note-form"><label for="note-text">Add a review note (max 2,000 characters)</label><textarea id="note-text" maxlength="2000" placeholder="What should the VXSK staff know?" required="" rows="3"></textarea><button id="save-note" type="submit">ADD NOTE ↗</button></form></section></div></section></div></div></section>
 <section data-staff-view="opponents" hidden="" id="staff-view-opponents"><section aria-labelledby="opponent-inbox-title" class="opponent-inbox" hidden="" id="opponent-inbox">
 <div class="panel-title"><span id="opponent-inbox-title">PLAYER MATCHING / PRIVATE REQUESTS</span><button id="opponent-refresh" type="button">↻ REFRESH</button></div>
@@ -100,50 +125,79 @@
 </section></section>
 <section data-staff-view="tournaments" hidden="" id="staff-view-tournaments">
 <div class="p12-wrap p12-staff" id="vxsk-p12-staff">
-<div class="p12-title"><div><span class="p12-eyebrow">TOURNAMENT CONTROL / P12</span><h2>TOURNAMENT <em>MANAGER</em></h2><p>Create tournament → add teams → generate bracket → enter scores.</p></div><button id="p12-refresh" type="button">↻ REFRESH</button></div>
+<div class="p12-title"><div><span class="p12-eyebrow">TOURNAMENT CONTROL / P12</span><h2>TOURNAMENT <em>MANAGER</em></h2><p>Create → Approve players → Generate bracket → Save scores.</p></div><button id="p12-refresh" type="button">↻ REFRESH</button></div>
 <p class="p12-notice" id="vxsk-p12-staff-notice" role="status">Checking referee permissions…</p>
 <nav aria-label="Tournament control sections" class="p12-control-nav">
 <button aria-pressed="true" data-p12-owner="" data-p12-tab="setup" hidden="" type="button">1. CREATE &amp; BRACKET</button>
-<button aria-pressed="false" data-p12-owner="" data-p12-tab="bracket" hidden="" type="button">2. BRACKET &amp; SCORES</button>
-<button aria-pressed="false" data-p12-tab="referee" type="button">3. REFEREE &amp; APPROVALS</button>
+<button aria-pressed="false" data-p12-tab="bracket" type="button">2. PUBLISH / BRACKET / SCORES</button>
+<button aria-pressed="false" data-p12-tab="referee" type="button">3. APPROVE PLAYERS</button>
 </nav>
 <div class="p12-staff-grid" data-p12-view="setup" hidden="">
 <section class="p12-panel" data-p12-owner="" hidden="">
-<h3>1. CREATE TOURNAMENT</h3>
+<h3>1. CREATE TOURNAMENT + POSTER</h3>
 <form class="p12-form" id="p12-create">
 <label>TOURNAMENT NAME <input maxlength="100" minlength="3" name="title" placeholder="VXSK Rocket League Cup" required=""/></label>
 <label>GAME <select name="game"><option>Rocket League</option><option>VALORANT</option><option>League of Legends</option></select></label>
-<label>MODE <input maxlength="50" name="mode" placeholder="1v1, 2v2, 3v3, 5v5" required=""/></label>
-<label>START DATE (TUNIS TIME) <input name="start" type="datetime-local"/></label>
+<label>MODE <select name="mode" id="p12-game-mode" required><option value="1v1">1v1 (Solo)</option><option value="2v2">2v2 (Teams)</option><option value="3v3">3v3 (Teams)</option></select></label>
+<label>DESCRIPTION <textarea maxlength="1500" name="description" rows="3" required placeholder="What is this tournament about? Format, platform, how to join..."></textarea></label>
+<label>RULES <textarea maxlength="2500" name="rules" rows="4" required placeholder="Eligibility, check-in time, fair play, tiebreaks, no-shows..."></textarea></label>
+<label>PRIZE / REWARD (OPTIONAL) <input maxlength="300" name="prize" placeholder="e.g. VXSK Champion trophy"/></label>
+<label>LIVE STREAM LINK (OPTIONAL · KICK / YOUTUBE / TWITCH) <input type="url" maxlength="240" name="stream_url" placeholder="https://kick.com/voxzan_05"/></label>
+<label>TOURNAMENT POSTER (OPTIONAL · JPG/PNG/WEBP · MAX 3 MB) <input type="file" name="poster" accept="image/jpeg,image/png,image/webp"/></label>
+<p class="p12-muted">Poster will be publicly visible when the tournament is published. Use an image you own.</p>
+<label>START DATE (TUNIS TIME) <input name="start" type="datetime-local" required=""/></label>
+<label>END DATE (TUNIS TIME) <input name="end" type="datetime-local" required=""/></label>
 <button type="submit">CREATE TOURNAMENT</button>
+<p class="p12-form-feedback" data-form-feedback role="status" aria-live="polite" hidden></p>
 </form>
-<p class="p12-muted">Create it as a private draft first. You can publish it after the bracket is ready.</p>
+<p class="p12-muted">Draft first. In BRACKET & SCORES, publish it to open JOIN, approve players, then generate the bracket. Nothing goes to the main VXSK website.</p>
 </section>
+<section class="p12-panel" data-p12-owner="" hidden>
+<h3>STREAM LINK — EXISTING TOURNAMENT</h3>
+<form class="p12-form" id="p12-update-stream">
+<label>TOURNAMENT <select name="event" id="p12-stream-event" required></select></label>
+<label>LIVE STREAM URL <input name="stream_url" type="url" maxlength="240" required placeholder="https://kick.com/voxzan_05"/></label>
+<button type="submit">SAVE LIVE STREAM</button>
+<p class="p12-form-feedback" data-form-feedback role="status" aria-live="polite" hidden></p>
+</form><p class="p12-muted">Link must point to Kick, YouTube, or Twitch. For upcoming tournaments only.</p></section>
 <section class="p12-panel" data-p12-owner="" hidden="">
-<h3>2. ADD TEAMS &amp; GENERATE BRACKET</h3>
+<h3>2. GENERATE BRACKET</h3>
+<details class="vxsk-format-planner-v18" id="vxsk-format-planner-v18">
+ <summary>FORMAT PLANNER · 16–64 PARTICIPANTS <span class="vxsk-planner-label">FORMAT GUIDE</span></summary>
+ <p class="p12-muted">Preview ideal event structure. This does NOT enable unsupported formats or change the database. The current generator supports single elimination only, with 2/4/8/16/32/64 approved entrants.</p>
+ <div class="vxsk-planner-controls">
+  <label for="vxsk-planner-count">APPROVED PLAYERS / TEAMS
+   <select id="vxsk-planner-count" aria-label="Number of tournament participants"></select>
+  </label>
+  <label for="vxsk-planner-format">TOURNAMENT STRUCTURE
+   <select id="vxsk-planner-format"><option value="recommended">Recommended</option><option value="single">Single Elimination</option><option value="double">Double Elimination</option><option value="groups">Groups → Knockout</option><option value="swiss">Swiss → Knockout</option></select>
+  </label>
+ </div>
+ <div id="vxsk-planner-result" class="vxsk-planner-result" aria-live="polite"></div>
+ <p class="p12-muted">Full breakdown in <a href="VXSK_Tournament_Formats_16_to_64_Guide.pdf" target="_blank" rel="noopener">VXSK Format Guide (PDF)</a>. Swiss, Groups, Double Elimination and BYEs require future tested backend before they can be used for real events.</p>
+</details>
 <form class="p12-form" id="p12-build-bracket">
 <label>TOURNAMENT <select id="p12-bracket-build-event" name="event" required=""></select></label>
-<label>TEAM NAMES — ONE PER LINE <textarea id="p12-team-list" maxlength="5500" minlength="5" name="teams" placeholder="VXSK Alpha&#10;VXSK Beta&#10;Team Omega&#10;Team Nova" required="" rows="7"></textarea></label>
-<p class="p12-muted">Add 2–64 teams. The order you enter is the seed order. The system creates all rounds and handles BYEs automatically.</p>
-<label class="p12-inline"><input name="shuffle" type="checkbox"/> Shuffle team seeds randomly</label>
+<p class="p12-muted">Publish first to open JOIN. Approve players under PLAYER REQUESTS. Then generate the bracket once (2/4/8/16/32/64 entries). Team names and nicknames are reviewed by staff; no extra legacy fixtures.</p>
 <label class="p12-inline"><input name="publish" type="checkbox"/> Publish the tournament after bracket generation</label>
 <button type="submit">GENERATE SINGLE-ELIMINATION BRACKET</button>
 </form>
 </section>
 </div>
 <div class="p12-staff-grid" data-p12-view="bracket" hidden="">
-<section class="p12-panel" data-p12-owner="" hidden="">
+<section class="p12-panel">
 <h3>BRACKET &amp; SCOREBOARD</h3>
 <label class="p12-select-label">TOURNAMENT <select id="p12-bracket-event"></select></label>
 <button id="p12-publish-toggle" type="button" disabled="">PUBLISH TOURNAMENT</button>
-<p class="p12-muted">Enter the final score for a ready match. The winner advances automatically. Saved results are locked for audit integrity.</p>
+<p class="p12-muted">Owner or reviewer with MFA can save the final score when the tournament is LIVE. The winner advances automatically.</p>
 <div id="p12-admin-bracket"><p class="p12-muted">Select a tournament to view its bracket.</p></div>
 </section>
 </div>
 <div class="p12-staff-grid" data-p12-view="referee" hidden="">
+<section class="p12-panel"><h3>PLAYER REQUESTS</h3><p class="p12-muted">Review applications to add players to the bracket. Owner and reviewer accounts require MFA.</p><div id="p12-entry-queue" class="p12-entry-queue">Loading player requests…</div></section>
 <section class="p12-panel" data-p12-referee="" hidden="">
 <h3>REFEREE — SUBMIT A SCORE</h3>
-<p class="p12-muted">Choose a ready match and submit the proposed score. The Owner reviews it before the winner advances.</p>
+<p class="p12-muted">Choose a ready match and submit the proposed score. Or save the verified result directly in BRACKET & SCORES. Reports remain available for escalations.</p>
 <form class="p12-form" id="p12-report">
 <label>TOURNAMENT <select id="p12-report-event" name="event" required=""></select></label>
 <label>READY MATCH <select id="p12-report-match" name="match" required=""></select></label>
@@ -161,46 +215,9 @@
 <div id="p12-reports"><p>No pending reports.</p></div>
 </section>
 </div>
-<p class="p12-footnote">VXSK v1 uses Single Elimination. Double Elimination, Round Robin and Swiss can be added later after the simple bracket workflow is stable.</p>
+<p class="p12-footnote">Single-elimination brackets for 1v1, 2v2, 3v3 or 5v5. Team captains list teammates by nickname; individual teammate account verification is not yet available. BYE seeding not supported.</p>
 </div>
-<details class="p12-legacy-details">
-<summary>LEGACY TOURNAMENT TOOLS — OLD GAME HUB</summary>
-<p class="p12-muted">These are the older Arena Hub records, reports and player check-ins. Keep them for historical records. Use the new P12 Tournament Manager above for all new tournaments.</p>
-<div class="command-section-title"><div><span class="eyebrow">STAFF ONLY / VERIFIED ACCESS</span><h2>TOURNAMENT <em>OPERATIONS.</em></h2><p>One place for fixtures, events, referee reports, owner assignments and awards. Public view stays in Arena Hub.</p></div><a class="back" href="arena.html" rel="noopener noreferrer" target="_blank">VIEW PLAYER ARENA ↗</a></div>
-<p aria-live="polite" class="notice" id="staff-arena-message" role="status">Checking tournament permissions…</p>
-<div class="staff-arena-links"><button id="staff-arena-refresh" type="button">↻ REFRESH TOURNAMENT DATA</button><span id="staff-arena-role-note">Checking staff permissions…</span></div>
-<section class="staff-arena-block" hidden="" id="staff-arena-referee-area"><h3>01 / REFEREE DESK</h3><p class="small-muted">Submit proposed scores. Only the MFA-verified Owner can approve and publish final results.</p>
-<div class="staff-arena-grid"><div class="staff-arena-card"><h4>SUBMIT MATCH REPORT</h4><form class="staff-arena-form" id="staff-referee-form">
-<label>MATCH<select id="staff-report-match" name="report-match" required=""></select></label><div class="staff-arena-pair"><label>SIDE A SCORE<input max="99" min="0" name="report-a" required="" type="number"/></label><label>SIDE B SCORE<input max="99" min="0" name="report-b" required="" type="number"/></label></div>
-<label>REFEREE NOTES<textarea maxlength="700" name="report-notes" rows="3"></textarea></label><button type="submit">SUBMIT FOR OWNER REVIEW ↗</button>
-</form></div><div class="staff-arena-card"><h4>PENDING &amp; PAST REPORTS</h4><div class="staff-arena-list" id="staff-report-queue">Loading…</div></div></div>
-</section>
-<section class="staff-arena-block" hidden="" id="staff-arena-editor-area"><h3>02 / TOURNAMENT CALENDAR &amp; BRACKETS</h3><p class="small-muted">Create tournament + prize → Participants → Brackets → Ready Check → Results → Champion. The owner controls assignments, results and champion badges.</p><nav aria-label="Tournament steps" class="vxsk-workflow"><span>1. TOURNAMENT + PRIZE</span><span>2. PARTICIPANTS</span><span>3. BRACKETS</span><span>4. READY CHECK</span><span>5. RESULTS</span><span>6. CHAMPION</span></nav>
-<div class="staff-arena-grid"><div class="staff-arena-card"><h4>NEW EVENT DATE</h4><form class="staff-arena-form" id="staff-event-form">
-<label>EVENT TITLE<input maxlength="100" minlength="4" name="event-title" required=""/></label><label>GAME<select name="event-game"><option>Rocket League</option><option>VALORANT</option><option>League of Legends</option></select></label>
-<label>DATE &amp; TIME (TUNIS)<input name="event-date" required="" type="datetime-local"/></label><label>PRIZE / REWARD (OPTIONAL)<input maxlength="180" name="event-prize" placeholder="e.g. Trophy + featured champion"/></label><label>DETAILS<textarea maxlength="500" name="event-details" rows="3"></textarea></label>
-<label>EVENT POSTER (OPTIONAL · 16:9 · MAX 3 MB)<input accept="image/png,image/jpeg,image/webp" name="event-cover" type="file"/></label><div class="vxsk-cover-picker-preview" id="staff-event-cover-preview">No image selected</div>
-<label class="staff-arena-checkbox"><input name="event-publish" type="checkbox"/> PUBLISH PUBLICLY</label><button type="submit">SAVE EVENT ↗</button>
-</form></div><div class="staff-arena-card"><h4>NEW BRACKET MATCH</h4><form class="staff-arena-form" id="staff-match-form">
-<label>GAME<select name="match-game"><option>Rocket League</option><option>VALORANT</option><option>League of Legends</option></select></label><label>ROUND<input maxlength="50" name="match-round" placeholder="Quarterfinals" required=""/></label><label>SLOT<input max="128" min="1" name="match-slot" required="" type="number" value="1"/></label>
-<div class="staff-arena-pair"><label>SIDE A NAME<input maxlength="60" name="match-a" required=""/></label><label>SIDE B NAME<input maxlength="60" name="match-b" required=""/></label></div>
-<label>STARTS (TUNIS)<input name="match-date" type="datetime-local"/></label>
-<label>BRACKET POSTER (OPTIONAL · 16:9 · MAX 3 MB)<input accept="image/png,image/jpeg,image/webp" name="match-cover" type="file"/></label><div class="vxsk-cover-picker-preview" id="staff-match-cover-preview">No image selected</div>
-<label class="staff-arena-checkbox"><input name="match-publish" type="checkbox"/> PUBLISH PUBLICLY</label><button type="submit">SAVE BRACKET MATCH ↗</button>
-</form></div></div>
-<div class="staff-arena-card staff-arena-summary"><h4>RECENT TOURNAMENT FIXTURES</h4><div class="staff-arena-list" id="staff-fixture-list">Loading fixtures…</div><p class="small-muted">Each fixture shows how many assigned players have marked Ready. Players can check in through My Arena when the match is published.</p></div>
-</section>
-<section class="staff-arena-block" hidden="" id="staff-arena-owner-area"><h3>03 / OWNER CONTROLS</h3><p class="small-muted">Only Owner + MFA can assign participants, award badges or approve score reports. Draft matches are selectable, but Ready Check requires publication.</p>
-<div class="staff-arena-grid"><div class="staff-arena-card"><h4>ASSIGN MATCH PARTICIPANT</h4><form class="staff-arena-form" id="staff-assign-form">
-<label>MATCH<select id="staff-assign-match" name="assign-match" required=""></select></label><label>PLAYER <select id="staff-assign-player" name="assign-user" required=""><option value="">CHOOSE PLAYER</option></select></label>
-<label>TEAM SIDE<select name="assign-side"><option value="A">SIDE A</option><option value="B">SIDE B</option></select></label><button type="submit">ASSIGN &amp; NOTIFY PLAYER ↗</button>
-</form></div><div class="staff-arena-card"><h4>AWARD BADGE</h4><form class="staff-arena-form" id="staff-badge-form">
-<label>PLAYER <select id="staff-badge-player" name="badge-user" required=""><option value="">CHOOSE PLAYER</option></select></label>
-<label>BADGE<select name="badge-type"><option>CHAMPION</option><option>FINALIST</option><option>PARTICIPANT</option><option>REFEREE</option><option>COMMUNITY HERO</option></select></label><button type="submit">AWARD BADGE ↗</button>
-</form></div></div>
-</section>
-<div class="staff-arena-card" hidden="" id="staff-arena-noaccess">This account doesn't have tournament editor/referee permissions. Ask the event Owner to confirm your existing staff role; no new database permissions are assigned here.</div>
-</details>
+
 </section>
 <section aria-labelledby="vxsk-p13-crew-title" data-staff-view="crew" hidden="" id="staff-view-crew">
 <div class="command-section-title"><div><span class="eyebrow">OWNER ONLY / LIVE WEBSITE ROSTER</span><h2 id="vxsk-p13-crew-title">CREW <em>MANAGER.</em></h2><p>Add, edit or hide public profiles. Changes appear under Meet the Crew on the homepage.</p></div><a class="back" href="./#staff" rel="noopener noreferrer" target="_blank">VIEW PUBLIC CREW ↗</a></div>
@@ -249,7 +266,7 @@
 <div class="staff-arena-card"><h3>OWNER-ONLY SERVICE REQUESTS</h3><p class="small-muted">Bookings are requests, not proof of payment. Only the Owner with 2FA may see this list. No private payment codes are collected here.</p><button id="vxsk-boost-orders-refresh" type="button">↻ REFRESH REQUESTS</button><p aria-live="polite" class="notice" id="vxsk-boost-owner-status" role="status"></p><div id="vxsk-boost-owner-list"></div></div>
 </section>
 <section aria-labelledby="vxsk-cleanup-heading" data-staff-view="cleanup" hidden="" id="staff-view-cleanup">
-<div class="command-section-title"><div><span class="eyebrow">OWNER ONLY / SUPABASE + MFA</span><h2 id="vxsk-cleanup-heading">GAME HUB <em>DELETE CENTER.</em></h2><p>Review Game Hub events, fixtures, referee reports and other staff records before removing them. Existing Applications, No Opponent and Public Posts tabs already have their own Delete controls.</p></div></div>
+<div class="command-section-title"><div><span class="eyebrow">OWNER ONLY / SUPABASE + MFA</span><h2 id="vxsk-cleanup-heading">RECORD <em>MANAGEMENT.</em></h2><p>Owner-only audit archive for tournaments, legacy fixtures and public posts. Other private reports retain their existing review workflows; no automatic permanent deletion.</p></div></div>
 <div class="vxsk-cleanup-panel">
 <p class="vxsk-cleanup-warning">SECURITY FIRST: deletion is not enabled until an audited Owner-only Supabase RPC exists. The frontend cannot override permissions. Do not attempt production database changes without a verified backup.</p>
 <div class="vxsk-cleanup-toolbar"><label for="vxsk-cleanup-type">SECTION <select id="vxsk-cleanup-type"><option value="events">Tournament events</option><option value="fixtures">Tournament fixtures</option><option value="reports">Referee reports</option><option value="challenges">Showmatch challenges</option><option value="boosters">Booster applications</option><option value="orders">Marketplace requests</option><option value="feedback">Server feedback</option></select></label><button id="vxsk-cleanup-refresh" type="button">↻ VIEW RECORDS</button></div>

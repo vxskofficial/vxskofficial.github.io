@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- VXSK V5: THREE GAMES / TWELVE MOMENTS + USER-SUPPLIED BRAND ICONS -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -32,8 +33,8 @@
   <script src="arena-v8.js?v=12.8.7" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1" defer></script>
   <script src="supabase-config.js?v=12.8.7" defer></script>
-  <script src="staging-guard.js?v=12.8.8" defer></script><script src="auth-client.js?v=12.9.1-p0" defer></script><script src="updates.js" defer></script>
-  <script defer src="vxsk-cover-utils.js?v=12.8.34"></script><script src="match-center-live.js?v=12.8.34" defer></script>
+  <script src="staging-guard.js?v=12.8.8" defer></script><script src="vxsk-turnstile-config.js?v=8" defer></script><script src="vxsk-turnstile-auth.js?v=8" defer></script><script src="auth-client.js?v=8-captcha-ready" defer></script><script src="updates.js" defer></script>
+  <script defer src="vxsk-cover-utils.js?v=12.8.34"></script><script src="match-center-live.js?v=5-real-icons" defer></script>
   <script src="vxsk-experience.js?v=12.8.34-music" defer></script>
   <script src="season-showcase.js?v=12.9.13-phase-cards" defer></script>
   <script src="chapter-transitions.js?v=12.8.7" defer></script>
@@ -64,6 +65,15 @@
 <link rel="stylesheet" href="vxsk-app.css?v=1.0.0">
 <link rel="stylesheet" href="vxsk-mobile-polish.css?v=1.2.1-mobile-toolbar">
 <script defer src="vxsk-p15-galaxy.js?v=15.0.1"></script>
+<link rel="stylesheet" href="vxsk-simple-pro.css?v=1"/>
+
+  <link rel="stylesheet" href="vxsk-home-clean-v3.css?v=3"/>
+  <link rel="stylesheet" href="vxsk-real-icons-v5.css?v=5-real" />
+<link rel="stylesheet" href="vxsk-mvp-clean-v8.css?v=8"/>
+<link rel="stylesheet" href="vxsk-navigation-v18.css?v=18">
+<link rel="stylesheet" href="vxsk-v19-rankings.css?v=19.0">
+<script defer src="vxsk-v19-rankings.js?v=19.0"></script>
+<link rel="stylesheet" href="vxsk-v20-ui.css?v=20.0"><script defer src="vxsk-v20-account.js?v=20.0"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -74,7 +84,7 @@
   <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
   <div class="announcement-bar">
     <span class="live-ping"></span>
-    <span>VXSK 2026 / 2027</span><span class="staging-build-label">V12.9.3-P4</span>
+    <span>VXSK 2026 / 2027</span><span class="staging-build-label">V19 TEST</span>
     <span class="bar-divider">/</span>
     <span>ROCKET LEAGUE SEASON ONE</span>
     <span class="bar-extra">·</span>
@@ -84,8 +94,29 @@
     <nav class="nav shell" aria-label="Main navigation">
       <a class="nav-logo" href="#top" aria-label="VXSK home"><img src="assets/vxsk-wordmark.webp" alt="VXSK" width="139" height="35"></a>
       <div class="nav-links" id="nav-links">
-        <a href="merch.html" class="vxsk-nav-merch" aria-label="Merch and VXSK services"><svg class="vxsk-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16l-1.5 13h-13L4 7Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span>MERCH</span></a>
-        <a href="#vxsk-app" class="vxsk-nav-app vxsk-app-nav-link"><svg class="vxsk-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.2"/><path d="M10 18.5h4"/></svg><span>APP</span></a><a href="#about"><svg class="vxsk-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 1.6 5.4L19 10l-5.4 1.6L12 17l-1.6-5.4L5 10l5.4-1.6L12 3Z"/><path d="m19 17 .7 1.3L21 19l-1.3.7L19 21l-.7-1.3L17 19l1.3-.7L19 17Z"/></svg><span>About</span></a><a href="#games"><svg class="vxsk-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9h12a4 4 0 0 1 3.9 3.2l.7 4.2a2.5 2.5 0 0 1-4.2 2.3l-2.4-2.2H8l-2.4 2.2a2.5 2.5 0 0 1-4.2-2.3l.7-4.2A4 4 0 0 1 6 9Z"/><path d="M7 11v5m-2.5-2.5h5M16 12h.01M19 14h.01"/></svg><span>Games</span></a><a href="#modes"><svg class="vxsk-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5 9-5Zm-9 9 9 5 9-5M3 16l9 5 9-5"/></svg><span>Modes</span></a><a href="#match-center"><svg class="vxsk-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4 20 20M14 4l6 0v6M20 4 4 20M4 14v6h6"/></svg><span>Matches</span></a><a href="#find-rival"><svg class="vxsk-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 1v5m0 12v5M1 12h5m12 0h5"/></svg><span>Find Rival</span></a><a href="#staff"><svg class="vxsk-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M17 5a3 3 0 0 1 0 6m1 3a5 5 0 0 1 3 5v1"/></svg><span>Staff</span></a><a href="#videos"><svg class="vxsk-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m10 8 6 4-6 4V8Z"/></svg><span>Videos</span></a><a href="teams.html"><svg class="vxsk-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 3.1 6.4 7 1-5 4.9 1.2 7-6.3-3.3-6.3 3.3 1.2-7-5-4.9 7-1L12 2Z"/></svg><span>Teams</span></a><a href="#community" class="nav-community-link"><svg class="vxsk-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 9a9 9 0 0 1 18 0v5a4 4 0 0 1-4 4h-1v-7h5M3 11h5v7H7a4 4 0 0 1-4-4V9Z"/></svg><span>Community</span></a><a href="#members"><svg class="vxsk-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 22v-2a8 8 0 0 1 16 0v2"/></svg><span>Members</span></a><a href="#contact"><svg class="vxsk-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="m3 7 9 7 9-7"/></svg><span>Contact</span></a>
+        <a href="arena.html#vxsk-registration" class="vxsk-nav-tournaments">🏆 Tournaments</a>
+        <a href="#games">🎮 Games</a>
+        <a href="#match-center">⚔ Matches</a>
+        <a href="teams.html">♜ Teams</a>
+        <a href="#community">♧ Community</a>
+        <details class="vxsk-nav-more" id="vxsk-nav-more">
+          <summary>MORE <span aria-hidden="true">⌄</span></summary>
+          <div class="vxsk-nav-more-panel">
+            <span class="vxsk-nav-more-heading">EXPLORE VXSK</span>
+            <a href="#about">About</a>
+            <a href="#modes">Modes & Schedule</a>
+            <a href="#videos">Videos</a>
+            <a href="#vxsk-teams">Featured Teams</a>
+            <a href="#v19-rankings">Rankings · Top 10</a>
+            <a href="teams.html">All Teams</a>
+            <a href="team-manager.html">Team Manager</a>
+            <a href="#staff">Meet the Crew</a>
+            <a href="#vxsk-app">VXSK App</a>
+            <a href="#members">Members</a>
+            <a href="merch.html">Merch</a><a href="news.html">VXSK News</a>
+            <a href="#contact">Contact</a>
+          </div>
+        </details>
       </div>
       <div class="vxsk-community-nav" aria-label="Player search and friends">
         <form id="nav-player-search-form" class="nav-player-search" role="search"><label for="nav-player-search" class="sr-only">Search VXSK games or players</label><input id="nav-player-search" type="search" maxlength="30" autocomplete="off" placeholder="Search VXSK…"/><button type="submit" aria-label="Search games and players" title="Search">⌕</button></form>
@@ -97,7 +128,7 @@
       <button type="button" id="vxsk-call-ringtone-toggle" class="vxsk-call-ring-toggle" aria-label="Enable incoming call ringtone" aria-pressed="false" title="Enable incoming call ringtone">🔔 <span>RING OFF</span></button>
       <div id="vxsk-updates-widget" class="vxsk-updates-widget"><button type="button" id="vxsk-updates-toggle" class="vxsk-updates-toggle" aria-controls="vxsk-updates-panel" aria-expanded="false" aria-label="View VXSK announcements">✦ <span>UPDATES</span><b id="vxsk-updates-count" hidden>0</b></button><div id="vxsk-updates-panel" class="vxsk-updates-panel" hidden><strong>VXSK / NEW ANNOUNCEMENTS</strong><div id="vxsk-updates-list"><p class="updates-empty">Checking latest public announcements…</p></div><a href="#match-center">SEE ALL ANNOUNCEMENTS ↗</a></div></div>
       <button id="vxsk-low-lag-toggle" type="button" aria-pressed="false" title="Toggle low-lag display mode">⚡ LOW-LAG OFF</button><button id="music-toggle" class="music-toggle" type="button" aria-label="Enable background music" aria-pressed="false" title="Background music · click to play">♫ <span>OFF</span></button>
-      <span id="nav-user-chip" class="nav-user-chip" hidden><span class="nav-avatar-zone"><img id="nav-avatar" alt="" hidden><span class="nav-avatar-fallback" id="nav-avatar-fallback">V</span><button type="button" class="vxsk-avatar-edit-button vxsk-avatar-edit-mini" aria-label="Change your VXSK profile picture" title="Change profile picture"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5 4 4M4 20l4.3-1 11-11a2.1 2.1 0 0 0-3-3l-11 11L4 20Z"/></svg></button></span><span id="nav-nickname">PLAYER</span><span class="nav-security" id="nav-verified" hidden title="Two-step verification enabled">◆</span></span><a href="staff.html" id="nav-staff-link" class="nav-staff-link" hidden>STAFF COMMAND ↗</a><button class="account-nav open-account" type="button" aria-label="Open player account"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.4"/><path d="M5 20v-1.5c0-3 3.1-5.1 7-5.1s7 2.1 7 5.1V20"/></svg><span id="nav-account-label">SIGN IN</span></button><button class="nav-cta open-register" type="button" data-game="Rocket League" data-mode="1v1"><span>JOIN THE ARENA</span><span aria-hidden="true">↗</span></button>
+      <span id="nav-user-chip" class="nav-user-chip" hidden><span class="nav-avatar-zone"><img id="nav-avatar" alt="" hidden><span class="nav-avatar-fallback" id="nav-avatar-fallback">V</span><button type="button" class="vxsk-avatar-edit-button vxsk-avatar-edit-mini" aria-label="Change your VXSK profile picture" title="Change profile picture"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5 4 4M4 20l4.3-1 11-11a2.1 2.1 0 0 0-3-3l-11 11L4 20Z"/></svg></button></span><span id="nav-nickname">PLAYER</span><span class="nav-security" id="nav-verified" hidden title="Two-step verification enabled">◆</span></span><a href="staff.html" id="nav-staff-link" class="nav-staff-link" hidden>STAFF COMMAND ↗</a><button class="account-nav open-account" type="button" aria-label="Open player account"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.4"/><path d="M5 20v-1.5c0-3 3.1-5.1 7-5.1s7 2.1 7 5.1V20"/></svg><span id="nav-account-label">SIGN IN</span></button><a class="nav-cta vxsk-join-cta" href="arena.html#vxsk-registration"><span>JOIN TOURNAMENT</span><span aria-hidden="true">↗</span></a>
       <button type="button" class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu"><span></span><span></span><span></span></button>
     </nav>
     <div id="nav-hover-panel" class="nav-hover-panel" hidden aria-label="Navigation preview"></div>
@@ -109,14 +140,14 @@
       <div class="hero-light-1" aria-hidden="true"></div>
       <div class="hero-content">
         <div class="eyebrow"><span class="eyebrow-line"></span> THE NEXT CHAPTER STARTS NOW <span class="eyebrow-dot">✦</span></div>
-        <div class="hero-mini"><span class="chip-dot"></span> THE OFFICIAL VXSK 2026–27 SEASON</div><div class="vxsk-intro-note"><strong>WELCOME TO VXSK.</strong> New to the arena? Choose a game, check the latest announcements, then find a rival or join the event. <a href="#match-center">SEE UPDATES ↗</a></div>
+        <div class="hero-mini"><span class="chip-dot"></span> THE OFFICIAL VXSK 2026–27 SEASON</div><div class="vxsk-intro-note"><strong>WELCOME TO VXSK.</strong> New player? Choose a tournament, check the rules and dates, then join with your VXSK account. <a href="#match-center">SEE UPDATES ↗</a></div>
         <h1 id="hero-title">ONE VISION.<br><span class="hero-outline">ONE ARENA.</span><br><span class="gradient-text">INFINITE HYPE.</span></h1>
         <p class="hero-description">One owner. Three games. A new generation of talent. <strong>Voxzan</strong> presents VXSK — the annual gaming event built for showmatches, rivalries, streaming moments, and unforgettable competition.</p>
         <div class="hero-actions">
-          <button type="button" class="btn btn-main open-register" data-game="Rocket League" data-mode="1v1">ENTER THE ARENA <span aria-hidden="true">↗</span></button>
-          <a class="btn btn-ghost" href="#about">EXPLORE VXSK <span aria-hidden="true">↓</span></a>
+          <a class="btn btn-main" href="arena.html#vxsk-registration">BROWSE & JOIN TOURNAMENTS <span aria-hidden="true">↗</span></a>
+          <a class="btn btn-ghost" href="#about">ABOUT VXSK <span aria-hidden="true">↓</span></a>
         </div>
-        <a class="vxsk-arena-orb" href="arena.html" aria-label="Explore VXSK Arena Hub"><span class="vxsk-arena-orb-icon" aria-hidden="true">✦</span><span><strong>ARENA HUB</strong><small>EVENTS · MATCHES · BRACKETS</small></span><span aria-hidden="true">↗</span></a>
+        <a class="vxsk-arena-orb" href="arena.html#vxsk-registration" aria-label="Explore VXSK Arena Hub"><span class="vxsk-arena-orb-icon" aria-hidden="true">✦</span><span><strong>ARENA HUB</strong><small>EVENTS · MATCHES · BRACKETS</small></span><span aria-hidden="true">↗</span></a>
         <div class="hero-stats" aria-label="VXSK season highlights">
           <div><strong>04</strong><span>RL SHOWMATCH PHASES</span></div><div><strong>03</strong><span>GAME UNIVERSES</span></div><div><strong>01</strong><span>ARENA FOR ALL</span></div>
         </div>
@@ -185,17 +216,18 @@
  <p class="match-disclaimer">Match times use the official event timezone. A pairing is confirmed only after staff publish it.</p>
 </section>
 
-    <section class="section shell games-section" id="games">
-      <div class="section-head split-heading reveal"><div><div class="kicker"><span>02 /</span> THE BATTLEGROUNDS</div><h2>CHOOSE YOUR <span class="gradient-text">UNIVERSE.</span></h2></div><p>One arena. Three worlds to conquer. Choose your game and be part of the VXSK story.</p></div>
-      <div class="games-grid">
-        <article class="game-card game-main reveal" data-game-card="Rocket League">
-          <div class="game-image"><img src="assets/game-rocket-custom.webp" alt="Rocket League stadium artwork" loading="lazy" width="1140" height="460"></div>
-          <div class="game-card-sheen"></div>
-          <div class="game-top"><span class="game-sequence">UNIVERSE // 001</span><span class="status-pill current"><span class="chip-dot"></span> FIRST SEASON</span></div>
-          <div class="game-bottom"><img class="game-logo" src="assets/rl-logo.webp" alt="Rocket League game logo" width="70" height="70" loading="lazy"><div><div class="game-tag">THE FIRST ARENA</div><h3>ROCKET <span>LEAGUE</span></h3><p>Four distinct showmatch phases. One unforgettable season.</p></div><button class="round-arrow open-register" aria-label="Register for Rocket League" type="button" data-game="Rocket League" data-mode="1v1">↗</button></div>
-        </article>
-        <article class="game-card reveal" data-game-card="VALORANT"><div class="game-image"><img src="assets/game-valorant-custom.webp" alt="VALORANT themed artwork" loading="lazy" width="1200" height="1200"></div><div class="game-card-sheen"></div><div class="game-top"><span class="game-sequence">UNIVERSE // 002</span><span class="status-pill upcoming">COMING SOON</span></div><div class="game-bottom"><img class="game-logo" src="assets/valorant-logo-custom.webp" alt="VALORANT game logo" width="70" height="70" loading="lazy"><div><div class="game-tag">TACTICAL SHOWDOWNS</div><h3>VALORANT</h3><p>Explore the 2027 VALORANT mode schedule.</p></div><button class="round-arrow open-register" type="button" data-game="VALORANT" data-mode="1v1 Skirmish" aria-label="Apply for VALORANT 1v1 Skirmish">↗</button></div></article>
-        <article class="game-card reveal" data-game-card="League of Legends"><div class="game-image"><img src="assets/game-league-custom.webp" alt="League of Legends artwork" loading="lazy" width="1140" height="460"></div><div class="game-card-sheen"></div><div class="game-top"><span class="game-sequence">UNIVERSE // 003</span><span class="status-pill upcoming">COMING SOON</span></div><div class="game-bottom"><img class="game-logo" src="assets/lol-logo.webp" alt="League of Legends game logo" width="70" height="70" loading="lazy"><div><div class="game-tag">LEGENDS WILL RISE</div><h3>LEAGUE <span>OF LEGENDS</span></h3><p>Explore the 2027 League of Legends mode schedule.</p></div><button class="round-arrow open-register" type="button" data-game="League of Legends" data-mode="1v1 ARAM" aria-label="Apply for League of Legends 1v1 ARAM">↗</button></div></article>
+
+    <section class="section shell modes-section season-showcase" id="modes" aria-labelledby="season-title">
+      <div class="section-head split-heading reveal"><div><div class="kicker"><span>03 /</span> THE EVENT CALENDAR · 2026—2027</div><h2 id="season-title">SEASON <span class="gradient-text">CALENDAR.</span></h2></div><p>Select a game to reveal its four seasonal chapters, dates and play formats. All dates are subject to organizer confirmation.</p></div>
+      <div class="season-select-grid" role="group" aria-label="Select a VXSK game">
+        <button type="button" class="season-game is-selected reveal" data-season="rocket" aria-pressed="true" aria-controls="season-detail"><span class="season-game-image"><img src="assets/showcase-rocket-car.webp" alt="" loading="lazy"></span><span class="season-game-shade"></span><span class="season-game-index">UNIVERSE // 01</span><img class="season-game-logo" src="assets/rl-logo.webp" alt="" loading="lazy"><span class="season-game-name">ROCKET <em>LEAGUE</em></span><span class="season-game-bottom"><small>OCT 2026 — FEB 2027</small><b>EXPLORE 4 MODES ↗</b></span></button>
+        <button type="button" class="season-game reveal" data-season="lol" aria-pressed="false" aria-controls="season-detail"><span class="season-game-image"><img src="assets/showcase-league-jinx.webp" alt="" loading="lazy"></span><span class="season-game-shade"></span><span class="season-game-index">UNIVERSE // 02</span><img class="season-game-logo" src="assets/lol-logo.webp" alt="" loading="lazy"><span class="season-game-name">LEAGUE OF <em>LEGENDS</em></span><span class="season-game-bottom"><small>MAR — JUL 2027</small><b>EXPLORE 4 MODES ↗</b></span></button>
+        <button type="button" class="season-game reveal" data-season="valorant" aria-pressed="false" aria-controls="season-detail"><span class="season-game-image"><img src="assets/showcase-valorant-team.webp" alt="" loading="lazy"></span><span class="season-game-shade"></span><span class="season-game-index">UNIVERSE // 03</span><img class="season-game-logo" src="assets/valorant-logo-custom.webp" alt="" loading="lazy"><span class="season-game-name">VALO<em>RANT</em></span><span class="season-game-bottom"><small>AUG — NOV 2027</small><b>EXPLORE 4 MODES ↗</b></span></button>
+      </div>
+      <div id="season-detail" class="season-detail" role="region" aria-live="polite" aria-label="Selected game showmatch schedule">
+        <div class="season-detail-head"><div><span class="season-detail-eyebrow">SELECTED UNIVERSE / 01</span><h3 id="season-detail-title">ROCKET LEAGUE <span>PHASES</span></h3></div><p id="season-detail-desc">Four formats. Four moments to shine.</p></div>
+        <div id="season-phase-list" class="season-phase-grid"></div>
+        <p class="season-notice" id="season-notice">These modes accept Rocket League player applications. Applications do not guarantee a match.</p>
       </div>
     </section>
 
@@ -224,18 +256,17 @@
       </div>
     </section>
 
-
-    <section class="section shell modes-section season-showcase" id="modes" aria-labelledby="season-title">
-      <div class="section-head split-heading reveal"><div><div class="kicker"><span>03 /</span> THE EVENT CALENDAR · 2026—2027</div><h2 id="season-title">THREE GAMES.<br><span class="gradient-text">TWELVE MOMENTS.</span></h2></div><p>Choose a universe to reveal its four seasonal chapters, dates and play formats. All dates are subject to organizer confirmation.</p></div>
-      <div class="season-select-grid" role="group" aria-label="Select a VXSK game">
-        <button type="button" class="season-game is-selected reveal" data-season="rocket" aria-pressed="true" aria-controls="season-detail"><span class="season-game-image"><img src="assets/showcase-rocket-car.webp" alt="" loading="lazy"></span><span class="season-game-shade"></span><span class="season-game-index">UNIVERSE // 01</span><img class="season-game-logo" src="assets/rl-logo.webp" alt="" loading="lazy"><span class="season-game-name">ROCKET <em>LEAGUE</em></span><span class="season-game-bottom"><small>OCT 2026 — FEB 2027</small><b>EXPLORE 4 MODES ↗</b></span></button>
-        <button type="button" class="season-game reveal" data-season="lol" aria-pressed="false" aria-controls="season-detail"><span class="season-game-image"><img src="assets/showcase-league-jinx.webp" alt="" loading="lazy"></span><span class="season-game-shade"></span><span class="season-game-index">UNIVERSE // 02</span><img class="season-game-logo" src="assets/lol-logo.webp" alt="" loading="lazy"><span class="season-game-name">LEAGUE OF <em>LEGENDS</em></span><span class="season-game-bottom"><small>MAR — JUL 2027</small><b>EXPLORE 4 MODES ↗</b></span></button>
-        <button type="button" class="season-game reveal" data-season="valorant" aria-pressed="false" aria-controls="season-detail"><span class="season-game-image"><img src="assets/showcase-valorant-team.webp" alt="" loading="lazy"></span><span class="season-game-shade"></span><span class="season-game-index">UNIVERSE // 03</span><img class="season-game-logo" src="assets/valorant-logo-custom.webp" alt="" loading="lazy"><span class="season-game-name">VALO<em>RANT</em></span><span class="season-game-bottom"><small>AUG — NOV 2027</small><b>EXPLORE 4 MODES ↗</b></span></button>
-      </div>
-      <div id="season-detail" class="season-detail" role="region" aria-live="polite" aria-label="Selected game showmatch schedule">
-        <div class="season-detail-head"><div><span class="season-detail-eyebrow">SELECTED UNIVERSE / 01</span><h3 id="season-detail-title">ROCKET LEAGUE <span>PHASES</span></h3></div><p id="season-detail-desc">Four formats. Four moments to shine.</p></div>
-        <div id="season-phase-list" class="season-phase-grid"></div>
-        <p class="season-notice" id="season-notice">These modes accept Rocket League player applications. Applications do not guarantee a match.</p>
+    <section class="section shell games-section" id="games">
+      <div class="section-head split-heading reveal"><div><div class="kicker"><span>02 /</span> THE BATTLEGROUNDS</div><h2>THREE GAMES.<br><span class="gradient-text">TWELVE MOMENTS.</span></h2></div><p>Choose your game and jump straight into the VXSK story. One arena, three worlds, and a full season of moments.</p></div>
+      <div class="games-grid">
+        <article class="game-card game-main reveal" data-game-card="Rocket League">
+          <div class="game-image"><img src="assets/game-rocket-custom.webp" alt="Rocket League stadium artwork" loading="lazy" width="1140" height="460"></div>
+          <div class="game-card-sheen"></div>
+          <div class="game-top"><span class="game-sequence">UNIVERSE // 001</span><span class="status-pill current"><span class="chip-dot"></span> FIRST SEASON</span></div>
+          <div class="game-bottom"><img class="game-logo" src="assets/rl-logo.webp" alt="Rocket League game logo" width="70" height="70" loading="lazy"><div><div class="game-tag">THE FIRST ARENA</div><h3>ROCKET <span>LEAGUE</span></h3><p>Four distinct showmatch phases. One unforgettable season.</p></div><button class="round-arrow open-register" aria-label="Register for Rocket League" type="button" data-game="Rocket League" data-mode="1v1">↗</button></div>
+        </article>
+        <article class="game-card reveal" data-game-card="VALORANT"><div class="game-image"><img src="assets/game-valorant-custom.webp" alt="VALORANT themed artwork" loading="lazy" width="1200" height="1200"></div><div class="game-card-sheen"></div><div class="game-top"><span class="game-sequence">UNIVERSE // 002</span><span class="status-pill upcoming">COMING SOON</span></div><div class="game-bottom"><img class="game-logo" src="assets/valorant-logo-custom.webp" alt="VALORANT game logo" width="70" height="70" loading="lazy"><div><div class="game-tag">TACTICAL SHOWDOWNS</div><h3>VALORANT</h3><p>Explore the 2027 VALORANT mode schedule.</p></div><button class="round-arrow open-register" type="button" data-game="VALORANT" data-mode="1v1 Skirmish" aria-label="Apply for VALORANT 1v1 Skirmish">↗</button></div></article>
+        <article class="game-card reveal" data-game-card="League of Legends"><div class="game-image"><img src="assets/game-league-custom.webp" alt="League of Legends artwork" loading="lazy" width="1140" height="460"></div><div class="game-card-sheen"></div><div class="game-top"><span class="game-sequence">UNIVERSE // 003</span><span class="status-pill upcoming">COMING SOON</span></div><div class="game-bottom"><img class="game-logo" src="assets/lol-logo.webp" alt="League of Legends game logo" width="70" height="70" loading="lazy"><div><div class="game-tag">LEGENDS WILL RISE</div><h3>LEAGUE <span>OF LEGENDS</span></h3><p>Explore the 2027 League of Legends mode schedule.</p></div><button class="round-arrow open-register" type="button" data-game="League of Legends" data-mode="1v1 ARAM" aria-label="Apply for League of Legends 1v1 ARAM">↗</button></div></article>
       </div>
     </section>
     <section class="vxsk-world-scene vxsk-world-ace" id="vxsk-world-valorant" data-vxsk-world aria-label="03 / VALORANT cinematic gameplay background">
@@ -262,13 +293,20 @@
     </section>
 
 
-    <section class="section shell timeline-section year-roadmap" id="timeline"><div class="section-head split-heading reveal"><div><div class="kicker"><span>04 /</span> FULL SEASON AT A GLANCE</div><h2>YOUR ROAD TO <span class="gradient-text">THE ARENA.</span></h2></div><p>Follow the year in chronological order. Select a universe to view its exact mode dates.</p></div><div class="year-roadmap-grid reveal">
-      <a href="#modes" data-season-link="rocket"><img src="assets/rl-logo.webp" alt="" loading="lazy"><span><b>ROCKET LEAGUE</b><small>OCT 2026 — FEB 2027</small></span><span aria-hidden="true">↗</span></a>
-      <a href="#modes" data-season-link="lol"><img src="assets/lol-logo.webp" alt="" loading="lazy"><span><b>LEAGUE OF LEGENDS</b><small>MAR — JUL 2027</small></span><span aria-hidden="true">↗</span></a>
-      <a href="#modes" data-season-link="valorant"><img src="assets/valorant-logo-custom.webp" alt="" loading="lazy"><span><b>VALORANT</b><small>AUG — NOV 2027</small></span><span aria-hidden="true">↗</span></a>
-    </div></section>
-
-    <section class="section shell register-section" id="register"><div class="register-back-glow" aria-hidden="true"></div><div class="register-content reveal"><div class="kicker"><span>05 /</span> IT'S YOUR TURN</div><h2>READY TO MAKE <span class="gradient-text">YOUR MARK?</span></h2><p>Solo player? Duo partner? Three-person squad? Freestyle specialist? Pick your game and format, send your player details, and our team can review your application.</p><div class="register-shortcuts"><button class="shortcut open-register" data-game="Rocket League" data-mode="1v1" type="button"><span>↗</span> ROCKET LEAGUE</button><button class="shortcut open-register" data-game="VALORANT" data-mode="1v1 Skirmish" type="button"><span>↗</span> VALORANT</button><button class="shortcut open-register" data-game="League of Legends" data-mode="1v1 ARAM" type="button"><span>↗</span> LEAGUE OF LEGENDS</button></div><p class="small-note">League of Legends and VALORANT modes are listed for 2027. Selected-mode applications require the VXSK registration setup. Applying does not guarantee selection.</p></div><div class="register-side reveal"><div class="reg-step"><span>01</span><div><strong>CHOOSE YOUR GAME</strong><small>Rocket League, VALORANT or League of Legends.</small></div></div><div class="reg-step"><span>02</span><div><strong>SELECT YOUR MODE</strong><small>1v1, 2v2, 3v3, freestyles or an interest list.</small></div></div><div class="reg-step"><span>03</span><div><strong>SEND YOUR DETAILS</strong><small>In-game username and one way to contact you.</small></div></div></div></section>
+    <!-- Clean VXSK entry point: distinguish P12 tournaments from legacy showmatch applications. -->
+    <section class="section shell register-section vxsk-clean-register" id="register" aria-labelledby="vxsk-clean-join-title">
+      <div class="register-back-glow" aria-hidden="true"></div>
+      <div class="register-content reveal">
+        <div class="kicker">PLAY VXSK / ONE CLEAR START</div>
+        <h2 id="vxsk-clean-join-title">READY TO <span class="gradient-text">COMPETE?</span></h2>
+        <p>Browse official tournaments, check the rules and see when joining opens. For seasonal showmatches, use the separate player application.</p>
+        <div class="vxsk-clean-register-actions">
+          <a class="btn btn-main" href="arena.html#vxsk-registration">VIEW TOURNAMENTS <span aria-hidden="true">↗</span></a>
+          <button class="btn btn-ghost open-register" type="button" data-game="Rocket League" data-mode="1v1">SHOWMATCH APPLICATION <span aria-hidden="true">↗</span></button>
+        </div>
+        <p class="small-note">Tournament registration is only available when the official event is open. A showmatch application is not an automatic tournament entry.</p>
+      </div>
+    </section>
 
 <section class="section shell find-rival-section" id="find-rival" aria-labelledby="rival-title">
   <div class="rival-shell reveal"><div class="rival-heading"><div class="kicker"><span>FIND YOUR RIVAL /</span> PLAYER MATCHING</div><h2 id="rival-title">NO OPPONENT? <span class="gradient-text">WE GOT YOU.</span></h2><p>Playing Rocket League, VALORANT, or League of Legends but you don't have anyone to challenge? Tell the VXSK team what you play. We'll review your request and help coordinate a match. Your contact stays private.</p><p class="small-note">Sign in to VXSK first. Opponent requests now go to a separate private staff inbox.</p><div class="rival-pills"><span>1V1</span><span>2V2</span><span>3V3</span><span>FREESTYLE</span><span>TEAM MODES</span></div></div>
@@ -301,12 +339,28 @@
     
 <section class="section shell vxsk-teams-section" id="vxsk-teams" aria-labelledby="vxsk-teams-heading">
   <span id="sponsor" class="vxsk-anchor-target" aria-hidden="true"></span>
-  <div class="section-head split-heading reveal"><div><div class="kicker"><span>VXSK /</span> COMMUNITY SPOTLIGHT</div><h2 id="vxsk-teams-heading">FEATURED <span class="gradient-text">TEAMS.</span></h2></div><p>Discover communities supporting Tunisian gaming. Weekly support standings will display verified activity when the private scoring system is available.</p></div>
+  <div class="section-head split-heading reveal"><div><div class="kicker"><span>VXSK /</span> COMMUNITY SPOTLIGHT</div><h2 id="vxsk-teams-heading">FEATURED <span class="gradient-text">TEAMS.</span></h2></div><p>Discover communities supporting Tunisian gaming. Verified Top 10 player, staff and team rankings are now available below. Team rank prioritizes approved member count.</p></div>
   <div class="vxsk-featured-toolbar"><a id="vxsk-featured-manage" href="featured-teams-editor.html" hidden rel="nofollow">+ ADD FEATURED TEAM <span>↗</span></a></div>
   <div class="vxsk-partner-grid">
     <p class="vxsk-th-empty-teams">Loading featured teams...</p>
   </div>
-  <section class="vxsk-weekly-standings" aria-labelledby="vxsk-weekly-heading"><div><span class="vxsk-team-label">WEEKLY COMMUNITY SUPPORT</span><h3 id="vxsk-weekly-heading">COMMUNITY SPOTLIGHT BOARD</h3><p id="vxsk-weekly-status" role="status">Verified support totals will appear after weekly scoring and moderation are configured. No invented rankings.</p></div><div id="vxsk-weekly-list" class="vxsk-weekly-list" aria-live="polite"></div></section>
+  <section class="v20-news-strip" id="vxsk-news" aria-labelledby="vxsk-news-heading">
+    <div class="v20-news-title"><div><span class="v20-kicker">THE SOURCE MATTERS / VXSK NEWS</span><h2 id="vxsk-news-heading">LATEST GAMING <em>NEWS.</em></h2><p>Curated November 6, 2026 · official publishers · no fake timestamps.</p></div><a href="news.html">VIEW VXSK NEWS ↗</a></div>
+    <div class="v20-news-mini-grid">
+      <a class="v20-news-mini" href="https://playvalorant.com/en-gb/news/game-updates/protecting-competitive-integrity-in-vct-2027/" target="_blank" rel="noopener noreferrer"><img loading="lazy" src="assets/game-valorant.webp" alt=""><span><small>RIOT GAMES · NOV 05</small><strong>VCT 2027: Competitive Integrity</strong><span>OFFICIAL SOURCE ↗</span></span></a>
+      <a class="v20-news-mini" href="https://www.leagueoflegends.com/en-us/news/game-updates/" target="_blank" rel="noopener noreferrer"><img loading="lazy" src="assets/game-league.webp" alt=""><span><small>LEAGUE · NOV 03</small><strong>Patch 26.22 Notes</strong><span>OFFICIAL SOURCE ↗</span></span></a>
+      <a class="v20-news-mini" href="https://www.rocketleague.com/news" target="_blank" rel="noopener noreferrer"><img loading="lazy" src="assets/game-rocket.webp" alt=""><span><small>ROCKET LEAGUE · OCT 30</small><strong>Rocket League x One Piece</strong><span>OFFICIAL SOURCE ↗</span></span></a>
+    </div>
+  </section>
+  <section class="vxsk-v19-leaderboards" id="v19-rankings" aria-labelledby="v19-rank-title">
+    <h2 id="v19-rank-title">VXSK LEADERBOARDS · TOP 10</h2>
+    <p class="v19-sub">Real approved tournament results, verified staff work and accepted community team members. No fictional scores.</p>
+    <div class="v19-rank-grid" id="v19-rank-grid" aria-live="polite"><p>Loading verified rankings…</p></div>
+    <div class="v19-team-join"><label for="v19-join-team">JOIN A TEAM</label><select id="v19-join-team"><option value="">Loading published teams…</option></select>
+     <button type="button" id="v19-join-action">REQUEST TO JOIN</button><button type="button" id="v19-leave-action">LEAVE / CANCEL REQUEST</button>
+     <button type="button" id="v19-rank-refresh">REFRESH RANKINGS</button></div>
+    <p class="v19-rank-status" id="v19-rank-status" role="status"></p>
+  </section>
 </section>
 
     <section class="section shell community-section" id="community" aria-labelledby="community-title">
@@ -387,12 +441,12 @@
     </section>
 
     <section class="section shell contact-section" id="contact"><div class="section-head split-heading reveal"><div><div class="kicker"><span>09 /</span> CONNECT WITH THE ARENA</div><h2>DON'T MISS <span class="gradient-text">A MOMENT.</span></h2></div><p>Follow the updates, watch the showmatches, join the community or contact the team.</p></div><div class="social-grid reveal">
-      <a class="social-card" href="https://www.instagram.com/vxsk.events/?hl=en" target="_blank" rel="noopener noreferrer"><span class="social-symbol instagram"><img class="social-brand-icon" src="assets/social-clean/instagram.png?v=12.8.4" alt="" width="44" height="44" loading="lazy"></span><span><b>INSTAGRAM</b><small>@vxsk.events</small></span><span class="social-out">↗</span></a>
-      <a class="social-card" href="https://www.tiktok.com/@vxsk.events?lang=en" target="_blank" rel="noopener noreferrer"><span class="social-symbol tiktok"><img class="social-brand-icon" src="assets/social-clean/tiktok.png?v=12.8.4" alt="" width="44" height="44" loading="lazy"></span><span><b>TIKTOK</b><small>@vxsk.events</small></span><span class="social-out">↗</span></a>
-      <a class="social-card" href="https://discord.gg/ptWT895A55" target="_blank" rel="noopener noreferrer"><span class="social-symbol discord"><img class="social-brand-icon" src="assets/social-clean/discord.png?v=12.8.4" alt="" width="44" height="44" loading="lazy"></span><span><b>DISCORD</b><small>Join the server</small></span><span class="social-out">↗</span></a>
-      <a class="social-card" href="https://kick.com/voxzan_05" target="_blank" rel="noopener noreferrer"><span class="social-symbol kick"><img class="social-brand-icon" src="assets/social-clean/kick.png?v=12.8.4" alt="" width="44" height="44" loading="lazy"></span><span><b>KICK LIVE</b><small>voxzan_05</small></span><span class="social-out">↗</span></a>
-      <a class="social-card" href="https://www.youtube.com/@voxzan_05" target="_blank" rel="noopener noreferrer"><span class="social-symbol youtube"><img class="social-brand-icon" src="assets/social-clean/youtube.png?v=12.8.4" alt="" width="44" height="44" loading="lazy"></span><span><b>YOUTUBE</b><small>@voxzan_05</small></span><span class="social-out">↗</span></a>
-      <div class="social-card social-card-pending" aria-label="WhatsApp official contact link is pending"><span class="social-symbol whatsapp"><img class="social-brand-icon" src="assets/social-clean/whatsapp.png?v=12.8.4" alt="" width="44" height="44" loading="lazy"></span><span><b>WHATSAPP</b><small>Official link coming soon</small></span><span class="social-out" aria-hidden="true">◆</span></div>
+      <a class="social-card" href="https://www.instagram.com/vxsk.events/?hl=en" target="_blank" rel="noopener noreferrer"><span class="social-symbol instagram"><img class="social-brand-icon" src="assets/social-clean/instagram.png?v=12.8.4" alt="Instagram" width="44" height="44" loading="lazy"></span><span><b>INSTAGRAM</b><small>@vxsk.events</small></span><span class="social-out">↗</span></a>
+      <a class="social-card" href="https://www.tiktok.com/@vxsk.events?lang=en" target="_blank" rel="noopener noreferrer"><span class="social-symbol tiktok"><img class="social-brand-icon" src="assets/social-clean/tiktok.png?v=12.8.4" alt="Tiktok" width="44" height="44" loading="lazy"></span><span><b>TIKTOK</b><small>@vxsk.events</small></span><span class="social-out">↗</span></a>
+      <a class="social-card" href="https://discord.gg/ptWT895A55" target="_blank" rel="noopener noreferrer"><span class="social-symbol discord"><img class="social-brand-icon" src="assets/social-clean/discord.png?v=5-real" alt="Discord" width="44" height="44" loading="lazy"></span><span><b>DISCORD</b><small>Join the server</small></span><span class="social-out">↗</span></a>
+      <a class="social-card" href="https://kick.com/voxzan_05" target="_blank" rel="noopener noreferrer"><span class="social-symbol kick"><img class="social-brand-icon" src="assets/social-clean/kick.png?v=5-real" alt="Kick" width="44" height="44" loading="lazy"></span><span><b>KICK LIVE</b><small>voxzan_05</small></span><span class="social-out">↗</span></a>
+      <a class="social-card" href="https://www.youtube.com/@voxzan_05" target="_blank" rel="noopener noreferrer"><span class="social-symbol youtube"><img class="social-brand-icon" src="assets/social-clean/youtube.png?v=5-real" alt="Youtube" width="44" height="44" loading="lazy"></span><span><b>YOUTUBE</b><small>@voxzan_05</small></span><span class="social-out">↗</span></a>
+      <div class="social-card social-card-pending" aria-label="WhatsApp official contact link is pending"><span class="social-symbol whatsapp"><img class="social-brand-icon" src="assets/social-clean/whatsapp.png?v=12.8.4" alt="Whatsapp" width="44" height="44" loading="lazy"></span><span><b>WHATSAPP</b><small>Official link coming soon</small></span><span class="social-out" aria-hidden="true">◆</span></div>
       <a class="social-card" href="mailto:vxskevents@gmail.com?subject=VXSK%20Enquiry"><span class="social-symbol email"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 7 9-7"/></svg></span><span><b>EMAIL</b><small>vxskevents@gmail.com</small></span><span class="social-out">↗</span></a>
     </div><div class="contact-bottom reveal"><p>QUESTIONS ABOUT THE EVENT OR YOUR APPLICATION?</p><div><a class="contact-link" href="mailto:vxskevents@gmail.com"><span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3 7 9 7 9-7"></path></svg></span><span>vxskevents@gmail.com</span></a><a class="contact-link" href="tel:56661169"><span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2 2a15 15 0 0 0 4 4l2-2 5 2v4c0 .6-.4 1-1 1C11.8 20 4 12.2 4 5c0-.6.4-1 1-1Z"></path></svg></span><span>56 661 169</span></a></div></div></section>
   </main>

@@ -1,0 +1,27 @@
+/* VXSK V19 — scoreboard: layout-only CSS, no expensive blur/continuous animations */
+.vxsk-v19-leaderboards{padding:26px;border:1px solid rgba(173,133,255,.32);border-radius:20px;background:#100e24;color:#f7f4ff;margin-block:24px}
+.vxsk-v19-leaderboards h2{font-size:clamp(1.25rem,2.8vw,2rem);margin:0 0 8px}
+.vxsk-v19-leaderboards .v19-sub{color:#b7b0d8;font-size:.91rem;margin-bottom:20px}
+.v19-rank-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.v19-rank-panel{min-width:0;background:#171531;border:1px solid #3f3569;border-radius:14px;padding:15px}
+.v19-rank-panel h3{font-size:1rem;margin:0 0 12px;color:#d1b6ff}
+.v19-rank-row{display:grid;grid-template-columns:2.2em minmax(0,1fr) auto;align-items:center;gap:8px;padding:11px 6px;border-bottom:1px solid #332e53;font-size:.89rem}
+.v19-rank-row:last-child{border:0}
+.v19-rank-row .rank{color:#ddbbff;font-weight:800}
+.v19-rank-row .name{min-width:0;overflow-wrap:anywhere;font-weight:650}
+.v19-rank-row .score{font-variant-numeric:tabular-nums;color:#96f6c1;white-space:nowrap;font-weight:700}
+.v19-rank-panel small{color:#bab2d2;font-size:.75rem}
+.v19-team-join{margin-top:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.v19-team-join select,.v19-team-join button,.v19-team-join .leave{background:#201b43;border:1px solid #55428d;border-radius:9px;color:#fff;min-height:40px;padding:7px 10px}
+.v19-team-join button{cursor:pointer;background:#733fe5;font-weight:750}
+.v19-team-join button:focus-visible,.v19-team-join select:focus-visible{outline:2px solid #d6b0ff;outline-offset:2px}
+.v19-rank-status{margin:8px 0 0;color:#d5c8f9;font-size:.83rem;line-height:1.5}
+.v19-rank-status[data-error='1']{color:#ffc3bd}
+.v19-my-progress{border:1px solid #523e7f;background:#161433;border-radius:16px;padding:18px;margin-top:16px;color:#eee7ff}
+.v19-my-progress h3{margin:0 0 10px;font-size:1rem}
+.v19-progress-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.v19-progress-cards div{padding:13px;background:#211b48;border:1px solid #514779;border-radius:11px}
+.v19-progress-cards b{display:block;color:#95f1be;font-size:1.45rem}
+.v19-progress-cards small{color:#c9c0e8}
+@media(max-width:970px){.v19-rank-grid{grid-template-columns:1fr}.vxsk-v19-leaderboards{padding:16px}.v19-progress-cards{grid-template-columns:1fr 1fr}}
+@media(max-width:420px){.v19-team-join select{width:100%}.v19-rank-panel{padding:11px}.v19-rank-row{font-size:.82rem}}

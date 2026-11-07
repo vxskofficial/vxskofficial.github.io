@@ -1,0 +1,12 @@
+
+.vxsk-format-planner-v18{margin:14px 0 17px;padding:13px 16px;border:1px solid #72589e;border-radius:13px;background:#151834;color:#f5efff}
+.vxsk-format-planner-v18 summary{cursor:pointer;color:#dec7ff;font-weight:900;letter-spacing:.03em;line-height:1.6}
+.vxsk-format-planner-v18 summary:focus-visible{outline:2px solid #9b88ff}
+.vxsk-planner-label{font-size:10px;color:#79e8d2;border:1px solid #377c77;border-radius:25px;padding:4px 6px;margin-left:7px}
+.vxsk-planner-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:14px 0}
+.vxsk-planner-controls label{display:grid;gap:7px;font-size:11px;color:#bfb3df}
+.vxsk-planner-controls select{width:100%;background:#0c112a;color:#f4efff;padding:12px;border:1px solid #6f6098;border-radius:9px;font-weight:700}
+.vxsk-planner-result{border-radius:10px;background:#211c42;border:1px solid #655596;padding:13px 14px;line-height:1.65;font-size:12px}
+.vxsk-planner-result strong{color:#73e9cb}
+.vxsk-format-planner-v18 a{color:#bba2ff}
+@media(max-width:580px){.vxsk-planner-controls{grid-template-columns:1fr}.vxsk-planner-label{display:inline-block;margin-left:0}}

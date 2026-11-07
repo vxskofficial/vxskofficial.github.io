@@ -1,0 +1,50 @@
+/* VXSK Home Cleanup V3 — site-local stylesheet, no inline CSS */
+.season-showcase .season-select-grid { gap: 12px; margin-bottom: 20px; }
+.season-showcase .season-game {
+  min-height: 118px; padding: 17px 19px;
+  display: grid; grid-template-columns: 46px minmax(0,1fr);
+  grid-template-rows: auto auto; align-items: center; column-gap: 14px;
+  background: linear-gradient(130deg,rgba(32,26,83,.95),rgba(12,19,49,.95));
+  border-radius: 12px; box-shadow: none;
+}
+.season-showcase .season-game:hover,
+.season-showcase .season-game:focus-visible { transform: translateY(-2px); }
+.season-showcase .season-game-image,
+.season-showcase .season-game-shade,
+.season-showcase .season-game-index { display: none; }
+.season-showcase .season-game-logo {
+  grid-column: 1; grid-row: 1 / span 2;
+  width: 42px; height: 42px; margin: 0; align-self: center;
+}
+.season-showcase .season-game-name {
+  grid-column: 2; grid-row: 1;
+  font-size: clamp(19px,2.1vw,27px); line-height: 1.04;
+  text-shadow: none;
+}
+.season-showcase .season-game-bottom {
+  grid-column: 2; grid-row: 2;
+  margin: 5px 0 0; padding: 0; gap: 4px;
+  border: 0; align-items: center;
+}
+.season-showcase .season-game-bottom small { font-size: 10px; }
+.season-showcase .season-game-bottom b { font-size: 10px; color: #c7b2ff; }
+.vxsk-clean-register {
+  display: block; margin-top: 66px;
+  padding: clamp(28px,4vw,48px);
+  background: linear-gradient(120deg,rgba(32,25,85,.93),rgba(10,19,50,.96));
+}
+.vxsk-clean-register .register-content { max-width: 880px; }
+.vxsk-clean-register h2 { font-size: clamp(40px,5vw,66px); }
+.vxsk-clean-register .register-content > p { max-width: 690px; }
+.vxsk-clean-register-actions { display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:24px; }
+.vxsk-clean-register-actions .btn { text-decoration:none;white-space:normal;text-align:center; }
+.vxsk-clean-register-actions button { cursor:pointer; }
+@media (max-width: 760px) {
+  .season-showcase .season-select-grid { grid-template-columns:1fr; }
+  .season-showcase .season-game { min-height: 98px; padding: 14px 16px; }
+  .vxsk-clean-register-actions .btn { width:100%; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .season-showcase .season-game { transition:none; }
+  .season-showcase .season-game:hover { transform:none; }
+}

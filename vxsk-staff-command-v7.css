@@ -1,0 +1,65 @@
+/* VXSK Staff Command V7 | staging-only. Presentation changes only.
+   Auth/MFA, RLS, RPCs and owner-only functionality remain in original scripts. */
+:root{--v7-ink:#f4f1ff;--v7-muted:#bec2da;--v7-border:rgba(142,128,207,.32);--v7-panel:#131630;--v7-blue:#6999ff;--v7-purple:#ae8bff}
+/* Respect ALL hidden attributes, including role-gated controls. */
+#dashboard [hidden]{display:none!important}
+#dashboard>.welcome{background:linear-gradient(115deg,#1f1544,#121c3a 72%,#151431);border-color:rgba(147,126,223,.52);padding:23px 27px}
+#dashboard>.welcome h2{font-size:clamp(31px,3.4vw,50px);letter-spacing:.012em}
+#dashboard>.welcome p{font-size:12px;max-width:610px;color:#c9c8e2}
+#dashboard>.welcome .identity{background:#151532;border:1px solid #60538c;box-shadow:none;padding:12px 18px}
+#dashboard>.welcome .identity #my-role{color:#e8d6ff}
+#dashboard>.staff-command-nav.vxsk-p13-nav{border-color:var(--v7-border);background:linear-gradient(165deg,rgba(24,21,51,.98),rgba(11,17,37,.98));box-shadow:0 18px 43px #04061265}
+#dashboard>.staff-command-nav.vxsk-p13-nav:before{color:#a9a2ce;letter-spacing:.16em}
+#dashboard>.staff-command-nav.vxsk-p13-nav button{min-height:51px;border-radius:11px}
+#dashboard>.staff-command-nav.vxsk-p13-nav button.is-active{background:linear-gradient(100deg,#4d338c,#353b7d);border-color:#947dd1;box-shadow:none}
+#dashboard>.staff-command-nav.vxsk-p13-nav button:not(.is-active):hover{background:#2a244a}
+#dashboard>.staff-command-nav.vxsk-p13-nav button .vxsk-p13-nav-icon{background:#3d376a;box-shadow:none}
+#dashboard>.staff-command-nav.vxsk-p13-nav button.is-active .vxsk-p13-nav-icon{background:#7160bd}
+#dashboard #vxsk-simple-more{background:#202440;border:1px dashed #7263a8;color:#e4ddff;letter-spacing:.04em}
+#dashboard #vxsk-simple-more:hover{background:#303052;border-style:solid}
+#dashboard>[data-staff-view]{background:linear-gradient(145deg,rgba(18,21,45,.96),rgba(14,17,38,.98));border-color:var(--v7-border);padding:26px clamp(17px,2.2vw,33px) 30px}
+.v7-head{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+#staff-view-overview .v7-head h2{font:900 clamp(38px,4.7vw,64px)/1 'Barlow Condensed',sans-serif;letter-spacing:.015em}
+#staff-view-overview .v7-head p{margin:9px 0 0;max-width:600px;font-size:12px;line-height:1.6;color:var(--v7-muted)}
+.v7-access-status{display:flex;align-items:flex-end;flex-direction:column;gap:7px;min-width:142px}
+.v7-verified{display:inline-block;border:1px solid #327c68;color:#a4ead4;background:#112f2c;padding:6px 9px;border-radius:99px;font:800 9px/1 'Space Grotesk',sans-serif;letter-spacing:.12em}
+.v7-access-status strong{font:800 10px/1.5 'Space Grotesk',sans-serif;letter-spacing:.09em;color:#d6d0f0}
+.v7-role-context{margin:18px 0 14px;max-width:900px;font:500 12px/1.65 'Space Grotesk',sans-serif;color:#c7c5e2}
+.v7-workflow{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:13px 15px;margin:11px 0 25px;background:linear-gradient(100deg,#1b2240,#1a1838);border:1px solid rgba(114,111,178,.35);border-radius:12px}
+.v7-workflow span{font-size:10px;font-weight:750;letter-spacing:.025em;color:#cfd5f3}
+.v7-workflow span[aria-hidden]{color:#8177ad}
+.v7-workflow b{display:inline-grid;place-items:center;min-width:23px;height:22px;border-radius:6px;background:#373364;color:#dfd2ff;font-size:10px;margin-right:4px}
+.v7-group-heading{margin:8px 0 12px;color:#aa9ed8;font:800 10px 'Space Grotesk',sans-serif;letter-spacing:.17em}
+/* Keep only 2 priority launch cards when More Tools navigation is available.
+   If the additional controls failed to initialize, the original cards stay visible. */
+body.vxsk-staff-v7-ready #staff-view-overview .vxsk-p13-launch-grid>button:not([data-p13-go="applications"]):not([data-p13-go="tournaments"]){display:none!important}
+#staff-view-overview .vxsk-p13-launch-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:18px}
+#staff-view-overview .vxsk-p13-launch-grid>button{min-height:218px;padding:24px 24px 22px;border:1px solid #66618e;border-radius:17px;background:radial-gradient(ellipse at 96% 4%,#58369e55,transparent 56%),linear-gradient(145deg,#20244b,#141a35 78%);box-shadow:inset 0 1px 0 #ffffff12}
+#staff-view-overview .vxsk-p13-launch-grid>button[data-p13-go="tournaments"]{background:radial-gradient(ellipse at 100% 0,#244ea369,transparent 60%),linear-gradient(145deg,#1a2c4b,#131832 78%);border-color:#465d93}
+#staff-view-overview .vxsk-p13-launch-grid>button:hover{border-color:#c3afff;box-shadow:0 12px 30px #03081555;transform:translateY(-2px)}
+#staff-view-overview .vxsk-p13-launch-grid strong{font-size:clamp(27px,3vw,34px);letter-spacing:.02em}
+#staff-view-overview .vxsk-p13-launch-grid small{font-size:12px;line-height:1.4;color:#c9cce3}
+#staff-view-overview .vxsk-p13-launch-icon{width:52px;height:52px;border-radius:13px}
+#staff-view-overview .vxsk-p13-launch-icon svg{width:27px;height:27px}
+.v7-secondary-activity{margin-top:24px;border:1px solid rgba(134,126,188,.34);border-radius:13px;background:#131a33;overflow:hidden}
+.v7-secondary-activity>summary{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;list-style:none;cursor:pointer;padding:16px 18px;color:#d1c7f3;font-size:11px;font-weight:850;letter-spacing:.08em}
+.v7-secondary-activity>summary::-webkit-details-marker{display:none}
+.v7-secondary-activity>summary:after{content:'+';margin-left:auto;font:800 21px/1 'Barlow Condensed',sans-serif;color:#afa0e2}
+.v7-secondary-activity[open]>summary:after{content:'−'}
+.v7-secondary-activity>summary:focus-visible{outline:2px solid #ba9aff;outline-offset:-4px}
+.v7-secondary-activity>summary small{font-size:9px;color:#9ea9d6;letter-spacing:.04em}
+.v7-secondary-activity .vxsk-p14-metrics{margin:0;padding:4px 16px 16px;grid-template-columns:repeat(4,minmax(0,1fr))}
+.v7-secondary-activity .vxsk-p14-metric{padding:12px 10px;border-radius:11px;background:#1b2041}
+.v7-applications-heading{margin:0 0 17px}
+#staff-view-applications .stats{margin:9px 0 20px}
+#staff-view-applications .stat{border-radius:12px;padding:15px}
+#staff-view-applications .board,#staff-view-applications .details{border-radius:14px;overflow:hidden}
+#staff-view-applications .entry{min-height:75px}
+#staff-view-applications .entry.active{box-shadow:inset 3px 0 #a489ec}
+#staff-view-applications .toolbar input,#staff-view-applications .toolbar select,#staff-view-applications textarea{border-radius:9px}
+#staff-view-tournaments .p12-wrap{max-width:none}
+@media(max-width:1150px){.v7-secondary-activity .vxsk-p14-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:870px){#dashboard>.welcome{padding:19px 18px}#dashboard>[data-staff-view]{padding:19px 15px 24px}.v7-access-status{align-items:flex-start}.v7-workflow{gap:8px}}
+@media(max-width:650px){#staff-view-overview .vxsk-p13-launch-grid{grid-template-columns:1fr}#staff-view-overview .vxsk-p13-launch-grid>button{min-height:162px;padding:18px 19px}#staff-view-overview .v7-head{display:block}.v7-access-status{align-items:flex-start;flex-direction:row;flex-wrap:wrap;margin-top:12px}.v7-workflow span[aria-hidden]{display:none}.v7-workflow{flex-direction:column;align-items:flex-start}.v7-secondary-activity>summary small{display:none}.v7-secondary-activity .vxsk-p14-metrics{grid-template-columns:1fr 1fr;gap:8px}}
+@media(max-width:380px){.v7-secondary-activity .vxsk-p14-metrics{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){#staff-view-overview .vxsk-p13-launch-grid>button:hover{transform:none}}

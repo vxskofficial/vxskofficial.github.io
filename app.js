@@ -161,7 +161,16 @@
     menuToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     navLinks.classList.toggle('open', open);
   });
+  // V18: the compact More menu must not linger after navigation.
+  const moreMenu=document.getElementById('vxsk-nav-more');
+  document.addEventListener('click', (event)=>{
+    if(moreMenu?.open && !moreMenu.contains(event.target))moreMenu.open=false;
+  });
+  document.addEventListener('keydown',(event)=>{
+    if(event.key==='Escape' && moreMenu?.open){moreMenu.open=false;moreMenu.querySelector('summary')?.focus();}
+  });
   $$('.nav-links a').forEach(link => link.addEventListener('click', () => {
+    if(moreMenu)moreMenu.open=false;
     navLinks.classList.remove('open');
     menuToggle.setAttribute('aria-expanded', 'false');
     menuToggle.setAttribute('aria-label', 'Open menu');

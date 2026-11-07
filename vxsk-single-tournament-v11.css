@@ -1,0 +1,15 @@
+/* VXSK V11 — one tournament system, legacy fixture data preserved in Supabase */
+.p12-event-poster {width:100%;max-height:290px;aspect-ratio:16/9;object-fit:cover;border-radius:13px;margin:13px 0 8px;border:1px solid rgba(170,145,255,.3);background:#0d1029}
+.p12-event-description,.p12-event-rules p{white-space:pre-wrap;line-height:1.65;color:#dddaf2;overflow-wrap:anywhere}
+.p12-event-prize{color:#f6d68b;font-weight:800;padding:9px 12px;background:rgba(222,173,83,.08);border:1px solid rgba(222,173,83,.2);border-radius:9px}
+.p12-event-dates{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:.85rem;color:#bfbadd;margin:12px 0}
+.p12-event-rules{padding:12px 15px;background:rgba(125,91,218,.09);border-radius:10px;border:1px solid rgba(160,125,255,.25)}
+.p12-event-rules summary{cursor:pointer;color:#c6adff;font-weight:800}
+.p12-event-rules p{margin-top:12px}
+[data-arena-panel="matches"],[data-arena-panel="brackets"],[data-arena-panel="my"]{display:none!important}
+[data-arena-tab="matches"],[data-arena-tab="brackets"],[data-arena-tab="my"]{display:none!important}
+#vxsk-owner-cleanup-tab[data-vxsk-legacy-archive]{display:none!important}
+/* Ensure hidden controls cannot leak through existing generic staff CSS */
+.p12-legacy-details{display:none!important}
+.p12-form textarea{min-height:100px;resize:vertical}
+.p12-form input[type=file]{padding:12px;max-width:100%}

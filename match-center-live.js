@@ -55,10 +55,13 @@
     if(/twitch\.tv/i.test(url))return 'twitch';
     return 'generic';
   };
+  const brandIconAsset=brand=>({youtube:'assets/social-clean/youtube.png?v=5-real',kick:'assets/social-clean/kick.png?v=5-real',discord:'assets/social-clean/discord.png?v=5-real'})[brand]||'';
   const brandToken=(brand,label)=>{
     const token=document.createElement('span');
     token.className='vxsk-link-token brand-'+brand;
-    token.textContent=label;
+    const src=brandIconAsset(brand);
+    if(src){const img=document.createElement('img');img.src=src;img.alt='';img.width=16;img.height=16;img.loading='lazy';token.append(img);}
+    else token.textContent=label;
     return token;
   };
   const mediaLink=(href,label,brand,token)=>{

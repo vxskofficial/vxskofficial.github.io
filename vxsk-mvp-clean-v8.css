@@ -1,0 +1,15 @@
+/* VXSK MVP Clean v8 — staging-only presentation, no role/access logic. */
+/* Navigation: 6 useful shortcuts; other sections remain accessible on the page. */
+#nav-links > a:not([href="arena.html#vxsk-registration"]):not([href="#games"]):not([href="#modes"]):not([href="#match-center"]):not([href="#community"]):not([href="#contact"]) {display:none!important}
+#nav-links .vxsk-nav-tournaments {color:#f9f5ff!important;font-weight:800!important}
+#nav-links .vxsk-nav-tournaments:hover {color:#95b9ff!important}
+.nav-cta.vxsk-join-cta {text-decoration:none;align-items:center;justify-content:center}
+/* Visible official LIVE badge only when Supabase returns status=live. */
+.p12-status.p12-live, .p12-event-card .p12-live {color:#baffd8!important;background:#123b2c!important;border-color:#3bf098!important;animation:vxsk-live-breathe 2.7s ease-in-out infinite!important}
+.p12-status.p12-live::before {content:"";display:inline-block;width:7px;height:7px;margin-right:7px;border-radius:50%;background:#4ef8a1;box-shadow:0 0 7px #4ef8a1}
+@keyframes vxsk-live-breathe {0%,100%{box-shadow:0 0 0 rgba(66,241,140,0)}50%{box-shadow:0 0 17px rgba(66,241,140,.4)}}
+/* CAPTCHA appears only when public sitekey is configured; no secret in frontend. */
+.vxsk-auth-captcha {margin:10px 0 15px;min-height:66px;max-width:100%;color:#d4cceb;font-size:12px;overflow:hidden}
+.vxsk-auth-captcha iframe{max-width:100%}
+#staff-view-tournaments .p12-title p,#staff-view-overview .v7-head p {max-width:680px;line-height:1.6}
+@media (prefers-reduced-motion:reduce){.p12-status.p12-live,.p12-event-card .p12-live{animation:none!important}}

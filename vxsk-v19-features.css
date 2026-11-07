@@ -1,0 +1,46 @@
+/* VXSK V19 — accessible, performance-first stage + staff controls */
+.v19-panel{background:#151230;border:1px solid #544482;border-radius:15px;padding:16px;margin:20px 0;color:#f9f4ff}
+.v19-panel h3{font:800 20px 'Barlow Condensed',sans-serif;margin:0 0 8px}
+.v19-panel p{color:#c4b9e4;font-size:.88rem;line-height:1.55}
+.v19-muted{color:#c1b7d9;font-size:.82rem;line-height:1.5}
+.v19-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin:14px 0}
+.v19-controls label{font-weight:700;font-size:.8rem;color:#d2baff;display:grid;gap:7px}
+.v19-controls input,.v19-controls select,.v19-controls textarea,.v19-controls button,.v19-action{background:#201a44;border:1px solid #6a50a6;border-radius:9px;color:#fff;padding:10px;min-height:43px;width:100%;min-width:0;font:inherit}
+.v19-controls button,.v19-action{background:linear-gradient(105deg,#7433d7,#435fdd);font-weight:800;cursor:pointer}
+.v19-controls button:disabled,.v19-action:disabled{opacity:.5;cursor:not-allowed}
+.v19-controls input:focus-visible,.v19-controls select:focus-visible,.v19-controls button:focus-visible,.v19-action:focus-visible{outline:2px solid #e1c0ff;outline-offset:2px}
+.v19-stage{border:1px solid #494071;background:#11102b;border-radius:13px;margin:14px 0;padding:14px;min-width:0}
+.v19-stage h4{font-size:1rem;margin:0 0 8px;color:#d6bbff}
+.v19-bracket-scroller{overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-color:#8460d6 #1d1a37;padding:10px 0}
+.v19-bracket{display:flex;align-items:stretch;gap:30px;min-width:max-content}
+.v19-bracket-col{width:205px;flex:0 0 205px;display:grid;align-content:start;gap:10px}
+.v19-bracket-col h5{position:sticky;left:0;margin:0;color:#bd9fff;font-size:.8rem;letter-spacing:.05em}
+.v19-match{background:#1f1b3d;border:1px solid #544782;border-radius:10px;overflow:hidden;min-width:0}
+.v19-match small{display:block;padding:6px 10px;border-bottom:1px solid #483a6c;font-size:.72rem;color:#c9b5ed}
+.v19-match-line{display:grid;grid-template-columns:27px minmax(0,1fr) 26px;gap:5px;align-items:center;padding:8px;border-bottom:1px solid #342d51}
+.v19-match-line:last-child{border:0}.v19-match-line.is-winner{background:#17422e;color:#c7ffe0}
+.v19-match-line .logo{width:25px;height:25px;border-radius:50%;background:#37305a;display:grid;place-items:center;font-weight:800}
+.v19-match-line .name{font-weight:700;overflow-wrap:anywhere;font-size:.77rem}
+.v19-match-line .score{text-align:right;font-variant-numeric:tabular-nums;font-weight:850}
+.v19-standings{width:100%;border-collapse:collapse;font-size:.78rem;min-width:330px}
+.v19-standings th,.v19-standings td{padding:9px 8px;border-bottom:1px solid #44365d;text-align:left}
+.v19-standings th{color:#d0baff}
+.v19-mini-scroll{overflow-x:auto;max-width:100%}
+.v19-report-row{padding:12px;border:1px solid #584881;background:#1e193b;border-radius:10px;margin:9px 0;display:grid;gap:8px}
+.v19-report-actions{display:flex;gap:8px;flex-wrap:wrap}
+.v19-report-actions button{background:#5535a8;border:1px solid #8060c3;color:#fff;padding:9px;border-radius:7px;cursor:pointer;font-weight:700}
+.v19-status{min-height:24px;color:#afe8c7;font-size:.86rem;margin:10px 0}
+.v19-status[data-error='1']{color:#ffb9aa}
+.v19-flow{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
+.v19-flow span{border:1px solid #645193;border-radius:50px;background:#29214d;padding:6px 11px;font-size:.75rem}
+.v19-help{border:1px solid #5745a4;border-radius:10px;background:#19143a;padding:12px;color:#eae3ff}
+@media(max-width:600px){.v19-panel{padding:11px}.v19-controls{grid-template-columns:1fr}.v19-bracket-col{width:180px;flex-basis:180px}.v19-bracket{gap:18px}}
+
+.v19-panel.v19-panel{display:block}
+.v19-summary{cursor:pointer;font-weight:800;font-size:.98rem;letter-spacing:.025em;list-style:none;display:flex;align-items:center;justify-content:space-between;padding:6px 4px;color:#eee4ff}
+.v19-summary::-webkit-details-marker{display:none}
+.v19-summary span{color:#b19aff;transition:transform .16s ease}
+.v19-panel[open]>.v19-summary{padding-bottom:15px;margin-bottom:12px;border-bottom:1px solid #56477e}
+.v19-panel[open]>.v19-summary span{transform:rotate(180deg)}
+.v19-panel:not([open]){padding:12px 16px}
+@media(prefers-reduced-motion:reduce){.v19-summary span{transition:none}}
